@@ -351,15 +351,21 @@ html,body{
         给自己取一个昵称
       </p>
 
-      <input
-        id="nick"
-        maxlength="12"
-        placeholder="例如：小明"
-      >
+     <input
+  id="nick"
+  maxlength="12"
+  placeholder="例如：小明"
+>
 
-      <button id="join">
-        进入海滩
-      </button>
+<input
+  id="password"
+  type="password"
+  placeholder="请输入房间密码"
+>
+
+<button id="join">
+  进入海滩
+</button>
 
     </div>
 
@@ -393,7 +399,8 @@ const modal =
 
 const nick =
   document.getElementById("nick");
-
+const password =
+  document.getElementById("password");
 const world =
   document.getElementById("world");
 
@@ -451,18 +458,26 @@ document.getElementById("join").onclick = () => {
   const n =
     nick.value.trim() || "玩家";
 
-  modal.style.display = "none";
+  const p =
+    password.value.trim();
 
-  msg(
-    "系统",
-    "🏝️ 欢迎 "
-    + n
-    + " 来到 shako 的平行空间！"
-  );
-
-  if(socket){
-    socket.emit("setName",n);
+  if(!p){
+    password.focus();
+    return;
   }
+
+  if(!socket){
+    alert("服务器连接失败，请刷新页面后重试。");
+    return;
+  }
+
+  const joinBtn =
+    document.getElementById("join");
+
+  joinBtn.disabled = true;
+  joinBtn.textContent = "验证中...";
+
+  socket.emit("auth",p);
 
 };
 
@@ -516,7 +531,19 @@ function send(){
 
 
 if(socket){
+socket.on("authError",() => {
 
+    const joinBtn =
+      document.getElementById("join");
+
+    joinBtn.disabled = false;
+    joinBtn.textContent = "进入海滩";
+
+    password.value = "";
+    password.placeholder = "密码错误，请重新输入";
+    password.focus();
+
+  });
   socket.on("init",d => {
 
     myId = d.you.id;
