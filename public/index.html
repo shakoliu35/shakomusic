@@ -288,6 +288,39 @@ html,body{
 }
 
 @media(max-width:700px){
+
+  #chat{
+    width:calc(100vw - 28px);
+    right:14px;
+    bottom:85px;
+    transition:bottom .2s ease;
+  }
+
+  #messages{
+    height:140px;
+  }
+
+  #hint{
+    left:10px;
+    bottom:245px;
+    font-size:11px;
+  }
+
+  .genderOption{
+    width:42vw;
+    max-width:145px;
+  }
+
+  #input{
+    font-size:16px;
+    min-height:48px;
+  }
+
+  #btn{
+    min-width:68px;
+  }
+
+}
   #top{
     left:10px;
     top:10px
@@ -831,6 +864,87 @@ document.addEventListener(
 
   }
 );
+
+</script>
+<script>
+
+(function(){
+
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+
+  if(!chat || !input) return;
+
+  const isMobile =
+    /Android|iPhone|iPad|iPod/i.test(
+      navigator.userAgent
+    );
+
+  if(!isMobile) return;
+
+  const normalBottom = 85;
+
+  function adjustChat(){
+
+    const viewport = window.visualViewport;
+
+    if(!viewport) return;
+
+    const keyboardHeight =
+      window.innerHeight - viewport.height;
+
+    if(keyboardHeight > 120){
+
+      chat.style.bottom =
+        (keyboardHeight + 15) + "px";
+
+    }else{
+
+      chat.style.bottom =
+        normalBottom + "px";
+
+    }
+  }
+
+  if(window.visualViewport){
+
+    window.visualViewport.addEventListener(
+      "resize",
+      adjustChat
+    );
+
+    window.visualViewport.addEventListener(
+      "scroll",
+      adjustChat
+    );
+
+  }
+
+  input.addEventListener(
+    "focus",
+    function(){
+
+      setTimeout(adjustChat,100);
+      setTimeout(adjustChat,400);
+
+    }
+  );
+
+  input.addEventListener(
+    "blur",
+    function(){
+
+      setTimeout(adjustChat,200);
+
+    }
+  );
+
+  window.addEventListener(
+    "resize",
+    adjustChat
+  );
+
+})();
 
 </script>
 
