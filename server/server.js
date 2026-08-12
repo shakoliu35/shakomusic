@@ -10,12 +10,17 @@ app.use(express.static(path.join(__dirname,"../public")));
 const players=new Map();
 
 io.on("connection",socket=>{
-  if(players.size>=2){
+  if(players.size>=10){
     socket.emit("full");
     socket.disconnect(true);
     return;
   }
-  const spawn=players.size===0?{x:50,y:55}:{x:62,y:47};
+  const spawns=[
+    {x:50,y:55},{x:62,y:47},{x:38,y:47},{x:50,y:35},
+    {x:25,y:60},{x:75,y:60},{x:25,y:35},{x:75,y:35},
+    {x:40,y:75},{x:60,y:75}
+  ];
+  const spawn=spawns[players.size] || {x:50,y:55};
   players.set(socket.id,{id:socket.id,name:"玩家"+(players.size+1),x:spawn.x,y:spawn.y});
   socket.emit("init",{you:players.get(socket.id),players:[...players.values()]});
   io.emit("players",[...players.values()]);
