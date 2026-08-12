@@ -30,12 +30,7 @@ io.on("connection",socket=>{
 
     const spawn=spawns[players.size] || {x:50,y:55};
 
-    players.set(socket.id,{
-      id:socket.id,
-      name:"玩家"+(players.size+1),
-      x:spawn.x,
-      y:spawn.y
-    });
+    players.set(socket.id,{id:socket.id,name:"玩家"+(players.size+1),gender:"male",x:spawn.x,y:spawn.y});
 
     socket.emit("init",{
       you:players.get(socket.id),
@@ -52,7 +47,20 @@ io.on("connection",socket=>{
     if(name)p.name=name;
     io.emit("players",[...players.values()]);
   });
+socket.on("setGender",gender=>{
+  const p=players.get(socket.id);
+  if(!p)return;
 
+  gender=String(gender||"male");
+
+  if(gender!=="male" && gender!=="female"){
+    gender="male";
+  }
+
+  p.gender=gender;
+
+  io.emit("players",[...players.values()]);
+});
   socket.on("move",pos=>{
     const p=players.get(socket.id);
     if(!p)return;
