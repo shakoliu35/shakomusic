@@ -1,199 +1,185 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mini RooMi V2 · shako的平行空间</title>
-<style>
-*{box-sizing:border-box}
-html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,"Microsoft YaHei",sans-serif;background:#22bddd;color:#fff}
-#top{height:60px;background:linear-gradient(90deg,#061b2aee,#09283ee8);display:flex;align-items:center;gap:12px;padding:0 20px;position:relative;z-index:30;box-shadow:0 3px 15px #0037}
-#top b{font-size:22px;text-shadow:0 2px 2px #0006}
-.pill{background:#254764dd;padding:8px 13px;border-radius:20px;font-size:14px;border:1px solid #ffffff22}
-.pill.online{background:#167a6dcc}
-
-#world{position:relative;height:calc(100vh - 60px);overflow:hidden}
-#map{
- position:absolute;inset:0;
- background-image:linear-gradient(180deg,#67d8e9 0%,#8ee7ef 35%,#f7d79b 36%,#f2c57d 100%);
- background-size:cover;
- background-position:center center;
- background-repeat:no-repeat;
-}
-/* 让真实 UI 覆盖生成图里自带的顶部栏/聊天框/提示条 */
-#world:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,#ffffff03,#00000005)}
-
-.player{position:absolute;width:68px;height:74px;transform:translate(-50%,-72%);transition:left .08s,top .08s;cursor:pointer;z-index:12;filter:drop-shadow(0 4px 3px #0005)}
-.avatar{width:40px;height:40px;border-radius:50%;margin:auto;border:3px solid #fff;background:#ffd2a8;position:relative;box-shadow:0 2px 5px #0004}
-.avatar:before{content:"";position:absolute;width:16px;height:7px;border-radius:50%;background:#8b5a3c;left:9px;top:-5px}
-.avatar:after{content:"";position:absolute;width:46px;height:11px;left:-6px;top:28px;background:#347bc7;border-radius:12px}
-.name{margin-top:2px;text-align:center;background:#27333bd9;border:1px solid #ffffff33;border-radius:10px;padding:3px 6px;font-size:11px;white-space:nowrap;text-shadow:0 1px 1px #000}
-.me .avatar{box-shadow:0 0 0 3px #ffd35c,0 4px 10px #0005}
-.me .name{background:#5a4721e8}
-
-#chat{position:absolute;right:18px;bottom:18px;width:min(350px,34vw);background:#15232eea;border:1px solid #ffffff35;border-radius:16px;overflow:hidden;box-shadow:0 12px 35px #0028;z-index:30;backdrop-filter:blur(5px)}
-#chatTitle{padding:9px 12px;background:#0b1b28aa;font-weight:bold;font-size:13px;border-bottom:1px solid #ffffff18}
-#messages{height:205px;overflow:auto;padding:10px 12px;font-size:13px}
-.msg{margin:7px 0;line-height:1.4}.msg b{color:#ffd66b}
-#send{display:flex;border-top:1px solid #ffffff25}
-#input{flex:1;background:#0b1620;border:0;color:#fff;padding:13px;outline:0}
-#btn{border:0;background:#3888ed;color:#fff;padding:0 18px;font-size:14px;cursor:pointer}
-#btn:hover{background:#4a9aff}
-
-#hint{position:absolute;left:18px;bottom:18px;background:#15232ee8;border:1px solid #ffffff22;padding:10px 14px;border-radius:12px;font-size:12px;z-index:25;box-shadow:0 5px 18px #0025}
-#toast{position:absolute;top:15px;left:50%;transform:translateX(-50%);background:#132431ee;padding:10px 17px;border-radius:22px;display:none;z-index:40}
-
-#modal{position:absolute;inset:0;background:#04233599;display:flex;align-items:center;justify-content:center;z-index:50;backdrop-filter:blur(4px)}
-.box{background:linear-gradient(145deg,#16394dcc,#102737ee);padding:28px;border-radius:20px;width:min(370px,90%);text-align:center;border:1px solid #ffffff33;box-shadow:0 20px 60px #001a}
-.box h2{margin:0 0 8px;font-size:26px}.box p{color:#d8edf2}
-.box input{width:100%;padding:13px;border-radius:10px;border:1px solid #ffffff25;margin:12px 0;background:#071923;color:white;outline:0}
-.box button{padding:12px 25px;border:0;border-radius:10px;background:#159fd0;color:#fff;font-weight:bold;cursor:pointer}
-.box button:disabled{opacity:.5;cursor:not-allowed}
-
-@media(max-width:700px){
- #top{padding:0 10px;height:54px}#top b{font-size:17px}.pill{padding:6px 9px;font-size:12px}
- #world{height:calc(100vh - 54px)}
- #chat{width:calc(100vw - 28px);right:14px;bottom:14px}
- #messages{height:140px}
- #hint{left:10px;bottom:175px;font-size:11px}
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini RooMi V2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+        body {
+            overflow: hidden;
+            height: 100vh;
+        }
+        /* 顶部导航栏 */
+        .top-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 48px;
+            background-color: rgba(0,0,0,0.55);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            padding: 0 16px;
+            gap:12px;
+            z-index:10;
+        }
+        .title {
+            font-size:18px;
+            font-weight:bold;
+        }
+        .online-tag {
+            background:#288b44;
+            padding:4px 10px;
+            border-radius:12px;
+            font-size:13px;
+        }
+        .room-tag {
+            background:#205799;
+            padding:4px 10px;
+            border-radius:12px;
+            font-size:13px;
+        }
+        /* 主背景画布 */
+        .bg-container {
+            width:100vw;
+            height:100vh;
+            background-image: url('https://i.imgur.com/6sNQ2VY.png');
+            background-size: cover;
+            background-position: center;
+            position:relative;
+        }
+        /* 中间大标题 */
+        .main-title{
+            position:absolute;
+            top:10%;
+            left:50%;
+            transform:translateX(-50%);
+            text-align:center;
+        }
+        .welcome-text{
+            font-size:32px;
+            color:white;
+            text-shadow: 2px 2px 4px #000;
+        }
+        .space-text{
+            font-size:72px;
+            font-weight:bold;
+            background: linear-gradient(180deg,#ffd02b,#40b8ff);
+            -webkit-background-clip:text;
+            color:transparent;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+        }
+        /* 右下角聊天面板 */
+        .chat-panel{
+            position:absolute;
+            bottom:40px;
+            right:30px;
+            width:280px;
+            background:rgba(0,0,0,0.65);
+            border-radius:8px;
+            overflow:hidden;
+            color:#fff;
+        }
+        .chat-content{
+            min-height:120px;
+            padding:10px;
+            font-size:14px;
+        }
+        .system-msg{
+            color:#ffdd44;
+        }
+        .chat-input-area{
+            display:flex;
+        }
+        .chat-input{
+            flex:1;
+            padding:8px 10px;
+            border:none;
+            outline:none;
+            background:rgba(255,255,255,0.2);
+            color:#fff;
+        }
+        .chat-input::placeholder{
+            color:#cccccc;
+        }
+        .send-btn{
+            background:#3478f6;
+            color:white;
+            border:none;
+            padding:0 14px;
+            cursor:pointer;
+        }
+        /* 底部提示文字 */
+        .bottom-hint{
+            position:absolute;
+            bottom:10px;
+            left:10px;
+            color:#fff;
+            font-size:13px;
+            background:rgba(0,0,0,0.45);
+            padding:4px 8px;
+            border-radius:4px;
+        }
+    </style>
 </head>
 <body>
-<div id="top">
- <b>🌴 Mini RooMi V2</b>
- <span class="pill online" id="count">在线：0/10</span>
- <span class="pill">十人房</span>
-</div>
+    <!--顶部栏-->
+    <div class="top-bar">
+        <div class="title">Mini RooMi V2</div>
+        <div class="online-tag">在线：1/10</div>
+        <div class="room-tag">十人房</div>
+    </div>
 
-<div id="world">
- <div id="map"></div>
- <div id="toast"></div>
+    <!--背景主体-->
+    <div class="bg-container">
+        <!--大标题-->
+        <div class="main-title">
+            <div class="welcome-text">欢迎来到<br></div>
+            <div class="space-text">shako的平行空间</div>
+        </div>
 
- <div id="hint">WASD / 方向键移动　·　最多十个人打开同一个网址即可见面</div>
+        <!--聊天框-->
+        <div class="chat-panel">
+            <div class="chat-content">
+                <div class="system-msg">系统：欢迎 shako!</div>
+            </div>
+            <div class="chat-input-area">
+                <input class="chat-input" placeholder="说点什么…">
+                <button class="send-btn">发送</button>
+            </div>
+        </div>
 
- <div id="chat">
-  <div id="chatTitle">💬 shako的平行空间 · 聊天室</div>
-  <div id="messages"></div>
-  <div id="send">
-   <input id="input" maxlength="200" placeholder="说点什么…">
-   <button id="btn">发送</button>
-  </div>
- </div>
+        <!--底部操作提示-->
+        <div class="bottom-hint">
+            WASD /方向键移动 · 最多十个人打开同一个网址即可见面
+        </div>
+    </div>
 
- <div id="modal">
-  <div class="box">
-   <h2>🌴 shako的平行空间</h2>
-   <p>欢迎来到海滩大厅<br>给自己取一个昵称</p>
-   <input id="nick" maxlength="12" placeholder="例如：小明">
-   <button id="join">进入海滩</button>
-  </div>
- </div>
-</div>
+    <script>
+        //简单聊天发送示例
+        const input = document.querySelector('.chat-input');
+        const sendBtn = document.querySelector('.send-btn');
+        const chatBox = document.querySelector('.chat-content');
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-const socket=io();
-let myId=null, me={x:50,y:55}, speed=1.2;
-
-const modal=document.getElementById('modal');
-const nick=document.getElementById('nick');
-const world=document.getElementById('world');
-const messages=document.getElementById('messages');
-const input=document.getElementById('input');
-
-function esc(s){
- return String(s).replace(/[&<>"']/g,c=>({
-  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
- }[c]));
-}
-
-function msg(name,text){
- const d=document.createElement('div');
- d.className='msg';
- d.innerHTML='<b>'+esc(name)+'：</b>'+esc(text);
- messages.appendChild(d);
- messages.scrollTop=messages.scrollHeight;
-}
-
-document.getElementById('join').onclick=()=>{
- const n=nick.value.trim()||'玩家';
- socket.emit('setName',n);
- modal.style.display='none';
- msg('系统','🏝️ 欢迎 '+n+' 来到 shako 的平行空间！');
-};
-
-nick.addEventListener('keydown',e=>{
- if(e.key==='Enter') document.getElementById('join').click();
-});
-
-document.getElementById('btn').onclick=send;
-
-input.addEventListener('keydown',e=>{
- if(e.key==='Enter') send();
-});
-
-function send(){
- const text=input.value.trim();
- if(text){
-  socket.emit('chat',text);
-  input.value='';
- }
-}
-
-socket.on('init',d=>{
- myId=d.you.id;
- me=d.you;
-});
-
-socket.on('full',()=>{
- modal.querySelector('p').textContent='房间已经满员，目前最多 10 人。';
- document.getElementById('join').disabled=true;
- modal.style.display='flex';
-});
-
-socket.on('chat',d=>msg(d.name,d.text));
-
-socket.on('players',ps=>{
- document.getElementById('count').textContent='在线：'+ps.length+'/10';
-
- document.querySelectorAll('.player').forEach(e=>e.remove());
-
- ps.forEach(p=>{
-  const el=document.createElement('div');
-  el.className='player'+(p.id===myId?' me':'');
-  el.style.left=p.x+'%';
-  el.style.top=p.y+'%';
-
-  el.innerHTML=
-   '<div class="avatar" style="background:'+
-   (p.id===myId?'#ffd2a8':'#f4b6d2')+
-   '"></div>'+
-   '<div class="name">'+esc(p.name)+
-   (p.id===myId?'（你）':'')+
-   '</div>';
-
-  world.appendChild(el);
- });
-});
-
-document.addEventListener('keydown',e=>{
- if(document.activeElement===input || document.activeElement===nick) return;
-
- let dx=0,dy=0;
-
- if(['ArrowUp','w','W'].includes(e.key)) dy=-speed;
- if(['ArrowDown','s','S'].includes(e.key)) dy=speed;
- if(['ArrowLeft','a','A'].includes(e.key)) dx=-speed;
- if(['ArrowRight','d','D'].includes(e.key)) dx=speed;
-
- if(dx||dy){
-  e.preventDefault();
-  me.x=Math.max(5,Math.min(95,me.x+dx));
-  me.y=Math.max(8,Math.min(92,me.y+dy));
-  socket.emit('move',{x:me.x,y:me.y});
- }
-});
-</script>
+        function sendChat(){
+            const val = input.value.trim();
+            if(!val) return;
+            const div = document.createElement('div');
+            div.innerText = val;
+            chatBox.appendChild(div);
+            input.value = '';
+        }
+        sendBtn.onclick = sendChat;
+        input.onkeydown = (e)=>{
+            if(e.key === 'Enter') sendChat();
+        }
+    </script>
 </body>
 </html>
