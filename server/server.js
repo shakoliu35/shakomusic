@@ -8,23 +8,43 @@ const io=new Server(server);
 app.use(express.static(path.join(__dirname,"../public")));
 
 const players=new Map();
-
+const ROOM_PASSWORD=process.env.ROOM_PASSWORD;
 io.on("connection",socket=>{
-  if(players.size>=10){
-    socket.emit("full");
-    socket.disconnect(true);
-    return;
-  }
-  const spawns=[
-    {x:50,y:55},{x:62,y:47},{x:38,y:47},{x:50,y:35},
-    {x:25,y:60},{x:75,y:60},{x:25,y:35},{x:75,y:35},
-    {x:40,y:75},{x:60,y:75}
-  ];
-  const spawn=spawns[players.size] || {x:50,y:55};
-  players.set(socket.id,{id:socket.id,name:"玩家"+(players.size+1),x:spawn.x,y:spawn.y});
-  socket.emit("init",{you:players.get(socket.id),players:[...players.values()]});
-  io.emit("players",[...players.values()]);
+ socket.on("auth",password=>{
 
+    if(password!==ROOM_PASSWORD){
+      socket.emit("authError");
+      return;
+    }
+
+    if(players.size>=10){
+      socket.emit("full");
+      return;
+    }
+
+    const spawns=[
+      {x:50,y:55},{x:62,y:47},{x:38,y:47},{x:50,y:35},
+      {x:25,y:60},{x:75,y:60},{x:25,y:35},{x:75,y:35},
+      {x:40,y:75},{x:60,y:75}
+    ];
+
+    const spawn=spawns[players.size] || {x:50,y:55};
+
+    players.set(socket.id,{
+      id:socket.id,
+      name:"玩家"+(players.size+1),
+      x:spawn.x,
+      y:spawn.y
+    });
+
+    socket.emit("init",{
+      you:players.get(socket.id),
+      players:[...players.values()]
+    });
+
+    io.emit("players",[...players.values()]);
+
+  });
   socket.on("setName",name=>{
     const p=players.get(socket.id);
     if(!p)return;
