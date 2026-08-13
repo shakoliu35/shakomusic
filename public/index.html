@@ -7,7 +7,7 @@
 
 <style>
 *{
-  box-sizing:border-box;
+  box-sizing:border-box
 }
 
 html,body{
@@ -17,14 +17,14 @@ html,body{
   overflow:hidden;
   font-family:Arial,"Microsoft YaHei",sans-serif;
   background:#000;
-  color:#fff;
+  color:#fff
 }
 
 #world{
   position:relative;
   width:100%;
   height:100vh;
-  overflow:hidden;
+  overflow:hidden
 }
 
 #map{
@@ -33,12 +33,12 @@ html,body{
   background-image:url("beach-sunset.jpg");
   background-size:cover;
   background-position:center;
-  background-repeat:no-repeat;
+  background-repeat:no-repeat
 }
 
 /* =========================
    顶部
-========================= */
+   ========================= */
 
 #top{
   position:absolute;
@@ -47,12 +47,12 @@ html,body{
   display:flex;
   align-items:center;
   gap:10px;
-  z-index:30;
+  z-index:30
 }
 
 #top b{
   font-size:20px;
-  text-shadow:0 2px 3px #000;
+  text-shadow:0 2px 3px #000
 }
 
 .pill{
@@ -60,128 +60,105 @@ html,body{
   padding:7px 12px;
   border-radius:20px;
   font-size:13px;
-  border:1px solid #ffffff22;
+  border:1px solid #ffffff22
 }
 
 .pill.online{
-  background:#167a6dcc;
+  background:#167a6dcc
 }
 
 
 /* =========================
-   玩家
-========================= */
+   人物
+   ========================= */
 
 .player{
   position:absolute;
-  width:100px;
-  height:145px;
-
+  width:78px;
+  height:96px;
   transform:translate(-50%,-80%);
-
+  transition:left .08s,top .08s;
   cursor:pointer;
   z-index:20;
   text-align:center;
-
-  filter:drop-shadow(0 4px 3px #0005);
-
-  user-select:none;
-  -webkit-user-select:none;
-
-  touch-action:manipulation;
+  filter:drop-shadow(0 4px 3px #0005)
 }
 
 .playerImg{
-  width:82px;
-  height:82px;
-
+  width:68px;
+  height:68px;
   object-fit:contain;
-
   display:block;
-
-  margin:0 auto;
-
-  transition:transform .15s ease;
-}
-
-.player:hover .playerImg{
-  transform:scale(1.04);
+  margin:0 auto
 }
 
 .name{
-  margin-top:4px;
-
+  margin-top:2px;
   text-align:center;
-
   background:#27333bd9;
-
   border:1px solid #ffffff33;
-
   border-radius:10px;
-
-  padding:4px 8px;
-
-  font-size:13px;
-
+  padding:3px 6px;
+  font-size:11px;
   white-space:nowrap;
-
-  text-shadow:0 1px 1px #000;
+  text-shadow:0 1px 1px #000
 }
 
 .me .name{
   background:#5a4721e8;
-
-  box-shadow:
-    0 0 0 1px #ffd35c66;
+  box-shadow:0 0 0 1px #ffd35c66
 }
 
 
 /* =========================
-   人物头顶说话文字
-========================= */
+   头顶聊天文字
+   ========================= */
 
 .speech{
   position:absolute;
 
+  /*
+    这次再往上提高一点
+  */
+  bottom:82px;
+
   left:50%;
-
-  bottom:112px;
-
   transform:translateX(-50%);
 
+  /*
+    文字不允许因为人物宽度变成竖排
+  */
   width:max-content;
-
   max-width:none;
-
-  white-space:nowrap;
 
   color:#fff;
 
-  font-size:17px;
+  /*
+    字体再小一点
+  */
+  font-size:20px;
 
-  font-weight:bold;
+  font-weight:600;
 
   line-height:1.35;
 
   text-align:center;
 
-  background:transparent;
-
-  border:0;
-
-  padding:0;
-
-  margin:0;
+  white-space:nowrap;
 
   pointer-events:none;
 
-  z-index:25;
+  z-index:60;
 
+  /*
+    只要很轻的阴影，
+    不要黑色描边
+  */
   text-shadow:
     0 2px 4px rgba(0,0,0,.75),
-    0 0 2px rgba(0,0,0,.65);
+    0 0 2px rgba(0,0,0,.55);
 
-  animation:speechIn .18s ease-out;
+  animation:speechIn .15s ease-out
 }
 
 @keyframes speechIn{
@@ -190,63 +167,124 @@ html,body{
     opacity:0;
     transform:
       translateX(-50%)
-      translateY(6px);
+      translateY(6px)
   }
 
   to{
     opacity:1;
     transform:
       translateX(-50%)
-      translateY(0);
+      translateY(0)
   }
 
 }
 
 
 /* =========================
-   互动表情
-   点击人物头像后出现
-========================= */
+   头顶互动表情
+   ========================= */
+
+.reaction{
+  position:absolute;
+
+  /*
+    表情也放到头顶，
+    比文字稍微低一点
+  */
+  bottom:82px;
+
+  left:50%;
+
+  transform:
+    translateX(-50%)
+    translateY(-28px);
+
+  font-size:25px;
+
+  line-height:1;
+
+  z-index:65;
+
+  pointer-events:none;
+
+  filter:
+    drop-shadow(0 2px 3px rgba(0,0,0,.55));
+
+  animation:reactionPop .25s ease-out
+}
+
+@keyframes reactionPop{
+
+  0%{
+    opacity:0;
+    transform:
+      translateX(-50%)
+      translateY(-10px)
+      scale(.5)
+  }
+
+  60%{
+    transform:
+      translateX(-50%)
+      translateY(-34px)
+      scale(1.08)
+  }
+
+  100%{
+    opacity:1;
+    transform:
+      translateX(-50%)
+      translateY(-28px)
+      scale(1)
+  }
+
+}
+
+
+/* =========================
+   人物表情选择菜单
+   点击人物才出现
+   ========================= */
 
 .reactionMenu{
   position:absolute;
 
   left:50%;
-
-  bottom:105px;
+  bottom:78px;
 
   transform:translateX(-50%);
 
   display:flex;
+  gap:5px;
 
-  gap:6px;
+  padding:7px 8px;
 
-  padding:7px 9px;
+  background:#132330ee;
 
-  background:#10202deF;
-
-  border:1px solid #ffffff35;
+  border:1px solid #ffffff2c;
 
   border-radius:14px;
 
   box-shadow:
-    0 8px 25px #0008;
+    0 8px 25px rgba(0,0,0,.45);
+
+  backdrop-filter:blur(8px);
 
   z-index:100;
 
   white-space:nowrap;
 
-  animation:reactionMenuIn .15s ease-out;
+  animation:menuIn .15s ease-out
 }
 
-@keyframes reactionMenuIn{
+@keyframes menuIn{
 
   from{
     opacity:0;
     transform:
       translateX(-50%)
       translateY(6px)
-      scale(.95);
+      scale(.95)
   }
 
   to{
@@ -254,150 +292,68 @@ html,body{
     transform:
       translateX(-50%)
       translateY(0)
-      scale(1);
+      scale(1)
   }
 
 }
 
-.reactionButton{
-  width:40px;
-  height:40px;
-
-  padding:0;
+.reactionBtn{
+  width:38px;
+  height:38px;
 
   border:0;
 
   border-radius:10px;
 
-  background:#ffffff10;
+  background:#ffffff0d;
 
-  color:#fff;
-
-  font-size:23px;
+  font-size:21px;
 
   cursor:pointer;
 
   display:flex;
-
   align-items:center;
-
   justify-content:center;
 
   transition:
-    transform .12s ease,
-    background .12s ease;
+    transform .12s,
+    background .12s
 }
 
-.reactionButton:hover{
-  background:#ffffff20;
+.reactionBtn:hover{
   transform:scale(1.12);
+  background:#ffffff1c
 }
 
-.reactionButton:active{
-  transform:scale(.92);
-}
-
-
-/* =========================
-   人物头顶互动表情
-========================= */
-
-.playerReaction{
-  position:absolute;
-
-  left:50%;
-
-  bottom:115px;
-
-  transform:
-    translateX(-50%)
-    scale(.7);
-
-  font-size:42px;
-
-  line-height:1;
-
-  pointer-events:none;
-
-  z-index:28;
-
-  filter:
-    drop-shadow(0 3px 4px #0008);
-
-  animation:
-    reactionFloat 1.2s ease-out forwards;
-}
-
-@keyframes reactionFloat{
-
-  0%{
-    opacity:0;
-    transform:
-      translateX(-50%)
-      translateY(10px)
-      scale(.6);
-  }
-
-  15%{
-    opacity:1;
-    transform:
-      translateX(-50%)
-      translateY(0)
-      scale(1);
-  }
-
-  70%{
-    opacity:1;
-    transform:
-      translateX(-50%)
-      translateY(-12px)
-      scale(1);
-  }
-
-  100%{
-    opacity:0;
-    transform:
-      translateX(-50%)
-      translateY(-28px)
-      scale(.9);
-  }
-
+.reactionBtn:active{
+  transform:scale(.92)
 }
 
 
 /* =========================
-   左下提示
-========================= */
+   提示
+   ========================= */
 
 #hint{
   position:absolute;
-
   left:18px;
   bottom:18px;
-
   background:#15232ee8;
-
   border:1px solid #ffffff22;
-
   padding:10px 14px;
-
   border-radius:12px;
-
   font-size:12px;
-
   z-index:30;
-
-  box-shadow:0 5px 18px #0025;
+  box-shadow:0 5px 18px #0025
 }
 
 
 /* =========================
    聊天室
-========================= */
+   ========================= */
 
 #chat{
   position:absolute;
-
   right:18px;
   bottom:18px;
 
@@ -415,113 +371,84 @@ html,body{
 
   z-index:30;
 
-  backdrop-filter:blur(5px);
+  backdrop-filter:blur(5px)
 }
 
 #chatTitle{
   padding:9px 12px;
-
   background:#0b1b28aa;
-
   font-weight:bold;
-
   font-size:13px;
-
   border-bottom:1px solid #ffffff18;
-
   cursor:move;
-
-  user-select:none;
+  user-select:none
 }
 
 #messages{
   height:210px;
-
   overflow:auto;
-
   padding:12px;
-
-  font-size:13px;
+  font-size:13px
 }
 
 .msg{
   margin:7px 0;
-
-  line-height:1.4;
-
-  word-break:break-word;
+  line-height:1.4
 }
 
 .msg b{
-  color:#ffd66b;
+  color:#ffd66b
 }
 
 #send{
   display:flex;
-
-  border-top:1px solid #ffffff25;
+  border-top:1px solid #ffffff25
 }
 
 #input{
   flex:1;
-
   background:#0b1620;
-
   border:0;
-
   color:#fff;
-
   padding:13px;
-
-  outline:0;
-
-  min-width:0;
+  outline:0
 }
 
 #btn{
   border:0;
-
   background:#3888ed;
-
   color:#fff;
-
   padding:0 18px;
-
   font-size:14px;
-
-  cursor:pointer;
+  cursor:pointer
 }
 
 
 /* =========================
    登录
-========================= */
+   ========================= */
 
 #modal{
   position:absolute;
-
   inset:0;
-
   background:#04233566;
 
   display:flex;
 
   align-items:center;
-
   justify-content:center;
 
   z-index:50;
 
-  backdrop-filter:blur(3px);
+  backdrop-filter:blur(3px)
 }
 
 .box{
-  background:
-    linear-gradient(
-      145deg,
-      #16394dcc,
-      #102737ee
-    );
+  background:linear-gradient(
+    145deg,
+    #16394dcc,
+    #102737ee
+  );
 
   padding:28px;
 
@@ -533,153 +460,111 @@ html,body{
 
   border-radius:20px;
 
-  box-shadow:0 20px 60px #001a;
+  box-shadow:0 20px 60px #001a
 }
 
 .box h2{
   margin:0 0 8px;
-
-  font-size:26px;
+  font-size:26px
 }
 
 .box p{
   color:#d8edf2;
-
   line-height:1.6;
-
-  margin-bottom:15px;
+  margin-bottom:15px
 }
 
 .genderTitle{
   font-size:13px;
-
   color:#cfe8ee;
-
-  margin-bottom:9px;
+  margin-bottom:9px
 }
 
 .genderRow{
   display:flex;
-
   justify-content:center;
-
   gap:18px;
-
-  margin-bottom:15px;
+  margin-bottom:15px
 }
 
 .genderOption{
   width:145px;
-
   padding:10px 8px;
-
   border:2px solid #ffffff22;
-
   border-radius:15px;
-
   background:#071923aa;
-
   cursor:pointer;
-
-  transition:.15s;
+  transition:.15s
 }
 
 .genderOption:hover{
   transform:translateY(-2px);
-
-  border-color:#ffffff55;
+  border-color:#ffffff55
 }
 
 .genderOption.selected{
   border-color:#42d6ff;
-
   background:#0d4660cc;
-
-  box-shadow:0 0 18px #42d6ff44;
+  box-shadow:0 0 18px #42d6ff44
 }
 
 .genderOption img{
   width:82px;
-
   height:82px;
-
   object-fit:contain;
-
   display:block;
-
-  margin:auto;
+  margin:auto
 }
 
 .genderOption div{
   margin-top:5px;
-
   font-weight:bold;
-
-  font-size:13px;
+  font-size:13px
 }
 
 .box input{
   width:100%;
-
   padding:13px;
-
   border-radius:10px;
-
   border:1px solid #ffffff25;
-
   margin:7px 0;
-
   background:#071923;
-
   color:white;
-
   outline:0;
-
-  display:block;
+  display:block
 }
 
 .box input:focus{
-  border-color:#159fd0;
+  border-color:#159fd0
 }
 
 .box button{
   padding:12px 25px;
-
   border:0;
-
   border-radius:10px;
-
   background:#159fd0;
-
   color:#fff;
-
   font-weight:bold;
-
   cursor:pointer;
-
-  margin-top:7px;
+  margin-top:7px
 }
 
 .box button:disabled{
   opacity:.5;
-
-  cursor:not-allowed;
+  cursor:not-allowed
 }
 
 #error{
   min-height:20px;
-
   margin:4px 0 0;
-
   color:#ff8f8f;
-
-  font-size:12px;
+  font-size:12px
 }
 
 
 /* =========================
-   房主控制
-========================= */
+   房主控制面板
+   ========================= */
 
 #hostPanel{
   display:none;
@@ -687,7 +572,6 @@ html,body{
   position:absolute;
 
   top:70px;
-
   right:18px;
 
   width:240px;
@@ -708,206 +592,192 @@ html,body{
 
   box-shadow:0 12px 35px #0007;
 
-  backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px)
 }
 
 #hostPanel.show{
-  display:block;
+  display:block
 }
 
 .hostTitle{
   color:#ffd75c;
-
   font-weight:bold;
-
   font-size:15px;
-
-  margin-bottom:10px;
+  margin-bottom:10px
 }
 
 .hostSub{
   color:#bcd0d8;
-
   font-size:12px;
-
-  margin-bottom:8px;
+  margin-bottom:8px
 }
 
 .hostPlayer{
   display:flex;
-
   align-items:center;
-
   justify-content:space-between;
-
   gap:7px;
-
   padding:7px;
-
   margin:5px 0;
-
   background:#ffffff0d;
-
   border-radius:8px;
-
-  font-size:12px;
+  font-size:12px
 }
 
 .hostPlayerName{
   overflow:hidden;
-
   text-overflow:ellipsis;
-
-  white-space:nowrap;
+  white-space:nowrap
 }
 
 .hostKick{
   border:0;
-
   border-radius:6px;
-
   padding:4px 8px;
-
   background:#a83b3b;
-
   color:#fff;
-
   cursor:pointer;
-
   font-size:11px;
-
-  flex:none;
+  flex:none
 }
 
 .hostAction{
   width:100%;
-
   margin-top:10px;
-
   padding:9px;
-
   border:0;
-
   border-radius:9px;
-
   color:#fff;
-
   cursor:pointer;
-
-  font-weight:bold;
+  font-weight:bold
 }
 
 #closeRoomBtn{
-  background:#a83b3b;
+  background:#a83b3b
 }
 
 #openRoomBtn{
   display:none;
-
-  background:#278c68;
+  background:#278c68
 }
 
 #roomStatus{
   margin-top:8px;
-
   color:#ffb0b0;
-
   font-size:11px;
-
-  line-height:1.4;
+  line-height:1.4
 }
 
 
 /* =========================
    手机端
-========================= */
+   ========================= */
 
 @media(max-width:700px){
 
   #top{
     left:10px;
-    top:10px;
+    top:10px
   }
 
   #top b{
-    font-size:16px;
+    font-size:16px
   }
 
   .pill{
     padding:6px 9px;
-
-    font-size:12px;
+    font-size:12px
   }
 
   #chat{
     width:calc(100vw - 28px);
-
     right:14px;
-
     bottom:85px;
-
-    transition:bottom .2s ease;
+    transition:bottom .2s ease
   }
 
   #messages{
-    height:140px;
+    height:140px
   }
 
   #hint{
     left:10px;
-
     bottom:175px;
-
-    font-size:11px;
+    font-size:11px
   }
 
   .genderOption{
     width:42vw;
-
-    max-width:145px;
+    max-width:145px
   }
 
   #input{
     font-size:16px;
-
-    min-height:48px;
+    min-height:48px
   }
 
   #btn{
-    min-width:68px;
+    min-width:68px
   }
 
   #hostPanel{
     top:58px;
-
     right:10px;
-
     width:220px;
-
-    max-height:65vh;
+    max-height:65vh
   }
+
+
+  /*
+    手机头顶文字再小一点
+  */
 
   .speech{
-    font-size:15px;
-
-    bottom:112px;
+    font-size:17px;
+    bottom:84px;
   }
 
+
+  /*
+    手机互动表情
+  */
+
+  .reaction{
+    font-size:22px;
+    bottom:84px;
+    transform:
+      translateX(-50%)
+      translateY(-25px)
+  }
+
+
   .reactionMenu{
-    bottom:106px;
+    bottom:78px;
+    padding:6px 7px;
+    gap:3px
+  }
+
+  .reactionBtn{
+    width:34px;
+    height:34px;
+    font-size:19px
   }
 
 }
 
 
 /* =========================
-   手机点击人物时
+   超小屏
    ========================= */
 
-@media(max-width:700px){
+@media(max-width:400px){
 
-  .player{
-    touch-action:manipulation;
+  .speech{
+    font-size:16px;
+  }
+
+  .reaction{
+    font-size:21px;
   }
 
 }
@@ -942,37 +812,37 @@ html,body{
 
 <!-- =========================
      房主控制面板
-========================= -->
+     ========================= -->
 
 <div id="hostPanel">
 
-<div class="hostTitle">
-👑 房主控制
-</div>
+  <div class="hostTitle">
+    👑 房主控制
+  </div>
 
-<div class="hostSub">
-在线玩家
-</div>
+  <div class="hostSub">
+    在线玩家
+  </div>
 
-<div id="hostPlayers"></div>
+  <div id="hostPlayers"></div>
 
-<button
-  id="closeRoomBtn"
-  class="hostAction"
-  type="button"
->
-🔒 关闭房间
-</button>
+  <button
+    id="closeRoomBtn"
+    class="hostAction"
+    type="button"
+  >
+    🔒 关闭房间
+  </button>
 
-<button
-  id="openRoomBtn"
-  class="hostAction"
-  type="button"
->
-🔓 重新开放房间
-</button>
+  <button
+    id="openRoomBtn"
+    class="hostAction"
+    type="button"
+  >
+    🔓 重新开放房间
+  </button>
 
-<div id="roomStatus"></div>
+  <div id="roomStatus"></div>
 
 </div>
 
@@ -983,42 +853,37 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 
 <!-- =========================
-     聊天室
-========================= -->
+     聊天
+     ========================= -->
 
 <div id="chat">
 
-<div id="chatTitle">
-💬 shako的平行空间 · 聊天室
-</div>
+  <div id="chatTitle">
+    💬 shako的平行空间 · 聊天室
+  </div>
 
-<div id="messages"></div>
+  <div id="messages"></div>
 
-<!--
-  注意：
-  这里已经没有互动表情按钮了
--->
+  <div id="send">
 
-<div id="send">
+    <input
+      id="input"
+      maxlength="200"
+      placeholder="说点什么…"
+    >
 
-<input
-  id="input"
-  maxlength="200"
-  placeholder="说点什么…"
->
+    <button id="btn">
+      发送
+    </button>
 
-<button id="btn">
-发送
-</button>
-
-</div>
+  </div>
 
 </div>
 
 
 <!-- =========================
-     登录窗口
-========================= -->
+     登录
+     ========================= -->
 
 <div id="modal">
 
@@ -1036,6 +901,7 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <div class="genderTitle">
 选择你的角色
 </div>
+
 
 <div class="genderRow">
 
@@ -1133,14 +999,9 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 <script src="/socket.io/socket.io.js"></script>
 
-
 <script>
 "use strict";
 
-
-/* =========================
-   Socket
-========================= */
 
 let socket=null;
 
@@ -1214,12 +1075,26 @@ const openRoomBtn=
   document.getElementById("openRoomBtn");
 
 
-window.currentPlayers=[];
+/* =========================
+   表情
+   ========================= */
+
+const reactionList=[
+  "❤️",
+  "😂",
+  "👍",
+  "😮",
+  "😡",
+  "🎉"
+];
+
+
+let activeReactionMenu=null;
 
 
 /* =========================
-   HTML转义
-========================= */
+   基础
+   ========================= */
 
 function esc(s){
 
@@ -1238,10 +1113,6 @@ function esc(s){
 
 }
 
-
-/* =========================
-   聊天消息
-========================= */
 
 function msg(name,text){
 
@@ -1264,10 +1135,6 @@ function msg(name,text){
 }
 
 
-/* =========================
-   错误
-========================= */
-
 function setError(text){
 
   errorBox.textContent=
@@ -1278,7 +1145,7 @@ function setError(text){
 
 /* =========================
    性别
-========================= */
+   ========================= */
 
 function chooseGender(gender){
 
@@ -1300,23 +1167,19 @@ function chooseGender(gender){
 
 maleOption.addEventListener(
   "click",
-  ()=>{
-    chooseGender("male");
-  }
+  ()=>chooseGender("male")
 );
 
 
 femaleOption.addEventListener(
   "click",
-  ()=>{
-    chooseGender("female");
-  }
+  ()=>chooseGender("female")
 );
 
 
 /* =========================
    登录
-========================= */
+   ========================= */
 
 function startAuth(){
 
@@ -1423,8 +1286,8 @@ hostPassword.addEventListener(
 
 
 /* =========================
-   聊天发送
-========================= */
+   聊天
+   ========================= */
 
 input.addEventListener(
   "keydown",
@@ -1443,11 +1306,11 @@ input.addEventListener(
 
 
 document
-  .getElementById("btn")
-  .addEventListener(
-    "click",
-    send
-  );
+.getElementById("btn")
+.addEventListener(
+  "click",
+  send
+);
 
 
 function send(){
@@ -1456,6 +1319,7 @@ function send(){
     input.value.trim();
 
   if(!text)return;
+
 
   if(socket){
 
@@ -1472,8 +1336,205 @@ function send(){
 
 
 /* =========================
-   Socket事件
-========================= */
+   关闭表情菜单
+   ========================= */
+
+function closeReactionMenu(){
+
+  if(activeReactionMenu){
+
+    activeReactionMenu.remove();
+
+    activeReactionMenu=null;
+
+  }
+
+}
+
+
+document.addEventListener(
+  "click",
+  function(e){
+
+    if(
+      !e.target.closest(".reactionMenu") &&
+      !e.target.closest(".playerImg")
+    ){
+
+      closeReactionMenu();
+
+    }
+
+  }
+);
+
+
+/* =========================
+   创建表情菜单
+   ========================= */
+
+function createReactionMenu(playerEl,playerId){
+
+  closeReactionMenu();
+
+
+  const menu=
+    document.createElement("div");
+
+  menu.className=
+    "reactionMenu";
+
+
+  reactionList.forEach(
+    emoji=>{
+
+      const btn=
+        document.createElement("button");
+
+      btn.type=
+        "button";
+
+      btn.className=
+        "reactionBtn";
+
+      btn.textContent=
+        emoji;
+
+
+      btn.addEventListener(
+        "click",
+        function(e){
+
+          e.stopPropagation();
+
+          sendReaction(
+            playerId,
+            emoji
+          );
+
+          closeReactionMenu();
+
+        }
+      );
+
+
+      menu.appendChild(btn);
+
+    }
+  );
+
+
+  playerEl.appendChild(menu);
+
+  activeReactionMenu=
+    menu;
+
+}
+
+
+/* =========================
+   发送互动表情
+   ========================= */
+
+function sendReaction(
+  targetId,
+  emoji
+){
+
+  if(!socket)return;
+
+
+  /*
+    点击谁，就给谁发送表情。
+    同时服务器广播给所有玩家。
+  */
+
+  socket.emit(
+    "reaction",
+    {
+      targetId:targetId,
+      emoji:emoji
+    }
+  );
+
+}
+
+
+/* =========================
+   显示头顶表情
+   ========================= */
+
+function showReaction(
+  targetId,
+  emoji
+){
+
+  const player=
+    document.querySelector(
+      '.player[data-id="'+
+      CSS.escape(String(targetId))+
+      '"]'
+    );
+
+
+  if(!player)return;
+
+
+  const old=
+    player.querySelector(
+      ".reaction"
+    );
+
+
+  if(old){
+
+    old.remove();
+
+  }
+
+
+  const reaction=
+    document.createElement(
+      "div"
+    );
+
+  reaction.className=
+    "reaction";
+
+  reaction.textContent=
+    emoji;
+
+
+  player.appendChild(
+    reaction
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      if(
+        reaction &&
+        reaction.parentNode
+      ){
+
+        reaction.remove();
+
+      }
+
+    },
+    2200
+  );
+
+}
+
+
+/* =========================
+   Socket
+   ========================= */
+
+window.currentPlayers=[];
+
 
 if(socket){
 
@@ -1529,7 +1590,7 @@ socket.on(
 
 /* =========================
    房间关闭
-========================= */
+   ========================= */
 
 socket.on(
   "roomClosed",
@@ -1570,10 +1631,6 @@ socket.on(
 );
 
 
-/* =========================
-   房间重新开放
-========================= */
-
 socket.on(
   "roomOpened",
   ()=>{
@@ -1592,8 +1649,8 @@ socket.on(
 
 
 /* =========================
-   房间满
-========================= */
+   满员
+   ========================= */
 
 socket.on(
   "full",
@@ -1615,7 +1672,7 @@ socket.on(
 
 /* =========================
    初始化
-========================= */
+   ========================= */
 
 socket.on(
   "init",
@@ -1626,6 +1683,7 @@ socket.on(
 
     me=
       d.you;
+
 
     modal.style.display=
       "none";
@@ -1674,8 +1732,8 @@ socket.on(
 
 
 /* =========================
-   房主验证成功
-========================= */
+   房主认证
+   ========================= */
 
 socket.on(
   "hostAuthSuccess",
@@ -1740,8 +1798,8 @@ socket.on(
 
 
 /* =========================
-   被踢
-========================= */
+   踢人
+   ========================= */
 
 socket.on(
   "kicked",
@@ -1771,8 +1829,8 @@ socket.on(
 
 
 /* =========================
-   关闭房间成功
-========================= */
+   关闭房间
+   ========================= */
 
 socket.on(
   "closeRoomSuccess",
@@ -1807,8 +1865,8 @@ socket.on(
 
 
 /* =========================
-   开放房间成功
-========================= */
+   开放房间
+   ========================= */
 
 socket.on(
   "openRoomSuccess",
@@ -1842,7 +1900,7 @@ socket.on(
 
 /* =========================
    聊天
-========================= */
+   ========================= */
 
 socket.on(
   "chat",
@@ -1853,14 +1911,33 @@ socket.on(
       d.text
     );
 
-    /*
-      收到别人发来的聊天以后，
-      同时在对应人物头顶显示文字
-    */
+  }
+);
 
-    showSpeech(
-      d.id,
-      d.text
+
+/* =========================
+   互动表情
+   ========================= */
+
+socket.on(
+  "reaction",
+  d=>{
+
+    if(!d)return;
+
+    if(
+      !d.targetId ||
+      !d.emoji
+    ){
+
+      return;
+
+    }
+
+
+    showReaction(
+      d.targetId,
+      d.emoji
     );
 
   }
@@ -1868,8 +1945,8 @@ socket.on(
 
 
 /* =========================
-   人物数据
-========================= */
+   玩家列表
+   ========================= */
 
 socket.on(
   "players",
@@ -1886,6 +1963,9 @@ socket.on(
     updateHostPlayers();
 
 
+    closeReactionMenu();
+
+
     document
       .querySelectorAll(".player")
       .forEach(
@@ -1896,504 +1976,102 @@ socket.on(
     ps.forEach(
       p=>{
 
-        createPlayer(p);
+        const el=
+          document.createElement("div");
 
-      }
-    );
 
-  }
-);
+        el.className=
+          "player"+
+          (p.id===myId?" me":"");
 
 
-/* =========================
-   互动表情
-========================= */
+        el.dataset.id=
+          p.id;
 
-/*
-  服务器收到 reaction 后，
-  广播给所有玩家。
 
-  这里兼容两种服务器写法：
+        el.style.left=
+          p.x+"%";
 
-  reaction
-  reactionShow
-*/
 
-socket.on(
-  "reaction",
-  d=>{
+        el.style.top=
+          p.y+"%";
 
-    if(!d)return;
 
-    showReaction(
-      d.id,
-      d.emoji
-    );
+        const gender=
+          p.gender==="female"
+          ?"female"
+          :"male";
 
-  }
-);
 
+        const img=
+          gender==="female"
+          ?"female.png"
+          :"male.png";
 
-socket.on(
-  "reactionShow",
-  d=>{
 
-    if(!d)return;
+        const hostMark=
+          p.isHost
+          ?" 👑"
+          :"";
 
-    showReaction(
-      d.id,
-      d.emoji
-    );
 
-  }
-);
+        el.innerHTML=
+          '<img class="playerImg" '+
+          'src="./'+
+          img+
+          '" alt="">'+
 
-}
+          '<div class="name">'+
+          esc(p.name)+
+          hostMark+
+          (p.id===myId?"（你）":"")+
+          "</div>";
 
 
-/* =========================
-   创建人物
-========================= */
+        /*
+          点击人物头像
+          才弹出互动表情
+        */
 
-function createPlayer(p){
-
-  const el=
-    document.createElement("div");
-
-
-  el.className=
-    "player"+
-    (p.id===myId?" me":"");
-
-
-  el.dataset.id=
-    p.id;
-
-
-  el.style.left=
-    p.x+"%";
-
-
-  el.style.top=
-    p.y+"%";
-
-
-  const gender=
-    p.gender==="female"
-    ?"female"
-    :"male";
-
-
-  const img=
-    gender==="female"
-    ?"female.png"
-    :"male.png";
-
-
-  const hostMark=
-    p.isHost
-    ?" 👑"
-    :"";
-
-
-  el.innerHTML=
-    '<img class="playerImg" '+
-    'src="./'+
-    img+
-    '" alt="">'+
-
-    '<div class="name">'+
-    esc(p.name)+
-    hostMark+
-    (p.id===myId?"（你）":"")+
-    "</div>";
-
-
-  /*
-    点击人物头像
-    打开表情选择
-  */
-
-  const playerImg=
-    el.querySelector(
-      ".playerImg"
-    );
-
-
-  playerImg.addEventListener(
-    "click",
-    function(e){
-
-      e.stopPropagation();
-
-      openReactionMenu(
-        el,
-        p.id
-      );
-
-    }
-  );
-
-
-  /*
-    手机端点击整个人物
-    也可以打开表情
-  */
-
-  el.addEventListener(
-    "click",
-    function(e){
-
-      if(
-        e.target===playerImg
-      ){
-
-        return;
-
-      }
-
-      openReactionMenu(
-        el,
-        p.id
-      );
-
-    }
-  );
-
-
-  world.appendChild(el);
-
-}
-
-
-/* =========================
-   打开表情选择
-========================= */
-
-function openReactionMenu(
-  playerEl,
-  playerId
-){
-
-  /*
-    删除其他人物的表情菜单
-  */
-
-  document
-    .querySelectorAll(".reactionMenu")
-    .forEach(
-      e=>e.remove()
-    );
-
-
-  /*
-    如果已经打开，
-    再点击一次就关闭
-  */
-
-  if(
-    playerEl.querySelector(
-      ".reactionMenu"
-    )
-  ){
-
-    return;
-
-  }
-
-
-  const menu=
-    document.createElement("div");
-
-
-  menu.className=
-    "reactionMenu";
-
-
-  const reactions=[
-    "❤️",
-    "😂",
-    "👍",
-    "😮",
-    "😡",
-    "🎉"
-  ];
-
-
-  reactions.forEach(
-    emoji=>{
-
-      const button=
-        document.createElement("button");
-
-
-      button.className=
-        "reactionButton";
-
-
-      button.type=
-        "button";
-
-
-      button.textContent=
-        emoji;
-
-
-      button.addEventListener(
-        "click",
-        function(e){
-
-          e.stopPropagation();
-
-
-          sendReaction(
-            playerId,
-            emoji
+        const avatar=
+          el.querySelector(
+            ".playerImg"
           );
 
 
-          menu.remove();
+        avatar.addEventListener(
+          "click",
+          function(e){
 
-        }
-      );
+            e.stopPropagation();
 
-
-      menu.appendChild(
-        button
-      );
-
-    }
-  );
-
-
-  playerEl.appendChild(
-    menu
-  );
-
-
-  /*
-    点击其他地方关闭
-  */
-
-  setTimeout(
-    ()=>{
-
-      document.addEventListener(
-        "click",
-        function closeMenu(e){
-
-          if(
-            !menu.contains(e.target)
-          ){
-
-            menu.remove();
-
-            document.removeEventListener(
-              "click",
-              closeMenu
+            createReactionMenu(
+              el,
+              p.id
             );
 
           }
-
-        }
-      );
-
-    },
-    0
-  );
-
-}
+        );
 
 
-/* =========================
-   发送互动表情
-========================= */
+        world.appendChild(
+          el
+        );
 
-function sendReaction(
-  playerId,
-  emoji
-){
-
-  /*
-    自己点击哪个人物，
-    表情就显示在哪个人物头顶。
-  */
-
-  if(socket){
-
-    socket.emit(
-      "reaction",
-      {
-        id:playerId,
-        emoji:emoji
       }
+
     );
 
   }
 
-  /*
-    如果服务器暂时没有广播，
-    自己也立即显示。
-  */
-
-  showReaction(
-    playerId,
-    emoji
-  );
-
-}
-
-
-/* =========================
-   显示互动表情
-========================= */
-
-function showReaction(
-  playerId,
-  emoji
-){
-
-  if(!emoji)return;
-
-
-  const player=
-    document.querySelector(
-      '.player[data-id="'+
-      CSS.escape(String(playerId))+
-      '"]'
-    );
-
-
-  if(!player)return;
-
-
-  /*
-    删除这个人物之前的表情
-  */
-
-  player
-    .querySelectorAll(
-      ".playerReaction"
-    )
-    .forEach(
-      e=>e.remove()
-    );
-
-
-  const reaction=
-    document.createElement(
-      "div"
-    );
-
-
-  reaction.className=
-    "playerReaction";
-
-
-  reaction.textContent=
-    emoji;
-
-
-  player.appendChild(
-    reaction
-  );
-
-
-  setTimeout(
-    ()=>{
-
-      reaction.remove();
-
-    },
-    1200
-  );
-
-}
-
-
-/* =========================
-   人物头顶文字
-========================= */
-
-const speechTimers={};
-
-
-function showSpeech(
-  playerId,
-  text
-){
-
-  if(!text)return;
-
-
-  const player=
-    document.querySelector(
-      '.player[data-id="'+
-      CSS.escape(String(playerId))+
-      '"]'
-    );
-
-
-  if(!player)return;
-
-
-  const old=
-    player.querySelector(
-      ".speech"
-    );
-
-
-  if(old){
-
-    old.remove();
-
-  }
-
-
-  const speech=
-    document.createElement(
-      "div"
-    );
-
-
-  speech.className=
-    "speech";
-
-
-  speech.textContent=
-    text;
-
-
-  player.appendChild(
-    speech
-  );
-
-
-  clearTimeout(
-    speechTimers[playerId]
-  );
-
-
-  speechTimers[playerId]=
-    setTimeout(
-      ()=>{
-
-        if(speech){
-
-          speech.remove();
-
-        }
-
-      },
-      4500
-    );
+);
 
 }
 
 
 /* =========================
    键盘移动
-========================= */
+   ========================= */
 
 document.addEventListener(
   "keydown",
@@ -2412,13 +2090,11 @@ document.addEventListener(
 
 
     let dx=0;
-
     let dy=0;
 
 
     if(
-      ["ArrowUp","w","W"]
-      .includes(e.key)
+      ["ArrowUp","w","W"].includes(e.key)
     ){
 
       dy=-speed;
@@ -2427,8 +2103,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowDown","s","S"]
-      .includes(e.key)
+      ["ArrowDown","s","S"].includes(e.key)
     ){
 
       dy=speed;
@@ -2437,8 +2112,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowLeft","a","A"]
-      .includes(e.key)
+      ["ArrowLeft","a","A"].includes(e.key)
     ){
 
       dx=-speed;
@@ -2447,8 +2121,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowRight","d","D"]
-      .includes(e.key)
+      ["ArrowRight","d","D"].includes(e.key)
     ){
 
       dx=speed;
@@ -2501,7 +2174,7 @@ document.addEventListener(
 
 /* =========================
    房主控制
-========================= */
+   ========================= */
 
 function showHostPanel(){
 
@@ -2688,6 +2361,10 @@ function setRoomButtons(closed){
 }
 
 
+/* =========================
+   房间按钮
+   ========================= */
+
 closeRoomBtn.addEventListener(
   "click",
   function(){
@@ -2769,7 +2446,7 @@ function openRoom(){
 
 /* =========================
    手机键盘适配
-========================= */
+   ========================= */
 
 (function(){
 
@@ -2855,7 +2532,6 @@ function openRoom(){
         100
       );
 
-
       setTimeout(
         adjustChat,
         400
@@ -2887,8 +2563,8 @@ function openRoom(){
 
 
 /* =========================
-   电脑端拖动聊天室
-========================= */
+   电脑端拖动聊天框
+   ========================= */
 
 const chat=
   document.getElementById(
@@ -2990,36 +2666,8 @@ document.addEventListener(
   }
 );
 
-
-/* =========================
-   点击空白处关闭表情
-========================= */
-
-world.addEventListener(
-  "click",
-  function(e){
-
-    if(
-      e.target.closest(".player")
-    ){
-
-      return;
-
-    }
-
-
-    document
-      .querySelectorAll(
-        ".reactionMenu"
-      )
-      .forEach(
-        menu=>menu.remove()
-      );
-
-  }
-);
-
 </script>
 
 </body>
 </html>
+```
