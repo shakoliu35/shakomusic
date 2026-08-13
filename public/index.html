@@ -1,142 +1,249 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
 <title>shako的平行空间</title>
 
 <style>
-*{box-sizing:border-box}
 
-html,body{
+*{
+  box-sizing:border-box
+}
+
+html,
+body{
+
   margin:0;
+
   width:100%;
   height:100%;
+
   overflow:hidden;
-  font-family:Arial,"Microsoft YaHei",sans-serif;
+
+  font-family:
+    Arial,
+    "Microsoft YaHei",
+    sans-serif;
+
   background:#000;
+
   color:#fff
+
 }
+
 
 #world{
+
   position:relative;
+
   width:100%;
   height:100vh;
+
   overflow:hidden
+
 }
+
 
 #map{
+
   position:absolute;
+
   inset:0;
-  background-image:url("beach-sunset.jpg");
+
+  background-image:
+    url("beach-sunset.jpg");
+
   background-size:cover;
+
   background-position:center;
+
   background-repeat:no-repeat
+
 }
 
-/* =========================
+
+/* ======================================================
    顶部
-   ========================= */
+   ====================================================== */
 
 #top{
+
   position:absolute;
+
   left:18px;
   top:18px;
+
   display:flex;
+
   align-items:center;
+
   gap:10px;
+
   z-index:30
+
 }
+
 
 #top b{
+
   font-size:20px;
-  text-shadow:0 2px 3px #000
+
+  text-shadow:
+    0 2px 3px #000
+
 }
+
 
 .pill{
+
   background:#254764dd;
+
   padding:7px 12px;
+
   border-radius:20px;
+
   font-size:13px;
-  border:1px solid #ffffff22
+
+  border:
+    1px solid #ffffff22
+
 }
+
 
 .pill.online{
+
   background:#167a6dcc
+
 }
 
-/* =========================
+
+/* ======================================================
    人物
-   ========================= */
+   ====================================================== */
 
 .player{
+
   position:absolute;
+
   width:90px;
+
   min-height:125px;
-  transform:translate(-50%,-80%);
-  transition:left .08s,top .08s;
+
+  transform:
+    translate(-50%,-80%);
+
+  transition:
+    left .08s,
+    top .08s;
+
   cursor:pointer;
+
   z-index:20;
+
   text-align:center;
-  filter:drop-shadow(0 4px 3px #0005);
+
+  filter:
+    drop-shadow(
+      0 4px 3px #0005
+    );
+
   user-select:none;
+
   -webkit-user-select:none
+
 }
+
 
 .playerImg{
+
   width:78px;
   height:78px;
+
   object-fit:contain;
+
   display:block;
+
   margin:0 auto
+
 }
 
-/* =========================
+
+/* ======================================================
    人物昵称
-   ========================= */
+   ====================================================== */
 
 .name{
+
   margin-top:2px;
+
   text-align:center;
+
   background:#27333bd9;
-  border:1px solid #ffffff33;
+
+  border:
+    1px solid #ffffff33;
+
   border-radius:10px;
+
   padding:3px 6px;
+
   font-size:11px;
+
   white-space:nowrap;
-  text-shadow:0 1px 1px #000
+
+  text-shadow:
+    0 1px 1px #000
+
 }
+
 
 .me .name{
+
   background:#5a4721e8;
-  box-shadow:0 0 0 1px #ffd35c66
+
+  box-shadow:
+    0 0 0 1px #ffd35c66
+
 }
 
-/* =========================
+
+/* ======================================================
    人物头顶聊天文字
-   ========================= */
+   ====================================================== */
 
 .speech{
+
   position:absolute;
+
   left:50%;
 
   /*
-    聊天文字距离人物头顶
-    这次再往上调一点
+    这个高度保持你现在满意的位置
   */
   bottom:118px;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
   /*
-    默认尽量保持一行
+    永远只允许一行
   */
   white-space:nowrap;
 
   /*
-    字体大小保持目前版本
+    默认字体
   */
-  font-size:15px;
+  font-size:14px;
+
+  font-weight:500;
 
   /*
     只要白色
@@ -148,61 +255,76 @@ html,body{
   */
   text-shadow:none;
 
+  /*
+    非常重要：
+    不允许因为父元素宽度而自动换行
+  */
+  width:max-content;
+
+  max-width:none;
+
+  overflow:visible;
+
   pointer-events:none;
 
   z-index:25;
 
-  animation:speechShow .18s ease-out;
+  line-height:1.2;
 
-  /*
-    防止太长撑出屏幕
-  */
-  max-width:80vw;
-  overflow:hidden;
-  text-overflow:ellipsis
+  animation:
+    speechShow .18s ease-out
+
 }
+
 
 /*
-  超长文字
+   删除原来的 .speech.long
+   现在不管多少字都不换行
 */
-.speech.long{
-  white-space:normal;
-  line-height:1.35;
-  max-width:260px;
-  text-align:center
-}
+
 
 @keyframes speechShow{
 
   from{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(6px)
+
   }
 
   to{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(0)
+
   }
 
 }
 
-/* =========================
+
+/* ======================================================
    互动表情
-   ========================= */
+   ====================================================== */
 
 .reaction{
+
   position:absolute;
+
   left:50%;
 
   bottom:154px;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
   font-size:30px;
+
   line-height:1;
 
   pointer-events:none;
@@ -214,454 +336,903 @@ html,body{
     1.5s
     ease-out
     forwards
+
 }
+
 
 @keyframes reactionFloat{
 
   0%{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(12px)
       scale(.7)
+
   }
 
+
   15%{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(0)
       scale(1)
+
   }
 
+
   70%{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(-12px)
       scale(1.05)
+
   }
 
+
   100%{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(-35px)
       scale(1.08)
+
   }
 
 }
 
-/* =========================
+
+/* ======================================================
    底部提示
-   ========================= */
+   ====================================================== */
 
 #hint{
+
   position:absolute;
+
   left:18px;
+
   bottom:18px;
+
   background:#15232ee8;
-  border:1px solid #ffffff22;
+
+  border:
+    1px solid #ffffff22;
+
   padding:10px 14px;
+
   border-radius:12px;
+
   font-size:12px;
+
   z-index:30;
-  box-shadow:0 5px 18px #0025
+
+  box-shadow:
+    0 5px 18px #0025
+
 }
 
-/* =========================
+
+/* ======================================================
    聊天框
-   ========================= */
+   ====================================================== */
 
 #chat{
+
   position:absolute;
+
   right:18px;
+
   bottom:18px;
-  width:min(350px,34vw);
+
+  width:
+    min(350px,34vw);
+
   background:#15232eea;
-  border:1px solid #ffffff35;
+
+  border:
+    1px solid #ffffff35;
+
   border-radius:16px;
+
   overflow:hidden;
-  box-shadow:0 12px 35px #0028;
+
+  box-shadow:
+    0 12px 35px #0028;
+
   z-index:30;
-  backdrop-filter:blur(5px)
+
+  backdrop-filter:
+    blur(5px)
+
 }
+
 
 #chatTitle{
+
   padding:9px 12px;
+
   background:#0b1b28aa;
+
   font-weight:bold;
+
   font-size:13px;
-  border-bottom:1px solid #ffffff18;
+
+  border-bottom:
+    1px solid #ffffff18;
+
   cursor:move;
+
   user-select:none
+
 }
+
 
 #messages{
+
   height:210px;
+
   overflow:auto;
+
   padding:12px;
+
   font-size:13px
+
 }
+
 
 .msg{
+
   margin:7px 0;
+
   line-height:1.4
+
 }
+
 
 .msg b{
+
   color:#ffd66b
+
 }
+
+
+/* ======================================================
+   互动表情按钮
+   ====================================================== */
+
+#reactionBar{
+
+  display:flex;
+
+  align-items:center;
+
+  justify-content:center;
+
+  gap:6px;
+
+  padding:7px 8px;
+
+  background:#0b1b28aa;
+
+  border-top:
+    1px solid #ffffff18;
+
+  border-bottom:
+    1px solid #ffffff18
+
+}
+
+
+.reactionBtn{
+
+  width:34px;
+
+  height:30px;
+
+  padding:0;
+
+  border:0;
+
+  border-radius:8px;
+
+  background:#ffffff0d;
+
+  color:#fff;
+
+  font-size:19px;
+
+  cursor:pointer;
+
+  transition:
+    transform .12s,
+    background .12s
+
+}
+
+
+.reactionBtn:hover{
+
+  background:#ffffff22;
+
+  transform:
+    translateY(-2px)
+
+}
+
+
+.reactionBtn:active{
+
+  transform:
+    scale(.88)
+
+}
+
+
+/* ======================================================
+   输入
+   ====================================================== */
 
 #send{
+
   display:flex;
-  border-top:1px solid #ffffff25
+
+  border-top:
+    1px solid #ffffff25
+
 }
+
 
 #input{
+
   flex:1;
+
   min-width:0;
+
   background:#0b1620;
+
   border:0;
+
   color:#fff;
+
   padding:13px;
+
   outline:0;
+
   -webkit-appearance:none;
+
   appearance:none;
+
   border-radius:0;
+
   touch-action:manipulation
+
 }
 
-#input:focus{
-  outline:none;
-  box-shadow:none
-}
 
 #btn{
+
   border:0;
+
   background:#3888ed;
+
   color:#fff;
-  padding:0 18px;
+
+  padding:
+    0 18px;
+
   font-size:14px;
-  cursor:pointer;
-  touch-action:manipulation
+
+  cursor:pointer
+
 }
 
-/* =========================
+
+/* ======================================================
    登录窗口
-   ========================= */
+   ====================================================== */
 
 #modal{
+
   position:absolute;
+
   inset:0;
+
   background:#04233566;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   z-index:50;
-  backdrop-filter:blur(3px)
+
+  backdrop-filter:
+    blur(3px)
+
 }
+
 
 .box{
-  background:linear-gradient(145deg,#16394dcc,#102737ee);
+
+  background:
+    linear-gradient(
+      145deg,
+      #16394dcc,
+      #102737ee
+    );
+
   padding:28px;
-  width:min(390px,92%);
+
+  width:
+    min(390px,92%);
+
   text-align:center;
-  border:1px solid #ffffff33;
+
+  border:
+    1px solid #ffffff33;
+
   border-radius:20px;
-  box-shadow:0 20px 60px #001a
+
+  box-shadow:
+    0 20px 60px #001a
+
 }
+
 
 .box h2{
-  margin:0 0 8px;
+
+  margin:
+    0 0 8px;
+
   font-size:26px
+
 }
+
 
 .box p{
+
   color:#d8edf2;
+
   line-height:1.6;
+
   margin-bottom:15px
+
 }
+
 
 .genderTitle{
+
   font-size:13px;
+
   color:#cfe8ee;
+
   margin-bottom:9px
+
 }
+
 
 .genderRow{
+
   display:flex;
+
   justify-content:center;
+
   gap:18px;
+
   margin-bottom:15px
+
 }
+
 
 .genderOption{
+
   width:145px;
+
   padding:10px 8px;
-  border:2px solid #ffffff22;
+
+  border:
+    2px solid #ffffff22;
+
   border-radius:15px;
+
   background:#071923aa;
+
   cursor:pointer;
-  transition:.15s;
-  touch-action:manipulation
+
+  transition:.15s
+
 }
+
 
 .genderOption:hover{
-  transform:translateY(-2px);
-  border-color:#ffffff55
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #ffffff55
+
 }
+
 
 .genderOption.selected{
+
   border-color:#42d6ff;
+
   background:#0d4660cc;
-  box-shadow:0 0 18px #42d6ff44
+
+  box-shadow:
+    0 0 18px #42d6ff44
+
 }
+
 
 .genderOption img{
+
   width:82px;
+
   height:82px;
+
   object-fit:contain;
+
   display:block;
+
   margin:auto
+
 }
+
 
 .genderOption div{
+
   margin-top:5px;
+
   font-weight:bold;
+
   font-size:13px
+
 }
+
 
 .box input{
+
   width:100%;
+
   padding:13px;
+
   border-radius:10px;
-  border:1px solid #ffffff25;
+
+  border:
+    1px solid #ffffff25;
+
   margin:7px 0;
+
   background:#071923;
+
   color:white;
+
   outline:0;
-  display:block;
-  font-size:16px;
-  -webkit-appearance:none;
-  appearance:none
+
+  display:block
+
 }
+
 
 .box input:focus{
+
   border-color:#159fd0
+
 }
+
 
 .box button{
-  padding:12px 25px;
+
+  padding:
+    12px 25px;
+
   border:0;
+
   border-radius:10px;
+
   background:#159fd0;
+
   color:#fff;
+
   font-weight:bold;
+
   cursor:pointer;
-  margin-top:7px;
-  touch-action:manipulation
+
+  margin-top:7px
+
 }
+
 
 .box button:disabled{
+
   opacity:.5;
+
   cursor:not-allowed
+
 }
+
 
 #error{
+
   min-height:20px;
-  margin:4px 0 0;
+
+  margin:
+    4px 0 0;
+
   color:#ff8f8f;
+
   font-size:12px
+
 }
 
-/* =========================
+
+/* ======================================================
    房主控制面板
-   ========================= */
+   ====================================================== */
 
 #hostPanel{
+
   display:none;
+
   position:absolute;
+
   top:70px;
+
   right:18px;
+
   width:240px;
+
   max-height:70vh;
+
   overflow:auto;
+
   z-index:40;
+
   background:#102737ee;
-  border:1px solid #ffd75c66;
+
+  border:
+    1px solid #ffd75c66;
+
   border-radius:14px;
+
   padding:14px;
-  box-shadow:0 12px 35px #0007;
-  backdrop-filter:blur(8px)
+
+  box-shadow:
+    0 12px 35px #0007;
+
+  backdrop-filter:
+    blur(8px)
+
 }
+
 
 #hostPanel.show{
+
   display:block
+
 }
+
 
 .hostTitle{
+
   color:#ffd75c;
+
   font-weight:bold;
+
   font-size:15px;
+
   margin-bottom:10px
+
 }
+
 
 .hostSub{
+
   color:#bcd0d8;
+
   font-size:12px;
+
   margin-bottom:8px
+
 }
+
 
 .hostPlayer{
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   gap:7px;
+
   padding:7px;
+
   margin:5px 0;
+
   background:#ffffff0d;
+
   border-radius:8px;
+
   font-size:12px
+
 }
+
 
 .hostPlayerName{
+
   overflow:hidden;
+
   text-overflow:ellipsis;
+
   white-space:nowrap
+
 }
+
 
 .hostKick{
+
   border:0;
+
   border-radius:6px;
+
   padding:4px 8px;
+
   background:#a83b3b;
+
   color:#fff;
+
   cursor:pointer;
+
   font-size:11px;
-  flex:none;
-  touch-action:manipulation
+
+  flex:none
+
 }
+
 
 .hostAction{
+
   width:100%;
+
   margin-top:10px;
+
   padding:9px;
+
   border:0;
+
   border-radius:9px;
+
   color:#fff;
+
   cursor:pointer;
-  font-weight:bold;
-  touch-action:manipulation
+
+  font-weight:bold
+
 }
+
 
 #closeRoomBtn{
+
   background:#a83b3b
+
 }
+
 
 #openRoomBtn{
+
   display:none;
+
   background:#278c68
+
 }
+
 
 #roomStatus{
+
   margin-top:8px;
+
   color:#ffb0b0;
+
   font-size:11px;
+
   line-height:1.4
+
 }
 
-/* =========================
+
+/* ======================================================
    手机端
-   ========================= */
+   ====================================================== */
 
 @media(max-width:700px){
 
   #top{
+
     left:10px;
+
     top:10px
+
   }
+
 
   #top b{
+
     font-size:16px
+
   }
+
 
   .pill{
+
     padding:6px 9px;
+
     font-size:12px
+
   }
+
 
   #chat{
-    width:calc(100vw - 28px);
+
+    width:
+      calc(100vw - 28px);
+
     right:14px;
+
     bottom:85px;
-    transition:bottom .2s ease
+
+    transition:
+      bottom .2s ease
+
   }
+
 
   #messages{
+
     height:140px
+
   }
+
 
   #hint{
+
     left:10px;
+
     bottom:175px;
+
     font-size:11px
+
   }
+
 
   .genderOption{
+
     width:42vw;
+
     max-width:145px
+
   }
+
 
   #input{
+
     font-size:16px;
+
     min-height:48px
+
   }
+
 
   #btn{
+
     min-width:68px;
+
     min-height:48px
+
   }
+
 
   #hostPanel{
+
     top:58px;
+
     right:10px;
+
     width:220px;
+
     max-height:65vh
+
   }
+
 
   /*
-    手机端头顶文字也再往上一点
+    手机端文字保持一行
   */
+
   .speech{
-    font-size:14px;
+
+    font-size:13px;
+
     bottom:115px;
-    max-width:78vw
+
+    width:max-content;
+
+    max-width:none;
+
+    white-space:nowrap
+
   }
 
-  .speech.long{
-    max-width:240px
-  }
 
   .reaction{
+
     bottom:150px;
+
     font-size:28px
+
+  }
+
+
+  #reactionBar{
+
+    gap:4px;
+
+    padding:6px
+
+  }
+
+
+  .reactionBtn{
+
+    width:32px;
+
+    height:30px;
+
+    font-size:18px
+
   }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div id="world">
+
 
 <div id="map"></div>
 
+
+<!-- ======================================================
+     顶部
+     ====================================================== -->
+
 <div id="top">
 
-<b>🌴 shako的平行空间</b>
+<b>
+🌴 shako的平行空间
+</b>
 
 <span
   class="pill online"
@@ -677,51 +1248,55 @@ html,body{
 </div>
 
 
-<!-- =========================
+<!-- ======================================================
      房主控制面板
-     ========================= -->
+     ====================================================== -->
 
 <div id="hostPanel">
 
-  <div class="hostTitle">
-    👑 房主控制
-  </div>
+<div class="hostTitle">
+👑 房主控制
+</div>
 
-  <div class="hostSub">
-    在线玩家
-  </div>
+<div class="hostSub">
+在线玩家
+</div>
 
-  <div id="hostPlayers"></div>
+<div id="hostPlayers"></div>
 
-  <button
-    id="closeRoomBtn"
-    class="hostAction"
-    type="button"
-  >
-    🔒 关闭房间
-  </button>
+<button
+  id="closeRoomBtn"
+  class="hostAction"
+  type="button"
+>
+🔒 关闭房间
+</button>
 
-  <button
-    id="openRoomBtn"
-    class="hostAction"
-    type="button"
-  >
-    🔓 重新开放房间
-  </button>
+<button
+  id="openRoomBtn"
+  class="hostAction"
+  type="button"
+>
+🔓 重新开放房间
+</button>
 
-  <div id="roomStatus"></div>
+<div id="roomStatus"></div>
 
 </div>
 
+
+<!-- ======================================================
+     底部提示
+     ====================================================== -->
 
 <div id="hint">
 WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 </div>
 
 
-<!-- =========================
+<!-- ======================================================
      聊天
-     ========================= -->
+     ====================================================== -->
 
 <div id="chat">
 
@@ -729,7 +1304,66 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 💬 shako的平行空间 · 聊天室
 </div>
 
+
 <div id="messages"></div>
+
+
+<!-- ====================================================
+     互动表情
+     ==================================================== -->
+
+<div id="reactionBar">
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="❤️"
+>
+❤️
+</button>
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="😂"
+>
+😂
+</button>
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="👍"
+>
+👍
+</button>
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="😮"
+>
+😮
+</button>
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="😡"
+>
+😡
+</button>
+
+<button
+  class="reactionBtn"
+  type="button"
+  data-emoji="🎉"
+>
+🎉
+</button>
+
+</div>
+
 
 <div id="send">
 
@@ -753,26 +1387,31 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 </div>
 
 
-<!-- =========================
+<!-- ======================================================
      登录
-     ========================= -->
+     ====================================================== -->
 
 <div id="modal">
 
 <div class="box">
 
-<h2>🌴 shako的平行空间</h2>
+<h2>
+🌴 shako的平行空间
+</h2>
 
 <p>
 欢迎来到海滩大厅<br>
 先选择你的角色，再输入昵称和房间密码
 </p>
 
+
 <div class="genderTitle">
 选择你的角色
 </div>
 
+
 <div class="genderRow">
+
 
 <div
   class="genderOption selected"
@@ -809,6 +1448,7 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 </div>
 
+
 </div>
 
 
@@ -829,13 +1469,15 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 >
 
 
-<div style="
-  text-align:left;
-  font-size:11px;
-  color:#a9cbd3;
-  margin-top:2px;
-  margin-bottom:4px;
-">
+<div
+  style="
+    text-align:left;
+    font-size:11px;
+    color:#a9cbd3;
+    margin-top:2px;
+    margin-bottom:4px;
+  "
+>
 👑 房主密码只有房主填写，不填写也可以正常进入
 </div>
 
@@ -859,24 +1501,34 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 进入海滩
 </button>
 
+
 </div>
 
 </div>
+
 
 </div>
 
 
 <script src="/socket.io/socket.io.js"></script>
 
+
 <script>
+
 "use strict";
+
 
 let socket=null;
 
+
 try{
 
-  if(typeof io==="function"){
+  if(
+    typeof io==="function"
+  ){
+
     socket=io();
+
   }
 
 }catch(e){
@@ -885,58 +1537,106 @@ try{
 
 }
 
+
 let myId=null;
 
-let selectedGender="male";
+
+let selectedGender=
+  "male";
+
 
 let me={
   x:50,
   y:55
 };
 
-const speed=1.2;
+
+const speed=
+  1.2;
+
 
 const modal=
-  document.getElementById("modal");
+  document.getElementById(
+    "modal"
+  );
+
 
 const nick=
-  document.getElementById("nick");
+  document.getElementById(
+    "nick"
+  );
+
 
 const password=
-  document.getElementById("password");
+  document.getElementById(
+    "password"
+  );
+
 
 const hostPassword=
-  document.getElementById("hostPassword");
+  document.getElementById(
+    "hostPassword"
+  );
+
 
 const joinBtn=
-  document.getElementById("join");
+  document.getElementById(
+    "join"
+  );
+
 
 const errorBox=
-  document.getElementById("error");
+  document.getElementById(
+    "error"
+  );
+
 
 const world=
-  document.getElementById("world");
+  document.getElementById(
+    "world"
+  );
+
 
 const messages=
-  document.getElementById("messages");
+  document.getElementById(
+    "messages"
+  );
+
 
 const input=
-  document.getElementById("input");
+  document.getElementById(
+    "input"
+  );
+
 
 const count=
-  document.getElementById("count");
+  document.getElementById(
+    "count"
+  );
+
 
 const maleOption=
-  document.getElementById("maleOption");
+  document.getElementById(
+    "maleOption"
+  );
+
 
 const femaleOption=
-  document.getElementById("femaleOption");
+  document.getElementById(
+    "femaleOption"
+  );
+
 
 const closeRoomBtn=
-  document.getElementById("closeRoomBtn");
+  document.getElementById(
+    "closeRoomBtn"
+  );
+
 
 const openRoomBtn=
-  document.getElementById("openRoomBtn");
+  document.getElementById(
+    "openRoomBtn"
+  );
 
 
 /* ======================================================
@@ -947,30 +1647,44 @@ function esc(s){
 
   return String(s).replace(
     /[&<>"']/g,
+
     c=>({
 
       "&":"&amp;",
+
       "<":"&lt;",
+
       ">":"&gt;",
+
       '"':"&quot;",
+
       "'":"&#39;"
 
     }[c])
+
   );
 
 }
 
 
 /* ======================================================
-   聊天室消息
+   聊天消息
    ====================================================== */
 
-function msg(name,text){
+function msg(
+  name,
+  text
+){
 
   const d=
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
 
-  d.className="msg";
+
+  d.className=
+    "msg";
+
 
   d.innerHTML=
     "<b>"+
@@ -978,7 +1692,11 @@ function msg(name,text){
     "：</b>"+
     esc(text);
 
-  messages.appendChild(d);
+
+  messages.appendChild(
+    d
+  );
+
 
   messages.scrollTop=
     messages.scrollHeight;
@@ -990,7 +1708,9 @@ function msg(name,text){
    登录错误
    ====================================================== */
 
-function setError(text){
+function setError(
+  text
+){
 
   errorBox.textContent=
     text||"";
@@ -1002,15 +1722,19 @@ function setError(text){
    性别
    ====================================================== */
 
-function chooseGender(gender){
+function chooseGender(
+  gender
+){
 
   selectedGender=
     gender;
+
 
   maleOption.classList.toggle(
     "selected",
     gender==="male"
   );
+
 
   femaleOption.classList.toggle(
     "selected",
@@ -1040,9 +1764,11 @@ function startAuth(){
 
   setError("");
 
+
   const n=
     nick.value.trim()||
     "玩家";
+
 
   const p=
     password.value;
@@ -1075,6 +1801,7 @@ function startAuth(){
   joinBtn.disabled=
     true;
 
+
   joinBtn.textContent=
     "验证中...";
 
@@ -1097,7 +1824,9 @@ nick.addEventListener(
   "keydown",
   e=>{
 
-    if(e.key==="Enter"){
+    if(
+      e.key==="Enter"
+    ){
 
       e.preventDefault();
 
@@ -1113,7 +1842,9 @@ password.addEventListener(
   "keydown",
   e=>{
 
-    if(e.key==="Enter"){
+    if(
+      e.key==="Enter"
+    ){
 
       e.preventDefault();
 
@@ -1129,7 +1860,9 @@ hostPassword.addEventListener(
   "keydown",
   e=>{
 
-    if(e.key==="Enter"){
+    if(
+      e.key==="Enter"
+    ){
 
       e.preventDefault();
 
@@ -1149,7 +1882,9 @@ input.addEventListener(
   "keydown",
   e=>{
 
-    if(e.key==="Enter"){
+    if(
+      e.key==="Enter"
+    ){
 
       e.preventDefault();
 
@@ -1161,11 +1896,14 @@ input.addEventListener(
 );
 
 
-document.getElementById("btn")
-.addEventListener(
-  "click",
-  send
-);
+document
+  .getElementById(
+    "btn"
+  )
+  .addEventListener(
+    "click",
+    send
+  );
 
 
 function send(){
@@ -1193,6 +1931,64 @@ function send(){
 
 
 /* ======================================================
+   互动表情
+   ====================================================== */
+
+document
+  .querySelectorAll(
+    ".reactionBtn"
+  )
+  .forEach(
+    button=>{
+
+      button.addEventListener(
+        "click",
+        function(){
+
+          const emoji=
+            this.dataset.emoji;
+
+
+          if(!emoji)return;
+
+
+          /*
+            先让自己马上看到
+          */
+
+          if(myId){
+
+            showReaction(
+              myId,
+              emoji
+            );
+
+          }
+
+
+          /*
+            同时发送给服务器
+            如果 server.js 有 reaction
+            广播，其他人也能看到
+          */
+
+          if(socket){
+
+            socket.emit(
+              "reaction",
+              emoji
+            );
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+/* ======================================================
    当前玩家
    ====================================================== */
 
@@ -1204,6 +2000,7 @@ window.currentPlayers=[];
    ====================================================== */
 
 if(socket){
+
 
   socket.on(
     "connect",
@@ -1222,8 +2019,10 @@ if(socket){
       joinBtn.disabled=
         false;
 
+
       joinBtn.textContent=
         "进入海滩";
+
 
       setError(
         "无法连接服务器，请稍后刷新重试"
@@ -1240,14 +2039,18 @@ if(socket){
       joinBtn.disabled=
         false;
 
+
       joinBtn.textContent=
         "进入海滩";
 
+
       password.value="";
+
 
       setError(
         "房间密码错误，请重新输入"
       );
+
 
       password.focus();
 
@@ -1259,35 +2062,68 @@ if(socket){
     "roomClosed",
     ()=>{
 
+
       if(
         modal &&
-        getComputedStyle(modal).display!=="none"
+        getComputedStyle(
+          modal
+        ).display!=="none"
       ){
 
         joinBtn.disabled=
           false;
 
+
         joinBtn.textContent=
           "进入海滩";
+
 
         setError(
           "房间目前已关闭，请稍后再试"
         );
+
 
         return;
 
       }
 
 
-      setRoomButtons(true);
+      setRoomButtons(
+        true
+      );
+
 
       setRoomStatus(
         "🔒 房间已关闭，新玩家暂时无法进入"
       );
 
+
       msg(
         "系统",
         "🔒 房主已关闭房间，新玩家暂时无法进入"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "roomOpened",
+    ()=>{
+
+      setRoomButtons(
+        false
+      );
+
+
+      setRoomStatus(
+        ""
+      );
+
+
+      msg(
+        "系统",
+        "🔓 房间已经重新开放"
       );
 
     }
@@ -1301,8 +2137,10 @@ if(socket){
       joinBtn.disabled=
         true;
 
+
       joinBtn.textContent=
         "房间已满";
+
 
       setError(
         "房间已经满员，目前最多10人"
@@ -1313,7 +2151,7 @@ if(socket){
 
 
   /* ====================================================
-     初始化
+     登录成功
      ==================================================== */
 
   socket.on(
@@ -1322,6 +2160,7 @@ if(socket){
 
       myId=
         d.you.id;
+
 
       me=
         d.you;
@@ -1374,7 +2213,7 @@ if(socket){
 
 
   /* ====================================================
-     房主成功
+     房主认证成功
      ==================================================== */
 
   socket.on(
@@ -1389,7 +2228,10 @@ if(socket){
         d.roomOpen===false
       ){
 
-        setRoomButtons(true);
+        setRoomButtons(
+          true
+        );
+
 
         setRoomStatus(
           "🔒 房间已关闭，新玩家暂时无法进入"
@@ -1397,9 +2239,14 @@ if(socket){
 
       }else{
 
-        setRoomButtons(false);
+        setRoomButtons(
+          false
+        );
 
-        setRoomStatus("");
+
+        setRoomStatus(
+          ""
+        );
 
       }
 
@@ -1451,6 +2298,7 @@ if(socket){
         "你已被房主请出房间"
       );
 
+
       location.reload();
 
     }
@@ -1478,11 +2326,15 @@ if(socket){
     "closeRoomSuccess",
     ()=>{
 
-      setRoomButtons(true);
+      setRoomButtons(
+        true
+      );
+
 
       setRoomStatus(
         "🔒 房间已关闭，新玩家暂时无法进入"
       );
+
 
       msg(
         "系统",
@@ -1514,9 +2366,15 @@ if(socket){
     "openRoomSuccess",
     ()=>{
 
-      setRoomButtons(false);
+      setRoomButtons(
+        false
+      );
 
-      setRoomStatus("");
+
+      setRoomStatus(
+        ""
+      );
+
 
       msg(
         "系统",
@@ -1571,10 +2429,22 @@ if(socket){
     "reaction",
     d=>{
 
-      showReaction(
-        d.id,
-        d.emoji
-      );
+      /*
+        如果是自己发出的，
+        已经立即显示过一次，
+        这里避免重复。
+      */
+
+      if(
+        d.id!==myId
+      ){
+
+        showReaction(
+          d.id,
+          d.emoji
+        );
+
+      }
 
     }
   );
@@ -1600,7 +2470,9 @@ if(socket){
 
 
       document
-        .querySelectorAll(".player")
+        .querySelectorAll(
+          ".player"
+        )
         .forEach(
           e=>e.remove()
         );
@@ -1617,7 +2489,11 @@ if(socket){
 
           el.className=
             "player"+
-            (p.id===myId?" me":"");
+            (
+              p.id===myId
+              ?" me"
+              :""
+            );
 
 
           el.dataset.playerId=
@@ -1658,7 +2534,11 @@ if(socket){
             '<div class="name">'+
             esc(p.name)+
             hostMark+
-            (p.id===myId?"（你）":"")+
+            (
+              p.id===myId
+              ?"（你）"
+              :""
+            )+
             "</div>";
 
 
@@ -1676,7 +2556,7 @@ if(socket){
 
 
 /* ======================================================
-   人物头顶显示文字
+   人物头顶聊天文字
    ====================================================== */
 
 function showSpeech(
@@ -1694,6 +2574,10 @@ function showSpeech(
 
   if(!player)return;
 
+
+  /*
+    删除之前的文字
+  */
 
   const old=
     player.querySelector(
@@ -1718,29 +2602,89 @@ function showSpeech(
     "speech";
 
 
-  /*
-    超过18个字才允许换行
-  */
-
-  if(
-    String(text).length>18
-  ){
-
-    speech.classList.add(
-      "long"
-    );
-
-  }
-
-
   speech.textContent=
-    text;
+    String(text);
 
 
   player.appendChild(
     speech
   );
 
+
+  /*
+    ==================================================
+    强制单行
+    根据屏幕宽度自动缩小字体
+    ==================================================
+  */
+
+
+  let fontSize=
+    window.innerWidth<=700
+    ?13
+    :14;
+
+
+  speech.style.fontSize=
+    fontSize+"px";
+
+
+  /*
+    给文字预留左右一点空间
+  */
+
+  const maxWidth=
+    Math.max(
+      180,
+      Math.min(
+        window.innerWidth*0.90,
+        900
+      )
+    );
+
+
+  /*
+    文字过长时逐渐缩小
+  */
+
+  while(
+    speech.scrollWidth>maxWidth &&
+    fontSize>8
+  ){
+
+    fontSize-=0.5;
+
+
+    speech.style.fontSize=
+      fontSize+"px";
+
+  }
+
+
+  /*
+    如果仍然太长，
+    不换行，直接省略
+  */
+
+  if(
+    speech.scrollWidth>maxWidth
+  ){
+
+    speech.style.maxWidth=
+      maxWidth+"px";
+
+    speech.style.overflow=
+      "hidden";
+
+    speech.style.textOverflow=
+      "ellipsis";
+
+  }
+
+
+  /*
+    4秒后消失
+  */
 
   setTimeout(
     ()=>{
@@ -1828,10 +2772,25 @@ document.addEventListener(
   e=>{
 
     if(
-      document.activeElement===input||
-      document.activeElement===nick||
-      document.activeElement===password||
-      document.activeElement===hostPassword
+
+      document.activeElement===
+      input
+
+      ||
+
+      document.activeElement===
+      nick
+
+      ||
+
+      document.activeElement===
+      password
+
+      ||
+
+      document.activeElement===
+      hostPassword
+
     ){
 
       return;
@@ -1840,11 +2799,16 @@ document.addEventListener(
 
 
     let dx=0;
+
     let dy=0;
 
 
     if(
-      ["ArrowUp","w","W"].includes(e.key)
+      [
+        "ArrowUp",
+        "w",
+        "W"
+      ].includes(e.key)
     ){
 
       dy=-speed;
@@ -1853,7 +2817,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowDown","s","S"].includes(e.key)
+      [
+        "ArrowDown",
+        "s",
+        "S"
+      ].includes(e.key)
     ){
 
       dy=speed;
@@ -1862,7 +2830,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowLeft","a","A"].includes(e.key)
+      [
+        "ArrowLeft",
+        "a",
+        "A"
+      ].includes(e.key)
     ){
 
       dx=-speed;
@@ -1871,7 +2843,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowRight","d","D"].includes(e.key)
+      [
+        "ArrowRight",
+        "d",
+        "D"
+      ].includes(e.key)
     ){
 
       dx=speed;
@@ -1879,7 +2855,10 @@ document.addEventListener(
     }
 
 
-    if(dx||dy){
+    if(
+      dx ||
+      dy
+    ){
 
       e.preventDefault();
 
@@ -1987,9 +2966,17 @@ function updateHostPlayers(){
 
 
       name.textContent=
-        (p.isHost?"👑 ":"")+
+        (
+          p.isHost
+          ?"👑 "
+          :""
+        )+
         p.name+
-        (p.id===myId?"（你）":"");
+        (
+          p.id===myId
+          ?"（你）"
+          :""
+        );
 
 
       row.appendChild(
@@ -2001,7 +2988,9 @@ function updateHostPlayers(){
         房主自己不显示踢出按钮
       */
 
-      if(p.id!==myId){
+      if(
+        p.id!==myId
+      ){
 
         const kick=
           document.createElement(
@@ -2062,7 +3051,9 @@ function updateHostPlayers(){
 }
 
 
-function setRoomStatus(text){
+function setRoomStatus(
+  text
+){
 
   const el=
     document.getElementById(
@@ -2080,7 +3071,9 @@ function setRoomStatus(text){
 }
 
 
-function setRoomButtons(closed){
+function setRoomButtons(
+  closed
+){
 
   const closeBtn=
     document.getElementById(
@@ -2117,7 +3110,7 @@ function setRoomButtons(closed){
 
 
 /* ======================================================
-   房主关闭房间
+   房间关闭 / 开放
    ====================================================== */
 
 closeRoomBtn.addEventListener(
@@ -2129,10 +3122,6 @@ closeRoomBtn.addEventListener(
   }
 );
 
-
-/* ======================================================
-   房主重新开放
-   ====================================================== */
 
 openRoomBtn.addEventListener(
   "click",
@@ -2221,7 +3210,14 @@ function openRoom(){
     );
 
 
-  if(!chat || !input)return;
+  if(
+    !chat ||
+    !input
+  ){
+
+    return;
+
+  }
 
 
   const isMobile=
@@ -2234,7 +3230,8 @@ function openRoom(){
   if(!isMobile)return;
 
 
-  const normalBottom=85;
+  const normalBottom=
+    85;
 
 
   function adjustChat(){
@@ -2251,10 +3248,15 @@ function openRoom(){
       viewport.height;
 
 
-    if(keyboardHeight>120){
+    if(
+      keyboardHeight>120
+    ){
 
       chat.style.bottom=
-        (keyboardHeight+15)+"px";
+        (
+          keyboardHeight+
+          15
+        )+"px";
 
     }else{
 
@@ -2266,18 +3268,22 @@ function openRoom(){
   }
 
 
-  if(window.visualViewport){
+  if(
+    window.visualViewport
+  ){
 
-    window.visualViewport.addEventListener(
-      "resize",
-      adjustChat
-    );
+    window.visualViewport
+      .addEventListener(
+        "resize",
+        adjustChat
+      );
 
 
-    window.visualViewport.addEventListener(
-      "scroll",
-      adjustChat
-    );
+    window.visualViewport
+      .addEventListener(
+        "scroll",
+        adjustChat
+      );
 
   }
 
@@ -2290,6 +3296,7 @@ function openRoom(){
         adjustChat,
         100
       );
+
 
       setTimeout(
         adjustChat,
@@ -2339,7 +3346,9 @@ const chatTitle=
 
 let dragging=false;
 
+
 let offsetX=0;
+
 
 let offsetY=0;
 
@@ -2404,13 +3413,17 @@ document.addEventListener(
 
 
     chat.style.left=
-      (e.clientX-offsetX)+
-      "px";
+      (
+        e.clientX-
+        offsetX
+      )+"px";
 
 
     chat.style.top=
-      (e.clientY-offsetY)+
-      "px";
+      (
+        e.clientY-
+        offsetY
+      )+"px";
 
   }
 );
@@ -2427,6 +3440,7 @@ document.addEventListener(
 
 </script>
 
+
 </body>
+
 </html>
-```
