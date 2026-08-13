@@ -1,3 +1,4 @@
+```html
 <!doctype html>
 <html lang="zh-CN">
 <head>
@@ -158,11 +159,21 @@ html,body{
 
 #input{
   flex:1;
+  min-width:0;
   background:#0b1620;
   border:0;
   color:#fff;
   padding:13px;
-  outline:0
+  outline:0;
+  -webkit-appearance:none;
+  appearance:none;
+  border-radius:0;
+  touch-action:manipulation
+}
+
+#input:focus{
+  outline:none;
+  box-shadow:none
 }
 
 #btn{
@@ -171,7 +182,8 @@ html,body{
   color:#fff;
   padding:0 18px;
   font-size:14px;
-  cursor:pointer
+  cursor:pointer;
+  touch-action:manipulation
 }
 
 #modal{
@@ -226,7 +238,8 @@ html,body{
   border-radius:15px;
   background:#071923aa;
   cursor:pointer;
-  transition:.15s
+  transition:.15s;
+  touch-action:manipulation
 }
 
 .genderOption:hover{
@@ -263,7 +276,10 @@ html,body{
   background:#071923;
   color:white;
   outline:0;
-  display:block
+  display:block;
+  font-size:16px;
+  -webkit-appearance:none;
+  appearance:none
 }
 
 .box input:focus{
@@ -278,7 +294,8 @@ html,body{
   color:#fff;
   font-weight:bold;
   cursor:pointer;
-  margin-top:7px
+  margin-top:7px;
+  touch-action:manipulation
 }
 
 .box button:disabled{
@@ -358,7 +375,8 @@ html,body{
   color:#fff;
   cursor:pointer;
   font-size:11px;
-  flex:none
+  flex:none;
+  touch-action:manipulation
 }
 
 .hostAction{
@@ -369,7 +387,8 @@ html,body{
   border-radius:9px;
   color:#fff;
   cursor:pointer;
-  font-weight:bold
+  font-weight:bold;
+  touch-action:manipulation
 }
 
 #closeRoomBtn{
@@ -409,7 +428,7 @@ html,body{
     width:calc(100vw - 28px);
     right:14px;
     bottom:85px;
-    transition:bottom .2s ease
+    transition:none;
   }
 
   #messages{
@@ -429,11 +448,13 @@ html,body{
 
   #input{
     font-size:16px;
-    min-height:48px
+    min-height:48px;
+    padding:13px;
   }
 
   #btn{
-    min-width:68px
+    min-width:68px;
+    min-height:48px
   }
 
   #hostPanel{
@@ -511,8 +532,14 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <div id="messages"></div>
 
 <div id="send">
-<input id="input" maxlength="200" placeholder="说点什么…">
-<button id="btn">发送</button>
+<input
+  id="input"
+  maxlength="200"
+  autocomplete="off"
+  autocapitalize="sentences"
+  placeholder="说点什么…"
+>
+<button id="btn" type="button">发送</button>
 </div>
 
 </div>
@@ -858,7 +885,11 @@ input.addEventListener(
   e=>{
 
     if(e.key==="Enter"){
+
+      e.preventDefault();
+
       send();
+
     }
 
   }
@@ -952,11 +983,6 @@ socket.on(
   "roomClosed",
   ()=>{
 
-    /*
-      如果现在还在登录页面
-      就提示不能进入
-    */
-
     if(
       modal &&
       getComputedStyle(modal).display!=="none"
@@ -975,12 +1001,6 @@ socket.on(
       return;
 
     }
-
-
-    /*
-      已经在房间里的人
-      继续留在房间
-    */
 
     setRoomButtons(true);
 
@@ -1069,11 +1089,6 @@ socket.on(
     );
 
 
-    /*
-      如果填写了房主密码
-      登录成功后申请房主身份
-    */
-
     const hp=
       hostPassword.value.trim();
 
@@ -1095,11 +1110,6 @@ socket.on(
   d=>{
 
     showHostPanel();
-
-    /*
-      根据服务器实际房间状态
-      显示正确按钮
-    */
 
     if(
       d &&
@@ -1437,7 +1447,6 @@ document.addEventListener(
    房主控制
    ========================= */
 
-
 function showHostPanel(){
 
 const panel=
@@ -1500,10 +1509,6 @@ window.currentPlayers
 
   row.appendChild(name);
 
-
-  /*
-    房主自己不显示踢出按钮
-  */
 
   if(p.id!==myId){
 
@@ -1615,7 +1620,7 @@ if(openBtn){
 
 
 /* =========================
-   这里是这次修好的关键
+   房间开关
    ========================= */
 
 closeRoomBtn.addEventListener(
@@ -1692,128 +1697,15 @@ socket.emit(
 
 }
 
-
 </script>
 
 
 <script>
 
-(function(){
-
-  const chat=
-    document.getElementById(
-      "chat"
-    );
-
-  const input=
-    document.getElementById(
-      "input"
-    );
-
-
-  if(!chat || !input)return;
-
-
-  const isMobile=
-    /Android|iPhone|iPad|iPod/i
-    .test(
-      navigator.userAgent
-    );
-
-
-  if(!isMobile)return;
-
-
-  const normalBottom=85;
-
-
-  function adjustChat(){
-
-    const viewport=
-      window.visualViewport;
-
-
-    if(!viewport)return;
-
-
-    const keyboardHeight=
-      window.innerHeight-
-      viewport.height;
-
-
-    if(keyboardHeight>120){
-
-      chat.style.bottom=
-        (keyboardHeight+15)+"px";
-
-    }else{
-
-      chat.style.bottom=
-        normalBottom+"px";
-
-    }
-
-  }
-
-
-  if(window.visualViewport){
-
-    window.visualViewport.addEventListener(
-      "resize",
-      adjustChat
-    );
-
-
-    window.visualViewport.addEventListener(
-      "scroll",
-      adjustChat
-    );
-
-  }
-
-
-  input.addEventListener(
-    "focus",
-    function(){
-
-      setTimeout(
-        adjustChat,
-        100
-      );
-
-      setTimeout(
-        adjustChat,
-        400
-      );
-
-    }
-  );
-
-
-  input.addEventListener(
-    "blur",
-    function(){
-
-      setTimeout(
-        adjustChat,
-        200
-      );
-
-    }
-  );
-
-
-  window.addEventListener(
-    "resize",
-    adjustChat
-  );
-
-})();
-
-
-/*
-  电脑端拖动聊天框
-*/
+/* =========================
+   电脑端拖动聊天框
+   手机端不启用
+   ========================= */
 
 const chat=
   document.getElementById(
@@ -1918,3 +1810,4 @@ document.addEventListener(
 
 </body>
 </html>
+```
