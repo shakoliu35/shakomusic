@@ -61,6 +61,11 @@ html,body{
   background:#167a6dcc
 }
 
+
+/* ======================================================
+   玩家
+   ====================================================== */
+
 .player{
   position:absolute;
   width:78px;
@@ -98,6 +103,131 @@ html,body{
   box-shadow:0 0 0 1px #ffd35c66
 }
 
+
+/* ======================================================
+   人物头顶说话文字
+   ====================================================== */
+
+.speechBubble{
+  position:absolute;
+  left:50%;
+  bottom:78px;
+  transform:translateX(-50%);
+  max-width:220px;
+  min-width:40px;
+  padding:6px 10px;
+  border-radius:12px;
+  background:#ffffffee;
+  color:#18313c;
+  border:1px solid #ffffff;
+  box-shadow:0 4px 14px #0005;
+  font-size:12px;
+  line-height:1.35;
+  text-align:center;
+  white-space:normal;
+  word-break:break-word;
+  z-index:60;
+  pointer-events:none;
+  animation:speechIn .15s ease-out
+}
+
+.speechBubble:after{
+  content:"";
+  position:absolute;
+  left:50%;
+  bottom:-6px;
+  transform:translateX(-50%);
+  width:10px;
+  height:10px;
+  background:#ffffffee;
+  border-right:1px solid #ffffff;
+  border-bottom:1px solid #ffffff;
+  transform:translateX(-50%) rotate(45deg)
+}
+
+@keyframes speechIn{
+  from{
+    opacity:0;
+    transform:translateX(-50%) translateY(5px)
+  }
+  to{
+    opacity:1;
+    transform:translateX(-50%) translateY(0)
+  }
+}
+
+
+/* ======================================================
+   互动表情
+   ====================================================== */
+
+.reactionMenu{
+  position:absolute;
+  left:50%;
+  bottom:78px;
+  transform:translateX(-50%);
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:5px 7px;
+  background:#102737ee;
+  border:1px solid #ffffff55;
+  border-radius:14px;
+  box-shadow:0 8px 22px #0007;
+  z-index:100;
+  white-space:nowrap
+}
+
+.reactionBtn{
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:10px;
+  background:#ffffff0d;
+  color:#fff;
+  font-size:19px;
+  cursor:pointer;
+  padding:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  touch-action:manipulation
+}
+
+.reactionBtn:hover{
+  background:#ffffff22;
+  transform:scale(1.08)
+}
+
+.reactionBubble{
+  position:absolute;
+  left:50%;
+  bottom:78px;
+  transform:translateX(-50%);
+  font-size:30px;
+  line-height:1;
+  z-index:70;
+  pointer-events:none;
+  filter:drop-shadow(0 3px 5px #0007);
+  animation:reactionIn .2s ease-out
+}
+
+@keyframes reactionIn{
+  0%{
+    opacity:0;
+    transform:translateX(-50%) translateY(8px) scale(.7)
+  }
+  100%{
+    opacity:1;
+    transform:translateX(-50%) translateY(0) scale(1)
+  }
+}
+
+
+/* ======================================================
+   左下提示
+   ====================================================== */
+
 #hint{
   position:absolute;
   left:18px;
@@ -110,6 +240,11 @@ html,body{
   z-index:30;
   box-shadow:0 5px 18px #0025
 }
+
+
+/* ======================================================
+   聊天
+   ====================================================== */
 
 #chat{
   position:absolute;
@@ -158,21 +293,11 @@ html,body{
 
 #input{
   flex:1;
-  min-width:0;
   background:#0b1620;
   border:0;
   color:#fff;
   padding:13px;
-  outline:0;
-  -webkit-appearance:none;
-  appearance:none;
-  border-radius:0;
-  touch-action:manipulation
-}
-
-#input:focus{
-  outline:none;
-  box-shadow:none
+  outline:0
 }
 
 #btn{
@@ -181,9 +306,17 @@ html,body{
   color:#fff;
   padding:0 18px;
   font-size:14px;
-  cursor:pointer;
-  touch-action:manipulation
+  cursor:pointer
 }
+
+#btn:hover{
+  background:#4a9aff
+}
+
+
+/* ======================================================
+   登录弹窗
+   ====================================================== */
 
 #modal{
   position:absolute;
@@ -310,9 +443,9 @@ html,body{
 }
 
 
-/* =========================
+/* ======================================================
    房主控制面板
-   ========================= */
+   ====================================================== */
 
 #hostPanel{
   display:none;
@@ -407,6 +540,10 @@ html,body{
 }
 
 
+/* ======================================================
+   手机
+   ====================================================== */
+
 @media(max-width:700px){
 
   #top{
@@ -427,7 +564,7 @@ html,body{
     width:calc(100vw - 28px);
     right:14px;
     bottom:85px;
-    transition:none;
+    transition:none
   }
 
   #messages{
@@ -448,7 +585,7 @@ html,body{
   #input{
     font-size:16px;
     min-height:48px;
-    padding:13px;
+    padding:13px
   }
 
   #btn{
@@ -461,6 +598,35 @@ html,body{
     right:10px;
     width:220px;
     max-height:65vh
+  }
+
+  .speechBubble{
+    max-width:170px;
+    font-size:11px;
+    padding:5px 8px
+  }
+
+  .reactionMenu{
+    padding:4px 5px
+  }
+
+  .reactionBtn{
+    width:32px;
+    height:32px;
+    font-size:18px
+  }
+
+}
+
+
+/* 手机键盘出现时，稍微提高聊天框 */
+
+@media(max-width:700px){
+
+  #chat.keyboard-open{
+    bottom:calc(
+      env(keyboard-inset-height, 85px) + 15px
+    )
   }
 
 }
@@ -481,9 +647,9 @@ html,body{
 </div>
 
 
-<!-- =========================
+<!-- ======================================================
      房主控制面板
-     ========================= -->
+     ====================================================== -->
 
 <div id="hostPanel">
 
@@ -522,6 +688,11 @@ html,body{
 WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 </div>
 
+
+<!-- ======================================================
+     聊天
+     ====================================================== -->
+
 <div id="chat">
 
 <div id="chatTitle">
@@ -531,6 +702,7 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <div id="messages"></div>
 
 <div id="send">
+
 <input
   id="input"
   maxlength="200"
@@ -538,11 +710,22 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
   autocapitalize="sentences"
   placeholder="说点什么…"
 >
-<button id="btn" type="button">发送</button>
-</div>
+
+<button
+  id="btn"
+  type="button"
+>
+发送
+</button>
 
 </div>
 
+</div>
+
+
+<!-- ======================================================
+     登录
+     ====================================================== -->
 
 <div id="modal">
 
@@ -561,23 +744,43 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 <div class="genderRow">
 
-<div class="genderOption selected" id="maleOption" data-gender="male">
+<div
+  class="genderOption selected"
+  id="maleOption"
+  data-gender="male"
+>
 
-<img src="./male.png" alt="男生">
+<img
+  src="./male.png"
+  alt="男生"
+>
 
-<div>👨 男生</div>
+<div>
+👨 男生
+</div>
 
 </div>
 
-<div class="genderOption" id="femaleOption" data-gender="female">
 
-<img src="./female.png" alt="女生">
+<div
+  class="genderOption"
+  id="femaleOption"
+  data-gender="female"
+>
 
-<div>👩 女生</div>
+<img
+  src="./female.png"
+  alt="女生"
+>
 
+<div>
+👩 女生
 </div>
 
 </div>
+
+</div>
+
 
 <input
 id="nick"
@@ -586,6 +789,7 @@ autocomplete="nickname"
 placeholder="请输入昵称"
 >
 
+
 <input
 id="password"
 type="password"
@@ -593,6 +797,7 @@ maxlength="100"
 autocomplete="off"
 placeholder="请输入房间密码"
 >
+
 
 <div style="
   text-align:left;
@@ -604,6 +809,7 @@ placeholder="请输入房间密码"
 👑 房主密码只有房主填写，不填写也可以正常进入
 </div>
 
+
 <input
 id="hostPassword"
 type="password"
@@ -612,9 +818,14 @@ autocomplete="off"
 placeholder="房主密码（只有房主填写）"
 >
 
+
 <div id="error"></div>
 
-<button id="join" type="button">
+
+<button
+id="join"
+type="button"
+>
 进入海滩
 </button>
 
@@ -630,12 +841,16 @@ placeholder="房主密码（只有房主填写）"
 <script>
 "use strict";
 
+
 let socket=null;
+
 
 try{
 
   if(typeof io==="function"){
+
     socket=io();
+
   }
 
 }catch(e){
@@ -644,16 +859,20 @@ try{
 
 }
 
+
 let myId=null;
 
 let selectedGender="male";
+
 
 let me={
   x:50,
   y:55
 };
 
+
 const speed=1.2;
+
 
 const modal=
   document.getElementById("modal");
@@ -698,67 +917,84 @@ const openRoomBtn=
   document.getElementById("openRoomBtn");
 
 
+/* ======================================================
+   防止 XSS
+   ====================================================== */
+
 function esc(s){
 
-return String(s).replace(
-  /[&<>"']/g,
-  c=>({
+  return String(s).replace(
+    /[&<>"']/g,
+    c=>({
 
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
 
-  }[c])
-);
+    }[c])
+  );
 
 }
 
+
+/* ======================================================
+   聊天记录
+   ====================================================== */
 
 function msg(name,text){
 
-const d=
-  document.createElement("div");
+  const d=
+    document.createElement("div");
 
-d.className="msg";
+  d.className=
+    "msg";
 
-d.innerHTML=
-  "<b>"+
-  esc(name)+
-  "：</b>"+
-  esc(text);
+  d.innerHTML=
+    "<b>"+
+    esc(name)+
+    "：</b>"+
+    esc(text);
 
-messages.appendChild(d);
+  messages.appendChild(d);
 
-messages.scrollTop=
-  messages.scrollHeight;
+  messages.scrollTop=
+    messages.scrollHeight;
 
 }
 
+
+/* ======================================================
+   错误提示
+   ====================================================== */
 
 function setError(text){
 
-errorBox.textContent=
-  text||"";
+  errorBox.textContent=
+    text||"";
 
 }
 
 
+/* ======================================================
+   性别
+   ====================================================== */
+
 function chooseGender(gender){
 
-selectedGender=
-  gender;
+  selectedGender=
+    gender;
 
-maleOption.classList.toggle(
-  "selected",
-  gender==="male"
-);
+  maleOption.classList.toggle(
+    "selected",
+    gender==="male"
+  );
 
-femaleOption.classList.toggle(
-  "selected",
-  gender==="female"
-);
+  femaleOption.classList.toggle(
+    "selected",
+    gender==="female"
+  );
 
 }
 
@@ -775,52 +1011,57 @@ femaleOption.addEventListener(
 );
 
 
+/* ======================================================
+   登录
+   ====================================================== */
+
 function startAuth(){
 
-setError("");
+  setError("");
 
-const n=
-  nick.value.trim()||
-  "玩家";
+  const n=
+    nick.value.trim()||
+    "玩家";
 
-const p=
-  password.value;
-
-if(!p){
-
-setError(
-  "请输入房间密码"
-);
-
-password.focus();
-
-return;
-
-}
+  const p=
+    password.value;
 
 
-if(!socket){
+  if(!p){
 
-setError(
-  "服务器连接失败，请刷新页面后重试"
-);
+    setError(
+      "请输入房间密码"
+    );
 
-return;
+    password.focus();
 
-}
+    return;
 
-
-joinBtn.disabled=
-  true;
-
-joinBtn.textContent=
-  "验证中...";
+  }
 
 
-socket.emit(
-  "auth",
-  p
-);
+  if(!socket){
+
+    setError(
+      "服务器连接失败，请刷新页面后重试"
+    );
+
+    return;
+
+  }
+
+
+  joinBtn.disabled=
+    true;
+
+  joinBtn.textContent=
+    "验证中...";
+
+
+  socket.emit(
+    "auth",
+    p
+  );
 
 }
 
@@ -879,6 +1120,10 @@ hostPassword.addEventListener(
 );
 
 
+/* ======================================================
+   聊天发送
+   ====================================================== */
+
 input.addEventListener(
   "keydown",
   e=>{
@@ -904,21 +1149,23 @@ document.getElementById("btn")
 
 function send(){
 
-const text=
-  input.value.trim();
+  const text=
+    input.value.trim();
 
-if(!text)return;
+  if(!text)return;
 
-if(socket){
 
-  socket.emit(
-    "chat",
-    text
-  );
+  if(socket){
 
-}
+    socket.emit(
+      "chat",
+      text
+    );
 
-input.value="";
+  }
+
+
+  input.value="";
 
 }
 
@@ -926,377 +1173,417 @@ input.value="";
 window.currentPlayers=[];
 
 
-if(socket){
+/* ======================================================
+   头顶说话状态
+   ====================================================== */
 
-socket.on(
-  "connect",
-  ()=>{
-
-    setError("");
-
-  }
-);
+const activeSpeech=
+  new Map();
 
 
-socket.on(
-  "connect_error",
-  ()=>{
+const activeReaction=
+  new Map();
 
-    joinBtn.disabled=
-      false;
 
-    joinBtn.textContent=
-      "进入海滩";
+function clearSpeech(id){
 
-    setError(
-      "无法连接服务器，请稍后刷新重试"
+  activeSpeech.delete(id);
+
+}
+
+
+function showSpeech(id,text){
+
+  const expires=
+    Date.now()+4000;
+
+
+  activeSpeech.set(
+    id,
+    {
+      text:text,
+      expires:expires
+    }
+  );
+
+
+  const player=
+    document.querySelector(
+      '.player[data-player-id="'+
+      CSS.escape(id)+
+      '"]'
     );
 
-  }
-);
+
+  if(!player)return;
 
 
-socket.on(
-  "authError",
-  ()=>{
-
-    joinBtn.disabled=
-      false;
-
-    joinBtn.textContent=
-      "进入海滩";
-
-    password.value="";
-
-    setError(
-      "房间密码错误，请重新输入"
+  const old=
+    player.querySelector(
+      ".speechBubble"
     );
 
-    password.focus();
+
+  if(old){
+
+    old.remove();
 
   }
-);
 
 
-socket.on(
-  "roomClosed",
-  ()=>{
+  const bubble=
+    document.createElement(
+      "div"
+    );
 
-    if(
-      modal &&
-      getComputedStyle(modal).display!=="none"
-    ){
 
-      joinBtn.disabled=
-        false;
+  bubble.className=
+    "speechBubble";
 
-      joinBtn.textContent=
-        "进入海滩";
+  bubble.textContent=
+    text;
 
-      setError(
-        "房间目前已关闭，请稍后再试"
+
+  player.appendChild(
+    bubble
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      const state=
+        activeSpeech.get(id);
+
+      if(
+        state &&
+        state.expires<=Date.now()
+      ){
+
+        activeSpeech.delete(id);
+
+        const current=
+          document.querySelector(
+            '.player[data-player-id="'+
+            CSS.escape(id)+
+            '"]'
+          );
+
+        if(current){
+
+          const b=
+            current.querySelector(
+              ".speechBubble"
+            );
+
+          if(b){
+
+            b.remove();
+
+          }
+
+        }
+
+      }
+
+    },
+    4100
+  );
+
+}
+
+
+/* ======================================================
+   互动表情
+   ====================================================== */
+
+function showReaction(
+  targetId,
+  emoji
+){
+
+  activeReaction.set(
+    targetId,
+    {
+      emoji:emoji,
+      expires:Date.now()+1800
+    }
+  );
+
+
+  const player=
+    document.querySelector(
+      '.player[data-player-id="'+
+      CSS.escape(targetId)+
+      '"]'
+    );
+
+
+  if(!player)return;
+
+
+  const old=
+    player.querySelector(
+      ".reactionBubble"
+    );
+
+
+  if(old){
+
+    old.remove();
+
+  }
+
+
+  const bubble=
+    document.createElement(
+      "div"
+    );
+
+
+  bubble.className=
+    "reactionBubble";
+
+  bubble.textContent=
+    emoji;
+
+
+  player.appendChild(
+    bubble
+  );
+
+
+  setTimeout(
+    ()=>{
+
+      const current=
+        document.querySelector(
+          '.player[data-player-id="'+
+          CSS.escape(targetId)+
+          '"]'
+        );
+
+
+      if(current){
+
+        const b=
+          current.querySelector(
+            ".reactionBubble"
+          );
+
+        if(b){
+
+          b.remove();
+
+        }
+
+      }
+
+      activeReaction.delete(
+        targetId
       );
 
-      return;
+    },
+    1800
+  );
+
+}
+
+
+/* ======================================================
+   互动菜单
+   ====================================================== */
+
+function showReactionMenu(
+  playerElement,
+  targetId
+){
+
+  document
+    .querySelectorAll(
+      ".reactionMenu"
+    )
+    .forEach(
+      e=>e.remove()
+    );
+
+
+  const menu=
+    document.createElement(
+      "div"
+    );
+
+
+  menu.className=
+    "reactionMenu";
+
+
+  const emojis=[
+    "👋",
+    "❤️",
+    "😂",
+    "✨"
+  ];
+
+
+  emojis.forEach(
+    emoji=>{
+
+      const button=
+        document.createElement(
+          "button"
+        );
+
+
+      button.className=
+        "reactionBtn";
+
+      button.type=
+        "button";
+
+      button.textContent=
+        emoji;
+
+
+      button.addEventListener(
+        "click",
+        e=>{
+
+          e.stopPropagation();
+
+
+          if(socket){
+
+            socket.emit(
+              "reaction",
+              {
+                targetId:
+                  targetId,
+
+                emoji:
+                  emoji
+              }
+            );
+
+          }
+
+
+          menu.remove();
+
+        }
+      );
+
+
+      menu.appendChild(
+        button
+      );
 
     }
-
-    setRoomButtons(true);
-
-    setRoomStatus(
-      "🔒 房间已关闭，新玩家暂时无法进入"
-    );
-
-    msg(
-      "系统",
-      "🔒 房主已关闭房间，新玩家暂时无法进入"
-    );
-
-  }
-);
+  );
 
 
-socket.on(
-  "roomOpened",
-  ()=>{
-
-    setRoomButtons(false);
-
-    setRoomStatus("");
-
-    msg(
-      "系统",
-      "🔓 房间已经重新开放"
-    );
-
-  }
-);
+  playerElement.appendChild(
+    menu
+  );
 
 
-socket.on(
-  "full",
-  ()=>{
+  setTimeout(
+    ()=>{
 
-    joinBtn.disabled=
-      true;
+      if(menu.parentNode){
 
-    joinBtn.textContent=
-      "房间已满";
+        menu.remove();
 
-    setError(
-      "房间已经满员，目前最多10人"
-    );
+      }
+
+    },
+    3500
+  );
+
+}
+
+
+/* ======================================================
+   点击玩家
+   ====================================================== */
+
+function bindPlayerClick(
+  el,
+  player
+){
+
+  if(
+    player.id===myId
+  ){
+
+    return;
 
   }
-);
 
 
-socket.on(
-  "init",
-  d=>{
+  el.addEventListener(
+    "click",
+    e=>{
 
-    myId=
-      d.you.id;
-
-    me=
-      d.you;
-
-    modal.style.display=
-      "none";
-
-    const n=
-      nick.value.trim()||
-      "玩家";
-
-    msg(
-      "系统",
-      "🏝️ 欢迎 "+
-      n+
-      " 来到 shako 的平行空间！"
-    );
+      e.stopPropagation();
 
 
-    socket.emit(
-      "setName",
-      n
-    );
-
-
-    socket.emit(
-      "setGender",
-      selectedGender
-    );
-
-
-    const hp=
-      hostPassword.value.trim();
-
-    if(hp){
-
-      socket.emit(
-        "hostAuth",
-        hp
+      showReactionMenu(
+        el,
+        player.id
       );
 
     }
+  );
 
-  }
-);
+}
 
 
-socket.on(
-  "hostAuthSuccess",
-  d=>{
+/* ======================================================
+   重新绘制玩家
+   ====================================================== */
 
-    showHostPanel();
+function renderPlayers(ps){
 
-    if(
-      d &&
-      d.roomOpen===false
-    ){
+  window.currentPlayers=
+    ps;
 
-      setRoomButtons(true);
 
-      setRoomStatus(
-        "🔒 房间已关闭，新玩家暂时无法进入"
-      );
+  count.textContent=
+    "在线："+ps.length+"/10";
 
-    }else{
 
-      setRoomButtons(false);
+  updateHostPlayers();
 
-      setRoomStatus("");
 
-    }
-
-    msg(
-      "系统",
-      "👑 房主身份验证成功"
+  document
+    .querySelectorAll(".player")
+    .forEach(
+      e=>e.remove()
     );
 
-  }
-);
 
-
-socket.on(
-  "hostAuthError",
-  ()=>{
-
-    msg(
-      "系统",
-      "房主密码不正确，你已作为普通玩家进入"
-    );
-
-  }
-);
-
-
-socket.on(
-  "hostAlreadyExists",
-  ()=>{
-
-    msg(
-      "系统",
-      "当前已经有房主在线"
-    );
-
-  }
-);
-
-
-socket.on(
-  "kicked",
-  ()=>{
-
-    alert(
-      "你已被房主请出房间"
-    );
-
-    location.reload();
-
-  }
-);
-
-
-socket.on(
-  "kickSuccess",
-  ()=>{
-
-    msg(
-      "系统",
-      "🚪 玩家已被请出房间"
-    );
-
-  }
-);
-
-
-socket.on(
-  "closeRoomSuccess",
-  ()=>{
-
-    setRoomButtons(true);
-
-    setRoomStatus(
-      "🔒 房间已关闭，新玩家暂时无法进入"
-    );
-
-    msg(
-      "系统",
-      "🔒 房间关闭成功"
-    );
-
-  }
-);
-
-
-socket.on(
-  "closeRoomError",
-  ()=>{
-
-    msg(
-      "系统",
-      "关闭房间失败：当前账号不是房主"
-    );
-
-  }
-);
-
-
-socket.on(
-  "openRoomSuccess",
-  ()=>{
-
-    setRoomButtons(false);
-
-    setRoomStatus("");
-
-    msg(
-      "系统",
-      "🔓 房间重新开放成功"
-    );
-
-  }
-);
-
-
-socket.on(
-  "openRoomError",
-  ()=>{
-
-    msg(
-      "系统",
-      "重新开放失败：当前账号不是房主"
-    );
-
-  }
-);
-
-
-socket.on(
-  "chat",
-  d=>{
-
-    msg(
-      d.name,
-      d.text
-    );
-
-  }
-);
-
-
-socket.on(
-  "players",
-  ps=>{
-
-    window.currentPlayers=
-      ps;
-
-    count.textContent=
-      "在线："+ps.length+"/10";
-
-    updateHostPlayers();
-
-
-    document
-      .querySelectorAll(".player")
-      .forEach(
-        e=>e.remove()
-      );
-
-
-    ps.forEach(p=>{
+  ps.forEach(
+    p=>{
 
       const el=
-        document.createElement("div");
+        document.createElement(
+          "div"
+        );
+
 
       el.className=
         "player"+
         (p.id===myId?" me":"");
 
+
+      el.dataset.playerId=
+        p.id;
+
+
       el.style.left=
         p.x+"%";
+
 
       el.style.top=
         p.y+"%";
@@ -1325,6 +1612,7 @@ socket.on(
         'src="./'+
         img+
         '" alt="">'+
+
         '<div class="name">'+
         esc(p.name)+
         hostMark+
@@ -1332,16 +1620,497 @@ socket.on(
         "</div>";
 
 
-      world.appendChild(el);
+      world.appendChild(
+        el
+      );
 
-    });
 
-  }
+      bindPlayerClick(
+        el,
+        p
+      );
 
-);
+
+      /* 恢复还没结束的聊天文字 */
+
+      const speech=
+        activeSpeech.get(
+          p.id
+        );
+
+
+      if(
+        speech &&
+        speech.expires>Date.now()
+      ){
+
+        const bubble=
+          document.createElement(
+            "div"
+          );
+
+        bubble.className=
+          "speechBubble";
+
+        bubble.textContent=
+          speech.text;
+
+        el.appendChild(
+          bubble
+        );
+
+      }
+
+
+      /* 恢复还没结束的互动表情 */
+
+      const reaction=
+        activeReaction.get(
+          p.id
+        );
+
+
+      if(
+        reaction &&
+        reaction.expires>Date.now()
+      ){
+
+        const bubble=
+          document.createElement(
+            "div"
+          );
+
+        bubble.className=
+          "reactionBubble";
+
+        bubble.textContent=
+          reaction.emoji;
+
+        el.appendChild(
+          bubble
+        );
+
+      }
+
+    }
+  );
 
 }
 
+
+/* ======================================================
+   Socket
+   ====================================================== */
+
+if(socket){
+
+  socket.on(
+    "connect",
+    ()=>{
+
+      setError("");
+
+    }
+  );
+
+
+  socket.on(
+    "connect_error",
+    ()=>{
+
+      joinBtn.disabled=
+        false;
+
+      joinBtn.textContent=
+        "进入海滩";
+
+      setError(
+        "无法连接服务器，请稍后刷新重试"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "authError",
+    ()=>{
+
+      joinBtn.disabled=
+        false;
+
+      joinBtn.textContent=
+        "进入海滩";
+
+      password.value="";
+
+      setError(
+        "房间密码错误，请重新输入"
+      );
+
+      password.focus();
+
+    }
+  );
+
+
+  socket.on(
+    "roomClosed",
+    ()=>{
+
+      if(
+        modal &&
+        getComputedStyle(modal).display!=="none"
+      ){
+
+        joinBtn.disabled=
+          false;
+
+        joinBtn.textContent=
+          "进入海滩";
+
+        setError(
+          "房间目前已关闭，请稍后再试"
+        );
+
+        return;
+
+      }
+
+
+      setRoomButtons(true);
+
+
+      setRoomStatus(
+        "🔒 房间已关闭，新玩家暂时无法进入"
+      );
+
+
+      msg(
+        "系统",
+        "🔒 房主已关闭房间，新玩家暂时无法进入"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "roomOpened",
+    ()=>{
+
+      setRoomButtons(false);
+
+      setRoomStatus("");
+
+      msg(
+        "系统",
+        "🔓 房间已经重新开放"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "full",
+    ()=>{
+
+      joinBtn.disabled=
+        true;
+
+      joinBtn.textContent=
+        "房间已满";
+
+      setError(
+        "房间已经满员，目前最多10人"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "init",
+    d=>{
+
+      myId=
+        d.you.id;
+
+
+      me=
+        d.you;
+
+
+      modal.style.display=
+        "none";
+
+
+      const n=
+        nick.value.trim()||
+        "玩家";
+
+
+      msg(
+        "系统",
+        "🏝️ 欢迎 "+
+        n+
+        " 来到 shako 的平行空间！"
+      );
+
+
+      socket.emit(
+        "setName",
+        n
+      );
+
+
+      socket.emit(
+        "setGender",
+        selectedGender
+      );
+
+
+      const hp=
+        hostPassword.value.trim();
+
+
+      if(hp){
+
+        socket.emit(
+          "hostAuth",
+          hp
+        );
+
+      }
+
+    }
+  );
+
+
+  socket.on(
+    "hostAuthSuccess",
+    d=>{
+
+      showHostPanel();
+
+
+      if(
+        d &&
+        d.roomOpen===false
+      ){
+
+        setRoomButtons(true);
+
+        setRoomStatus(
+          "🔒 房间已关闭，新玩家暂时无法进入"
+        );
+
+      }else{
+
+        setRoomButtons(false);
+
+        setRoomStatus("");
+
+      }
+
+
+      msg(
+        "系统",
+        "👑 房主身份验证成功"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "hostAuthError",
+    ()=>{
+
+      msg(
+        "系统",
+        "房主密码不正确，你已作为普通玩家进入"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "hostAlreadyExists",
+    ()=>{
+
+      msg(
+        "系统",
+        "当前已经有房主在线"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "kicked",
+    ()=>{
+
+      alert(
+        "你已被房主请出房间"
+      );
+
+      location.reload();
+
+    }
+  );
+
+
+  socket.on(
+    "kickSuccess",
+    ()=>{
+
+      msg(
+        "系统",
+        "🚪 玩家已被请出房间"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "closeRoomSuccess",
+    ()=>{
+
+      setRoomButtons(true);
+
+      setRoomStatus(
+        "🔒 房间已关闭，新玩家暂时无法进入"
+      );
+
+      msg(
+        "系统",
+        "🔒 房间关闭成功"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "closeRoomError",
+    ()=>{
+
+      msg(
+        "系统",
+        "关闭房间失败：当前账号不是房主"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "openRoomSuccess",
+    ()=>{
+
+      setRoomButtons(false);
+
+      setRoomStatus("");
+
+      msg(
+        "系统",
+        "🔓 房间重新开放成功"
+      );
+
+    }
+  );
+
+
+  socket.on(
+    "openRoomError",
+    ()=>{
+
+      msg(
+        "系统",
+        "重新开放失败：当前账号不是房主"
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     聊天
+     ==================================================== */
+
+  socket.on(
+    "chat",
+    d=>{
+
+      msg(
+        d.name,
+        d.text
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     人物头顶文字
+     ==================================================== */
+
+  socket.on(
+    "speech",
+    d=>{
+
+      showSpeech(
+        d.id,
+        d.text
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     互动表情
+     ==================================================== */
+
+  socket.on(
+    "reaction",
+    d=>{
+
+      showReaction(
+        d.targetId,
+        d.emoji
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     玩家同步
+     ==================================================== */
+
+  socket.on(
+    "players",
+    ps=>{
+
+      renderPlayers(
+        ps
+      );
+
+    }
+  );
+
+}
+
+
+/* ======================================================
+   WASD / 方向键移动
+   ====================================================== */
 
 document.addEventListener(
   "keydown",
@@ -1442,185 +2211,194 @@ document.addEventListener(
 );
 
 
-/* =========================
+/* ======================================================
    房主控制
-   ========================= */
+   ====================================================== */
 
 function showHostPanel(){
 
-const panel=
-  document.getElementById(
-    "hostPanel"
-  );
+  const panel=
+    document.getElementById(
+      "hostPanel"
+    );
 
-if(panel){
 
-  panel.classList.add(
-    "show"
-  );
+  if(panel){
 
-}
+    panel.classList.add(
+      "show"
+    );
 
-updateHostPlayers();
+  }
+
+
+  updateHostPlayers();
 
 }
 
 
 function updateHostPlayers(){
 
-const box=
-  document.getElementById(
-    "hostPlayers"
-  );
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-window.currentPlayers
-.forEach(p=>{
-
-  const row=
-    document.createElement(
-      "div"
+  const box=
+    document.getElementById(
+      "hostPlayers"
     );
 
-  row.className=
-    "hostPlayer";
+
+  if(!box)return;
 
 
-  const name=
-    document.createElement(
-      "span"
-    );
-
-  name.className=
-    "hostPlayerName";
+  box.innerHTML="";
 
 
-  name.textContent=
-    (p.isHost?"👑 ":"")+
-    p.name+
-    (p.id===myId?"（你）":"");
+  window.currentPlayers
+  .forEach(
+    p=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
 
 
-  row.appendChild(name);
+      row.className=
+        "hostPlayer";
 
 
-  if(p.id!==myId){
+      const name=
+        document.createElement(
+          "span"
+        );
 
-    const kick=
-      document.createElement(
-        "button"
+
+      name.className=
+        "hostPlayerName";
+
+
+      name.textContent=
+        (p.isHost?"👑 ":"")+
+        p.name+
+        (p.id===myId?"（你）":"");
+
+
+      row.appendChild(
+        name
       );
 
-    kick.className=
-      "hostKick";
 
-    kick.type=
-      "button";
+      if(p.id!==myId){
 
-    kick.textContent=
-      "踢出";
-
-
-    kick.onclick=
-      ()=>{
-
-        if(!socket)return;
-
-
-        if(
-          confirm(
-            "确定要把「"+
-            p.name+
-            "」请出房间吗？"
-          )
-        ){
-
-          socket.emit(
-            "kickPlayer",
-            p.id
+        const kick=
+          document.createElement(
+            "button"
           );
 
-        }
 
-      };
-
-
-    row.appendChild(
-      kick
-    );
-
-  }
+        kick.className=
+          "hostKick";
 
 
-  box.appendChild(
-    row
+        kick.type=
+          "button";
+
+
+        kick.textContent=
+          "踢出";
+
+
+        kick.onclick=
+          ()=>{
+
+            if(!socket)return;
+
+
+            if(
+              confirm(
+                "确定要把「"+
+                p.name+
+                "」请出房间吗？"
+              )
+            ){
+
+              socket.emit(
+                "kickPlayer",
+                p.id
+              );
+
+            }
+
+          };
+
+
+        row.appendChild(
+          kick
+        );
+
+      }
+
+
+      box.appendChild(
+        row
+      );
+
+    }
   );
-
-});
 
 }
 
 
 function setRoomStatus(text){
 
-const el=
-  document.getElementById(
-    "roomStatus"
-  );
+  const el=
+    document.getElementById(
+      "roomStatus"
+    );
 
-if(el){
 
-  el.textContent=
-    text||"";
+  if(el){
 
-}
+    el.textContent=
+      text||"";
+
+  }
 
 }
 
 
 function setRoomButtons(closed){
 
-const closeBtn=
-  document.getElementById(
-    "closeRoomBtn"
-  );
+  const closeBtn=
+    document.getElementById(
+      "closeRoomBtn"
+    );
 
-const openBtn=
-  document.getElementById(
-    "openRoomBtn"
-  );
+  const openBtn=
+    document.getElementById(
+      "openRoomBtn"
+    );
 
 
-if(closeBtn){
+  if(closeBtn){
 
-  closeBtn.style.display=
-    closed
-    ?"none"
-    :"block";
+    closeBtn.style.display=
+      closed
+      ?"none"
+      :"block";
+
+  }
+
+
+  if(openBtn){
+
+    openBtn.style.display=
+      closed
+      ?"block"
+      :"none";
+
+  }
 
 }
 
-
-if(openBtn){
-
-  openBtn.style.display=
-    closed
-    ?"block"
-    :"none";
-
-}
-
-}
-
-
-/* =========================
-   房间开关
-   ========================= */
 
 closeRoomBtn.addEventListener(
   "click",
@@ -1644,55 +2422,55 @@ openRoomBtn.addEventListener(
 
 function closeRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "确定要关闭房间吗？\n\n"+
+      "关闭后，新的人将无法进入，"+
+      "但已经在房间里的人可以继续聊天。"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "closeRoom"
   );
-
-  return;
-
-}
-
-
-if(
-  !confirm(
-    "确定要关闭房间吗？\n\n"+
-    "关闭后，新的人将无法进入，"+
-    "但已经在房间里的人可以继续聊天。"
-  )
-){
-
-  return;
-
-}
-
-
-socket.emit(
-  "closeRoom"
-);
 
 }
 
 
 function openRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "openRoom"
   );
-
-  return;
-
-}
-
-
-socket.emit(
-  "openRoom"
-);
 
 }
 
@@ -1701,10 +2479,139 @@ socket.emit(
 
 <script>
 
-/* =========================
+/* ======================================================
+   手机键盘适配
+   ====================================================== */
+
+(function(){
+
+  const chat=
+    document.getElementById(
+      "chat"
+    );
+
+  const input=
+    document.getElementById(
+      "input"
+    );
+
+
+  if(!chat || !input)return;
+
+
+  const isMobile=
+    /Android|iPhone|iPad|iPod/i
+    .test(
+      navigator.userAgent
+    );
+
+
+  if(!isMobile)return;
+
+
+  const normalBottom=
+    85;
+
+
+  function adjustChat(){
+
+    const viewport=
+      window.visualViewport;
+
+
+    if(!viewport)return;
+
+
+    const keyboardHeight=
+      window.innerHeight-
+      viewport.height;
+
+
+    if(keyboardHeight>120){
+
+      chat.style.bottom=
+        (keyboardHeight+15)+"px";
+
+      chat.classList.add(
+        "keyboard-open"
+      );
+
+    }else{
+
+      chat.style.bottom=
+        normalBottom+"px";
+
+      chat.classList.remove(
+        "keyboard-open"
+      );
+
+    }
+
+  }
+
+
+  if(window.visualViewport){
+
+    window.visualViewport.addEventListener(
+      "resize",
+      adjustChat
+    );
+
+
+    window.visualViewport.addEventListener(
+      "scroll",
+      adjustChat
+    );
+
+  }
+
+
+  input.addEventListener(
+    "focus",
+    function(){
+
+      setTimeout(
+        adjustChat,
+        100
+      );
+
+      setTimeout(
+        adjustChat,
+        400
+      );
+
+    }
+  );
+
+
+  input.addEventListener(
+    "blur",
+    function(){
+
+      setTimeout(
+        adjustChat,
+        200
+      );
+
+    }
+  );
+
+
+  window.addEventListener(
+    "resize",
+    adjustChat
+  );
+
+})();
+
+</script>
+
+
+<script>
+
+/* ======================================================
    电脑端拖动聊天框
-   手机端不启用
-   ========================= */
+   ====================================================== */
 
 const chat=
   document.getElementById(
@@ -1809,4 +2716,3 @@ document.addEventListener(
 
 </body>
 </html>
-```
