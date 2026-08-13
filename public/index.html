@@ -121,20 +121,20 @@ html,body{
   left:50%;
 
   /*
-    这里控制聊天文字距离人物头顶的高度
-    目前按照你截图里的位置
+    聊天文字距离人物头顶
+    这次再往上调一点
   */
-  bottom:106px;
+  bottom:118px;
 
   transform:translateX(-50%);
 
   /*
-    尽量一行显示
+    默认尽量保持一行
   */
   white-space:nowrap;
 
   /*
-    文字大小
+    字体大小保持目前版本
   */
   font-size:15px;
 
@@ -155,34 +155,39 @@ html,body{
   animation:speechShow .18s ease-out;
 
   /*
-    防止特别长的文字撑爆页面
+    防止太长撑出屏幕
   */
   max-width:80vw;
   overflow:hidden;
-  text-overflow:ellipsis;
+  text-overflow:ellipsis
 }
 
+/*
+  超长文字
+*/
 .speech.long{
   white-space:normal;
   line-height:1.35;
   max-width:260px;
-  text-align:center;
+  text-align:center
 }
 
 @keyframes speechShow{
+
   from{
     opacity:0;
     transform:
       translateX(-50%)
-      translateY(6px);
+      translateY(6px)
   }
 
   to{
     opacity:1;
     transform:
       translateX(-50%)
-      translateY(0);
+      translateY(0)
   }
+
 }
 
 /* =========================
@@ -193,10 +198,7 @@ html,body{
   position:absolute;
   left:50%;
 
-  /*
-    互动表情位于人物头顶
-  */
-  bottom:142px;
+  bottom:154px;
 
   transform:translateX(-50%);
 
@@ -221,7 +223,7 @@ html,body{
     transform:
       translateX(-50%)
       translateY(12px)
-      scale(.7);
+      scale(.7)
   }
 
   15%{
@@ -229,7 +231,7 @@ html,body{
     transform:
       translateX(-50%)
       translateY(0)
-      scale(1);
+      scale(1)
   }
 
   70%{
@@ -237,7 +239,7 @@ html,body{
     transform:
       translateX(-50%)
       translateY(-12px)
-      scale(1.05);
+      scale(1.05)
   }
 
   100%{
@@ -245,8 +247,9 @@ html,body{
     transform:
       translateX(-50%)
       translateY(-35px)
-      scale(1.08);
+      scale(1.08)
   }
+
 }
 
 /* =========================
@@ -317,11 +320,21 @@ html,body{
 
 #input{
   flex:1;
+  min-width:0;
   background:#0b1620;
   border:0;
   color:#fff;
   padding:13px;
-  outline:0
+  outline:0;
+  -webkit-appearance:none;
+  appearance:none;
+  border-radius:0;
+  touch-action:manipulation
+}
+
+#input:focus{
+  outline:none;
+  box-shadow:none
 }
 
 #btn{
@@ -330,7 +343,8 @@ html,body{
   color:#fff;
   padding:0 18px;
   font-size:14px;
-  cursor:pointer
+  cursor:pointer;
+  touch-action:manipulation
 }
 
 /* =========================
@@ -389,7 +403,8 @@ html,body{
   border-radius:15px;
   background:#071923aa;
   cursor:pointer;
-  transition:.15s
+  transition:.15s;
+  touch-action:manipulation
 }
 
 .genderOption:hover{
@@ -426,7 +441,10 @@ html,body{
   background:#071923;
   color:white;
   outline:0;
-  display:block
+  display:block;
+  font-size:16px;
+  -webkit-appearance:none;
+  appearance:none
 }
 
 .box input:focus{
@@ -441,7 +459,8 @@ html,body{
   color:#fff;
   font-weight:bold;
   cursor:pointer;
-  margin-top:7px
+  margin-top:7px;
+  touch-action:manipulation
 }
 
 .box button:disabled{
@@ -520,7 +539,8 @@ html,body{
   color:#fff;
   cursor:pointer;
   font-size:11px;
-  flex:none
+  flex:none;
+  touch-action:manipulation
 }
 
 .hostAction{
@@ -531,7 +551,8 @@ html,body{
   border-radius:9px;
   color:#fff;
   cursor:pointer;
-  font-weight:bold
+  font-weight:bold;
+  touch-action:manipulation
 }
 
 #closeRoomBtn{
@@ -598,7 +619,8 @@ html,body{
   }
 
   #btn{
-    min-width:68px
+    min-width:68px;
+    min-height:48px
   }
 
   #hostPanel{
@@ -608,24 +630,22 @@ html,body{
     max-height:65vh
   }
 
+  /*
+    手机端头顶文字也再往上一点
+  */
   .speech{
-    /*
-      手机端稍微小一点
-    */
     font-size:14px;
-
-    bottom:103px;
-
-    max-width:78vw;
+    bottom:115px;
+    max-width:78vw
   }
 
   .speech.long{
-    max-width:240px;
+    max-width:240px
   }
 
   .reaction{
-    bottom:137px;
-    font-size:28px;
+    bottom:150px;
+    font-size:28px
   }
 
 }
@@ -640,9 +660,20 @@ html,body{
 <div id="map"></div>
 
 <div id="top">
+
 <b>🌴 shako的平行空间</b>
-<span class="pill online" id="count">在线：0/10</span>
-<span class="pill">十人房</span>
+
+<span
+  class="pill online"
+  id="count"
+>
+在线：0/10
+</span>
+
+<span class="pill">
+十人房
+</span>
+
 </div>
 
 
@@ -701,14 +732,22 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <div id="messages"></div>
 
 <div id="send">
+
 <input
   id="input"
   maxlength="200"
+  autocomplete="off"
+  autocapitalize="sentences"
   placeholder="说点什么…"
 >
-<button id="btn">
+
+<button
+  id="btn"
+  type="button"
+>
 发送
 </button>
+
 </div>
 
 </div>
@@ -832,16 +871,12 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <script>
 "use strict";
 
-
 let socket=null;
-
 
 try{
 
   if(typeof io==="function"){
-
     socket=io();
-
   }
 
 }catch(e){
@@ -850,20 +885,16 @@ try{
 
 }
 
-
 let myId=null;
 
 let selectedGender="male";
-
 
 let me={
   x:50,
   y:55
 };
 
-
 const speed=1.2;
-
 
 const modal=
   document.getElementById("modal");
@@ -1264,23 +1295,6 @@ if(socket){
 
 
   socket.on(
-    "roomOpened",
-    ()=>{
-
-      setRoomButtons(false);
-
-      setRoomStatus("");
-
-      msg(
-        "系统",
-        "🔓 房间已经重新开放"
-      );
-
-    }
-  );
-
-
-  socket.on(
     "full",
     ()=>{
 
@@ -1299,7 +1313,7 @@ if(socket){
 
 
   /* ====================================================
-     登录成功
+     初始化
      ==================================================== */
 
   socket.on(
@@ -1540,10 +1554,6 @@ if(socket){
       );
 
 
-      /*
-        人物头顶显示聊天文字
-      */
-
       showSpeech(
         d.id,
         d.text
@@ -1685,11 +1695,6 @@ function showSpeech(
   if(!player)return;
 
 
-  /*
-    如果之前已经有气泡
-    删除旧的
-  */
-
   const old=
     player.querySelector(
       ".speech"
@@ -1714,7 +1719,7 @@ function showSpeech(
 
 
   /*
-    超长文字才允许换行
+    超过18个字才允许换行
   */
 
   if(
@@ -1736,10 +1741,6 @@ function showSpeech(
     speech
   );
 
-
-  /*
-    4秒后消失
-  */
 
   setTimeout(
     ()=>{
@@ -1843,9 +1844,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowUp","w","W"].includes(
-        e.key
-      )
+      ["ArrowUp","w","W"].includes(e.key)
     ){
 
       dy=-speed;
@@ -1854,9 +1853,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowDown","s","S"].includes(
-        e.key
-      )
+      ["ArrowDown","s","S"].includes(e.key)
     ){
 
       dy=speed;
@@ -1865,9 +1862,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowLeft","a","A"].includes(
-        e.key
-      )
+      ["ArrowLeft","a","A"].includes(e.key)
     ){
 
       dx=-speed;
@@ -1876,9 +1871,7 @@ document.addEventListener(
 
 
     if(
-      ["ArrowRight","d","D"].includes(
-        e.key
-      )
+      ["ArrowRight","d","D"].includes(e.key)
     ){
 
       dx=speed;
@@ -2004,6 +1997,10 @@ function updateHostPlayers(){
       );
 
 
+      /*
+        房主自己不显示踢出按钮
+      */
+
       if(p.id!==myId){
 
         const kick=
@@ -2083,9 +2080,7 @@ function setRoomStatus(text){
 }
 
 
-function setRoomButtons(
-  closed
-){
+function setRoomButtons(closed){
 
   const closeBtn=
     document.getElementById(
@@ -2295,7 +2290,6 @@ function openRoom(){
         adjustChat,
         100
       );
-
 
       setTimeout(
         adjustChat,
