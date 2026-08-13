@@ -112,7 +112,6 @@ html,body{
   right:18px;
   bottom:18px;
   width:min(350px,34vw);
-   resize:both;
   background:#15232eea;
   border:1px solid #ffffff35;
   border-radius:16px;
@@ -131,12 +130,17 @@ html,body{
 }
 
 #messages{
-  height:205px;
+  height:210px;
+  min-height:100px;
+  max-height:600px;
   overflow:auto;
-  padding:10px 12px;
-  font-size:13px
+  padding:12px;
+  font-size:13px;
 }
-
+#resizeBar{
+  height:6px;
+  cursor:row-resize;
+}
 .msg{
   margin:7px 0;
   line-height:1.4
@@ -383,7 +387,7 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 </div>
 
 <div id="messages"></div>
-
+<div id="resizeBar"></div>
 <div id="send">
 <input id="input" maxlength="200" placeholder="说点什么…">
 <button id="btn">发送</button>
@@ -989,6 +993,49 @@ document.addEventListener("mousemove", function(e){
 document.addEventListener("mouseup", function(){
 
   dragging = false;
+
+});
+  // 调整聊天记录区域高度
+
+const messages = document.getElementById("messages");
+const resizeBar = document.getElementById("resizeBar");
+
+let resizing = false;
+let startY = 0;
+let startHeight = 0;
+
+resizeBar.addEventListener("mousedown", function(e){
+
+  if(window.innerWidth <= 700) return;
+
+  resizing = true;
+
+  startY = e.clientY;
+  startHeight = messages.offsetHeight;
+
+  document.body.style.cursor = "row-resize";
+
+  e.preventDefault();
+
+});
+
+document.addEventListener("mousemove", function(e){
+
+  if(!resizing) return;
+
+  const newHeight =
+    startHeight + (e.clientY - startY);
+
+  messages.style.height =
+    Math.max(100, Math.min(600, newHeight)) + "px";
+
+});
+
+document.addEventListener("mouseup", function(){
+
+  resizing = false;
+
+  document.body.style.cursor = "";
 
 });
 </script>
