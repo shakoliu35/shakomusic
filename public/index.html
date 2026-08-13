@@ -98,6 +98,11 @@ html,body{
   box-shadow:0 0 0 1px #ffd35c66
 }
 
+.hostBadge{
+  color:#ffd75c;
+  font-weight:bold;
+}
+
 #hint{
   position:absolute;
   left:18px;
@@ -270,6 +275,14 @@ html,body{
   border-color:#159fd0
 }
 
+.hostHint{
+  text-align:left;
+  font-size:11px;
+  color:#a9cbd3;
+  margin-top:2px;
+  margin-bottom:4px
+}
+
 .box button{
   padding:12px 25px;
   border:0;
@@ -291,6 +304,31 @@ html,body{
   margin:4px 0 0;
   color:#ff8f8f;
   font-size:12px
+}
+
+#hostPanel{
+  display:none;
+  position:absolute;
+  top:70px;
+  right:18px;
+  z-index:35;
+  background:#102737ee;
+  border:1px solid #ffd75c55;
+  border-radius:14px;
+  padding:12px 15px;
+  box-shadow:0 10px 30px #0006;
+  backdrop-filter:blur(6px);
+  font-size:13px
+}
+
+#hostPanel.show{
+  display:block
+}
+
+#hostPanel .hostTitle{
+  color:#ffd75c;
+  font-weight:bold;
+  margin-bottom:5px
 }
 
 @media(max-width:700px){
@@ -339,8 +377,12 @@ html,body{
   #btn{
     min-width:68px
   }
-}
 
+  #hostPanel{
+    top:58px;
+    right:10px
+  }
+}
 </style>
 </head>
 
@@ -354,6 +396,11 @@ html,body{
 <b>🌴 shako的平行空间</b>
 <span class="pill online" id="count">在线：0/10</span>
 <span class="pill">十人房</span>
+</div>
+
+<div id="hostPanel">
+  <div class="hostTitle">👑 你是房主</div>
+  <div>欢迎回到你的平行空间</div>
 </div>
 
 <div id="hint">
@@ -393,19 +440,13 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 <div class="genderRow">
 
 <div class="genderOption selected" id="maleOption" data-gender="male">
-
 <img src="./male.png" alt="男生">
-
 <div>👨 男生</div>
-
 </div>
 
 <div class="genderOption" id="femaleOption" data-gender="female">
-
 <img src="./female.png" alt="女生">
-
 <div>👩 女生</div>
-
 </div>
 
 </div>
@@ -423,6 +464,18 @@ type="password"
 maxlength="100"
 autocomplete="off"
 placeholder="请输入房间密码"
+>
+
+<div class="hostHint">
+👑 房主密码只有房主填写，不填写也可以正常进入房间
+</div>
+
+<input
+id="hostPassword"
+type="password"
+maxlength="100"
+autocomplete="off"
+placeholder="房主密码（只有房主填写）"
 >
 
 <div id="error"></div>
@@ -443,81 +496,80 @@ placeholder="请输入房间密码"
 "use strict";
 
 let socket=null;
-
-try{
-  if(typeof io==="function")socket=io();
-}catch(e){
-  socket=null;
-}
-
 let myId=null;
 let selectedGender="male";
 let me={x:50,y:55};
 
 const speed=1.2;
 
+try{
+  if(typeof io==="function") socket=io();
+}catch(e){
+  socket=null;
+}
+
 const modal=document.getElementById("modal");
 const nick=document.getElementById("nick");
 const password=document.getElementById("password");
+const hostPassword=document.getElementById("hostPassword");
 const joinBtn=document.getElementById("join");
 const errorBox=document.getElementById("error");
 const world=document.getElementById("world");
 const messages=document.getElementById("messages");
 const input=document.getElementById("input");
 const count=document.getElementById("count");
+const hostPanel=document.getElementById("hostPanel");
 
 const maleOption=document.getElementById("maleOption");
 const femaleOption=document.getElementById("femaleOption");
 
 function esc(s){
 
-return String(s).replace(
-  /[&<>"']/g,
-  c=>({
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
-  }[c])
-);
+  return String(s).replace(
+    /[&<>"']/g,
+    c=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[c])
+  );
 
 }
 
 function msg(name,text){
 
-const d=document.createElement("div");
+  const d=document.createElement("div");
 
-d.className="msg";
+  d.className="msg";
 
-d.innerHTML=
-"<b>"+esc(name)+"：</b>"+esc(text);
+  d.innerHTML=
+    "<b>"+esc(name)+"：</b>"+esc(text);
 
-messages.appendChild(d);
+  messages.appendChild(d);
 
-messages.scrollTop=messages.scrollHeight;
+  messages.scrollTop=messages.scrollHeight;
 
 }
 
 function setError(text){
-
-errorBox.textContent=text||"";
-
+  errorBox.textContent=text||"";
 }
 
 function chooseGender(gender){
 
-selectedGender=gender;
+  selectedGender=gender;
 
-maleOption.classList.toggle(
-  "selected",
-  gender==="male"
-);
+  maleOption.classList.toggle(
+    "selected",
+    gender==="male"
+  );
 
-femaleOption.classList.toggle(
-  "selected",
-  gender==="female"
-);
+  femaleOption.classList.toggle(
+    "selected",
+    gender==="female"
+  );
 
 }
 
@@ -533,36 +585,45 @@ femaleOption.addEventListener(
 
 function startAuth(){
 
-setError("");
+  setError("");
 
-const n=nick.value.trim()||"玩家";
-const p=password.value;
+  const n=
+    nick.value.trim()||"玩家";
 
-if(!p){
+  const p=
+    password.value;
 
-setError("请输入房间密码");
+  const hp=
+    hostPassword.value;
 
-password.focus();
+  if(!p){
 
-return;
+    setError("请输入房间密码");
 
-}
+    password.focus();
 
-if(!socket){
+    return;
 
-setError(
-  "服务器连接失败，请刷新页面后重试"
-);
+  }
 
-return;
+  if(!socket){
 
-}
+    setError(
+      "服务器连接失败，请刷新页面后重试"
+    );
 
-joinBtn.disabled=true;
+    return;
 
-joinBtn.textContent="验证中...";
+  }
 
-socket.emit("auth",p);
+  joinBtn.disabled=true;
+  joinBtn.textContent="验证中...";
+
+  /*
+    先验证普通房间密码
+  */
+
+  socket.emit("auth",p);
 
 }
 
@@ -594,6 +655,21 @@ password.addEventListener(
 
       e.preventDefault();
 
+      hostPassword.focus();
+
+    }
+
+  }
+);
+
+hostPassword.addEventListener(
+  "keydown",
+  e=>{
+
+    if(e.key==="Enter"){
+
+      e.preventDefault();
+
       startAuth();
 
     }
@@ -605,7 +681,7 @@ input.addEventListener(
   "keydown",
   e=>{
 
-    if(e.key==="Enter")send();
+    if(e.key==="Enter") send();
 
   }
 );
@@ -618,157 +694,250 @@ document.getElementById("btn")
 
 function send(){
 
-const text=input.value.trim();
+  const text=
+    input.value.trim();
 
-if(!text)return;
+  if(!text)return;
 
-if(socket)socket.emit("chat",text);
+  if(socket){
 
-input.value="";
+    socket.emit(
+      "chat",
+      text
+    );
+
+  }
+
+  input.value="";
 
 }
 
 if(socket){
 
-socket.on(
-  "connect",
-  ()=>setError("")
-);
+  socket.on(
+    "connect",
+    ()=>{
+      setError("");
+    }
+  );
 
-socket.on(
-  "connect_error",
-  ()=>{
+  socket.on(
+    "connect_error",
+    ()=>{
 
-    joinBtn.disabled=false;
+      joinBtn.disabled=false;
 
-    joinBtn.textContent="进入海滩";
+      joinBtn.textContent="进入海滩";
 
-    setError(
-      "无法连接服务器，请稍后刷新重试"
-    );
+      setError(
+        "无法连接服务器，请稍后刷新重试"
+      );
 
-  }
-);
+    }
+  );
 
-socket.on(
-  "authError",
-  ()=>{
+  socket.on(
+    "authError",
+    ()=>{
 
-    joinBtn.disabled=false;
+      joinBtn.disabled=false;
 
-    joinBtn.textContent="进入海滩";
+      joinBtn.textContent="进入海滩";
 
-    password.value="";
+      setError(
+        "房间密码错误，请重新输入"
+      );
 
-    setError(
-      "房间密码错误，请重新输入"
-    );
+      password.focus();
 
-    password.focus();
+    }
+  );
 
-  }
-);
+  socket.on(
+    "full",
+    ()=>{
 
-socket.on(
-  "full",
-  ()=>{
+      joinBtn.disabled=true;
 
-    joinBtn.disabled=true;
+      joinBtn.textContent="房间已满";
 
-    joinBtn.textContent="房间已满";
+      setError(
+        "房间已经满员，目前最多10人"
+      );
 
-    setError(
-      "房间已经满员，目前最多10人"
-    );
+    }
+  );
 
-  }
-);
+  socket.on(
+    "init",
+    d=>{
 
-socket.on(
-  "init",
-  d=>{
+      myId=d.you.id;
 
-    myId=d.you.id;
+      me=d.you;
 
-    me=d.you;
+      modal.style.display="none";
 
-    modal.style.display="none";
+      const n=
+        nick.value.trim()||"玩家";
 
-    const n=
-      nick.value.trim()||"玩家";
+      msg(
+        "系统",
+        "🏝️ 欢迎 "+n+
+        " 来到 shako 的平行空间！"
+      );
 
-    msg(
-      "系统",
-      "🏝️ 欢迎 "+n+
-      " 来到 shako 的平行空间！"
-    );
+      socket.emit(
+        "setName",
+        n
+      );
 
-    socket.emit(
-      "setName",
-      n
-    );
+      socket.emit(
+        "setGender",
+        selectedGender
+      );
 
-    socket.emit(
-      "setGender",
-      selectedGender
-    );
+      /*
+        如果填写了房主密码，
+        登录成功后向服务器申请房主身份
+      */
 
-  }
-);
+      const hp=
+        hostPassword.value.trim();
 
-socket.on(
-  "chat",
-  d=>msg(d.name,d.text)
-);
+      if(hp){
 
-socket.on(
-  "players",
-  ps=>{
+        socket.emit(
+          "hostAuth",
+          hp
+        );
 
-    count.textContent=
-      "在线："+ps.length+"/10";
+      }
 
-    document
-      .querySelectorAll(".player")
-      .forEach(e=>e.remove());
+    }
+  );
 
-    ps.forEach(p=>{
+  /*
+    房主认证成功
+  */
 
-      const el=
-        document.createElement("div");
+  socket.on(
+    "hostAuthSuccess",
+    ()=>{
 
-      el.className=
-        "player"+
-        (p.id===myId?" me":"");
+      hostPanel.classList.add("show");
 
-      el.style.left=p.x+"%";
+      msg(
+        "系统",
+        "👑 房主身份验证成功"
+      );
 
-      el.style.top=p.y+"%";
+    }
+  );
 
-      const gender=
-        p.gender==="female"
-        ?"female"
-        :"male";
+  /*
+    房主密码错误
+  */
 
-      const img=
-        gender==="female"
-        ?"female.png"
-        :"male.png";
+  socket.on(
+    "hostAuthError",
+    ()=>{
 
-      el.innerHTML=
-        '<img class="playerImg" '+
-        'src="./'+img+'" alt="">'+
-        '<div class="name">'+
-        esc(p.name)+
-        (p.id===myId?"（你）":"")+
-        "</div>";
+      /*
+        不影响正常进入房间
+      */
 
-      world.appendChild(el);
+      msg(
+        "系统",
+        "房主密码不正确，你以普通玩家身份进入"
+      );
 
-    });
+    }
+  );
 
-  }
-);
+  /*
+    已经存在房主
+  */
+
+  socket.on(
+    "hostAlreadyExists",
+    ()=>{
+
+      msg(
+        "系统",
+        "当前已经有房主在线"
+      );
+
+    }
+  );
+
+  socket.on(
+    "chat",
+    d=>{
+
+      msg(
+        d.name,
+        d.text
+      );
+
+    }
+  );
+
+  socket.on(
+    "players",
+    ps=>{
+
+      count.textContent=
+        "在线："+ps.length+"/10";
+
+      document
+        .querySelectorAll(".player")
+        .forEach(
+          e=>e.remove()
+        );
+
+      ps.forEach(p=>{
+
+        const el=
+          document.createElement("div");
+
+        el.className=
+          "player"+
+          (p.id===myId?" me":"");
+
+        el.style.left=p.x+"%";
+        el.style.top=p.y+"%";
+
+        const gender=
+          p.gender==="female"
+          ?"female"
+          :"male";
+
+        const img=
+          gender==="female"
+          ?"female.png"
+          :"male.png";
+
+        const hostMark=
+          p.isHost
+          ?'<span class="hostBadge"> 👑</span>'
+          :"";
+
+        el.innerHTML=
+          '<img class="playerImg" '+
+          'src="./'+img+'" alt="">'+
+          '<div class="name">'+
+          esc(p.name)+
+          hostMark+
+          (p.id===myId?"（你）":"")+
+          "</div>";
+
+        world.appendChild(el);
+
+      });
+
+    }
+  );
 
 }
 
@@ -779,7 +948,8 @@ document.addEventListener(
     if(
       document.activeElement===input||
       document.activeElement===nick||
-      document.activeElement===password
+      document.activeElement===password||
+      document.activeElement===hostPassword
     )return;
 
     let dx=0;
@@ -846,15 +1016,17 @@ document.addEventListener(
 
 (function(){
 
-  const chat=document.getElementById("chat");
-  const input=document.getElementById("input");
+  const chat=
+    document.getElementById("chat");
+
+  const input=
+    document.getElementById("input");
 
   if(!chat || !input)return;
 
   const isMobile=
-    /Android|iPhone|iPad|iPod/i.test(
-      navigator.userAgent
-    );
+    /Android|iPhone|iPad|iPod/i
+    .test(navigator.userAgent);
 
   if(!isMobile)return;
 
@@ -862,12 +1034,14 @@ document.addEventListener(
 
   function adjustChat(){
 
-    const viewport=window.visualViewport;
+    const viewport=
+      window.visualViewport;
 
     if(!viewport)return;
 
     const keyboardHeight=
-      window.innerHeight-viewport.height;
+      window.innerHeight-
+      viewport.height;
 
     if(keyboardHeight>120){
 
@@ -901,8 +1075,15 @@ document.addEventListener(
     "focus",
     function(){
 
-      setTimeout(adjustChat,100);
-      setTimeout(adjustChat,400);
+      setTimeout(
+        adjustChat,
+        100
+      );
+
+      setTimeout(
+        adjustChat,
+        400
+      );
 
     }
   );
@@ -911,7 +1092,10 @@ document.addEventListener(
     "blur",
     function(){
 
-      setTimeout(adjustChat,200);
+      setTimeout(
+        adjustChat,
+        200
+      );
 
     }
   );
@@ -923,10 +1107,15 @@ document.addEventListener(
 
 })();
 
-/* 电脑端拖动聊天框 */
+/*
+  电脑端拖动聊天框
+*/
 
-const chat=document.getElementById("chat");
-const chatTitle=document.getElementById("chatTitle");
+const chat=
+  document.getElementById("chat");
+
+const chatTitle=
+  document.getElementById("chatTitle");
 
 let dragging=false;
 let offsetX=0;
