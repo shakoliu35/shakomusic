@@ -358,9 +358,13 @@ io.on("connection", socket => {
     if (!text) return;
 
 
+    // 聊天记录
     io.emit(
       "chat",
       {
+
+        id:
+          socket.id,
 
         name:
           p.name,
@@ -371,7 +375,98 @@ io.on("connection", socket => {
       }
     );
 
+
+    // 人物头顶说话文字
+    io.emit(
+      "speech",
+      {
+
+        id:
+          socket.id,
+
+        text:
+          text
+
+      }
+    );
+
   });
+
+
+
+  // ======================================================
+  // 玩家互动表情
+  // ======================================================
+
+  socket.on(
+    "reaction",
+    data => {
+
+      const player =
+        players.get(socket.id);
+
+      if (!player) return;
+
+
+      if (!data) return;
+
+
+      const targetId =
+        String(data.targetId || "");
+
+
+      const emoji =
+        String(data.emoji || "");
+
+
+      // 只允许这几个表情
+      const allowed =
+        [
+          "👋",
+          "❤️",
+          "😂",
+          "✨"
+        ];
+
+
+      if (
+        !allowed.includes(emoji)
+      ) {
+
+        return;
+
+      }
+
+
+      // 目标玩家必须存在
+      if (
+        !players.has(targetId)
+      ) {
+
+        return;
+
+      }
+
+
+      // 广播给所有在线玩家
+      io.emit(
+        "reaction",
+        {
+
+          fromId:
+            socket.id,
+
+          targetId:
+            targetId,
+
+          emoji:
+            emoji
+
+        }
+      );
+
+    }
+  );
 
 
 
