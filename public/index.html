@@ -1,101 +1,218 @@
 <!doctype html>
 <html lang="zh-CN">
+
 <head>
+
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1"
+>
+
 <title>shako的平行空间</title>
 
-<style>
-*{box-sizing:border-box}
 
-html,body{
+<style>
+
+*{
+  box-sizing:border-box
+}
+
+
+html,
+body{
+
   margin:0;
+
   width:100%;
   height:100%;
+
   overflow:hidden;
-  font-family:Arial,"Microsoft YaHei",sans-serif;
+
+  font-family:
+    Arial,
+    "Microsoft YaHei",
+    sans-serif;
+
   background:#000;
+
   color:#fff
+
 }
+
 
 #world{
+
   position:relative;
+
   width:100%;
   height:100vh;
+
   overflow:hidden
+
 }
+
 
 #map{
+
   position:absolute;
+
   inset:0;
-  background-image:url("beach-sunset.jpg");
+
+  background-image:
+    url("beach-sunset.jpg");
+
   background-size:cover;
+
   background-position:center;
+
   background-repeat:no-repeat
+
 }
+
+
+/* =========================
+   顶部
+   ========================= */
 
 #top{
+
   position:absolute;
+
   left:18px;
   top:18px;
+
   display:flex;
+
   align-items:center;
+
   gap:10px;
+
   z-index:30
+
 }
+
 
 #top b{
+
   font-size:20px;
-  text-shadow:0 2px 3px #000
+
+  text-shadow:
+    0 2px 3px #000
+
 }
+
 
 .pill{
+
   background:#254764dd;
+
   padding:7px 12px;
+
   border-radius:20px;
+
   font-size:13px;
-  border:1px solid #ffffff22
+
+  border:
+    1px solid #ffffff22
+
 }
+
 
 .pill.online{
+
   background:#167a6dcc
+
 }
+
+
+/* =========================
+   人物
+   ========================= */
 
 .player{
+
   position:absolute;
+
   width:78px;
   height:96px;
-  transform:translate(-50%,-80%);
-  transition:left .08s,top .08s;
+
+  transform:
+    translate(-50%,-80%);
+
+  transition:
+    left .08s,
+    top .08s;
+
   cursor:pointer;
+
   z-index:20;
+
   text-align:center;
-  filter:drop-shadow(0 4px 3px #0005)
+
+  filter:
+    drop-shadow(
+      0 4px 3px #0005
+    )
+
 }
+
 
 .playerImg{
+
   width:68px;
   height:68px;
+
   object-fit:contain;
+
   display:block;
-  margin:0 auto
+
+  margin:0 auto;
+
+  cursor:pointer;
+
+  -webkit-user-select:none;
+  user-select:none;
+
+  -webkit-tap-highlight-color:
+    transparent
+
 }
+
 
 .name{
+
   margin-top:2px;
+
   text-align:center;
+
   background:#27333bd9;
-  border:1px solid #ffffff33;
+
+  border:
+    1px solid #ffffff33;
+
   border-radius:10px;
+
   padding:3px 6px;
+
   font-size:11px;
+
   white-space:nowrap;
-  text-shadow:0 1px 1px #000
+
+  text-shadow:
+    0 1px 1px #000
+
 }
 
+
 .me .name{
+
   background:#5a4721e8;
-  box-shadow:0 0 0 1px #ffd35c66
+
+  box-shadow:
+    0 0 0 1px #ffd35c66
+
 }
 
 
@@ -104,23 +221,23 @@ html,body{
    ========================= */
 
 .speech{
+
   position:absolute;
 
-  /* 比之前再高一点 */
-  bottom:94px;
+  bottom:82px;
 
   left:50%;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
-  /* 强制一整行 */
   width:max-content;
+
   max-width:none;
 
   color:#fff;
 
-  /* 字体缩小 */
-  font-size:17px;
+  font-size:20px;
 
   font-weight:600;
 
@@ -134,28 +251,36 @@ html,body{
 
   z-index:60;
 
-  /* 只有轻微阴影 */
   text-shadow:
     0 2px 4px rgba(0,0,0,.75),
     0 0 2px rgba(0,0,0,.55);
 
-  animation:speechIn .15s ease-out
+  animation:
+    speechIn .15s ease-out
+
 }
+
 
 @keyframes speechIn{
 
   from{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(6px)
+
   }
 
   to{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(0)
+
   }
 
 }
@@ -166,9 +291,9 @@ html,body{
    ========================= */
 
 .reaction{
+
   position:absolute;
 
-  /* 表情位置 */
   bottom:92px;
 
   left:50%;
@@ -177,7 +302,6 @@ html,body{
     translateX(-50%)
     translateY(-22px);
 
-  /* 表情缩小 */
   font-size:20px;
 
   line-height:1;
@@ -187,34 +311,48 @@ html,body{
   pointer-events:none;
 
   filter:
-    drop-shadow(0 2px 3px rgba(0,0,0,.55));
+    drop-shadow(
+      0 2px 3px
+      rgba(0,0,0,.55)
+    );
 
-  animation:reactionPop .25s ease-out
+  animation:
+    reactionPop .25s ease-out
+
 }
+
 
 @keyframes reactionPop{
 
   0%{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(-10px)
       scale(.5)
+
   }
 
   60%{
+
     transform:
       translateX(-50%)
       translateY(-28px)
       scale(1.06)
+
   }
 
   100%{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(-22px)
       scale(1)
+
   }
 
 }
@@ -226,86 +364,131 @@ html,body{
    ========================= */
 
 .reactionMenu{
+
   position:absolute;
 
   left:50%;
+
   bottom:78px;
 
-  transform:translateX(-50%);
+  transform:
+    translateX(-50%);
 
   display:flex;
-  gap:5px;
 
-  padding:7px 8px;
+  gap:6px;
+
+  padding:8px 9px;
 
   background:#132330ee;
 
-  border:1px solid #ffffff2c;
+  border:
+    1px solid #ffffff2c;
 
   border-radius:14px;
 
   box-shadow:
-    0 8px 25px rgba(0,0,0,.45);
+    0 8px 25px
+    rgba(0,0,0,.45);
 
-  backdrop-filter:blur(8px);
+  backdrop-filter:
+    blur(8px);
 
   z-index:100;
 
   white-space:nowrap;
 
-  animation:menuIn .15s ease-out
+  animation:
+    menuIn .15s ease-out
+
 }
+
 
 @keyframes menuIn{
 
   from{
+
     opacity:0;
+
     transform:
       translateX(-50%)
       translateY(6px)
       scale(.95)
+
   }
 
   to{
+
     opacity:1;
+
     transform:
       translateX(-50%)
       translateY(0)
       scale(1)
+
   }
 
 }
 
+
+/* =========================
+   这里是本次唯一主要修改
+   表情按钮放大
+   ========================= */
+
 .reactionBtn{
-  width:38px;
-  height:38px;
+
+  width:46px;
+
+  height:46px;
 
   border:0;
 
-  border-radius:10px;
+  border-radius:11px;
 
   background:#ffffff0d;
 
-  font-size:21px;
+  font-size:27px;
 
   cursor:pointer;
 
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
+  padding:0;
+
+  flex:none;
 
   transition:
     transform .12s,
-    background .12s
+    background .12s;
+
+  touch-action:manipulation;
+
+  -webkit-tap-highlight-color:
+    transparent
+
 }
+
 
 .reactionBtn:hover{
-  transform:scale(1.12);
+
+  transform:
+    scale(1.12);
+
   background:#ffffff1c
+
 }
 
+
 .reactionBtn:active{
-  transform:scale(.92)
+
+  transform:
+    scale(.92)
+
 }
 
 
@@ -314,16 +497,29 @@ html,body{
    ========================= */
 
 #hint{
+
   position:absolute;
+
   left:18px;
+
   bottom:18px;
+
   background:#15232ee8;
-  border:1px solid #ffffff22;
+
+  border:
+    1px solid #ffffff22;
+
   padding:10px 14px;
+
   border-radius:12px;
+
   font-size:12px;
+
   z-index:30;
-  box-shadow:0 5px 18px #0025
+
+  box-shadow:
+    0 5px 18px #0025
+
 }
 
 
@@ -332,66 +528,147 @@ html,body{
    ========================= */
 
 #chat{
+
   position:absolute;
+
   right:18px;
+
   bottom:18px;
-  width:min(350px,34vw);
+
+  width:
+    min(350px,34vw);
+
   background:#15232eea;
-  border:1px solid #ffffff35;
+
+  border:
+    1px solid #ffffff35;
+
   border-radius:16px;
+
   overflow:hidden;
-  box-shadow:0 12px 35px #0028;
+
+  box-shadow:
+    0 12px 35px #0028;
+
   z-index:30;
-  backdrop-filter:blur(5px)
+
+  backdrop-filter:
+    blur(5px)
+
 }
+
 
 #chatTitle{
+
   padding:9px 12px;
+
   background:#0b1b28aa;
+
   font-weight:bold;
+
   font-size:13px;
-  border-bottom:1px solid #ffffff18;
+
+  border-bottom:
+    1px solid #ffffff18;
+
   cursor:move;
+
   user-select:none
+
 }
+
 
 #messages{
+
   height:210px;
+
   overflow:auto;
+
   padding:12px;
+
   font-size:13px
+
 }
+
 
 .msg{
+
   margin:7px 0;
+
   line-height:1.4
+
 }
+
 
 .msg b{
+
   color:#ffd66b
+
 }
+
 
 #send{
+
   display:flex;
-  border-top:1px solid #ffffff25
+
+  border-top:
+    1px solid #ffffff25
+
 }
+
 
 #input{
+
   flex:1;
+
+  min-width:0;
+
   background:#0b1620;
+
   border:0;
+
   color:#fff;
+
   padding:13px;
-  outline:0
+
+  outline:0;
+
+  -webkit-appearance:none;
+
+  appearance:none;
+
+  border-radius:0;
+
+  touch-action:manipulation
+
 }
 
+
+#input:focus{
+
+  outline:none;
+
+  box-shadow:none
+
+}
+
+
 #btn{
+
   border:0;
+
   background:#3888ed;
+
   color:#fff;
+
   padding:0 18px;
+
   font-size:14px;
-  cursor:pointer
+
+  cursor:pointer;
+
+  touch-action:manipulation
+
 }
 
 
@@ -400,122 +677,248 @@ html,body{
    ========================= */
 
 #modal{
+
   position:absolute;
+
   inset:0;
+
   background:#04233566;
+
   display:flex;
+
   align-items:center;
+
   justify-content:center;
+
   z-index:50;
-  backdrop-filter:blur(3px)
+
+  backdrop-filter:
+    blur(3px)
+
 }
+
 
 .box{
-  background:linear-gradient(145deg,#16394dcc,#102737ee);
+
+  background:
+    linear-gradient(
+      145deg,
+      #16394dcc,
+      #102737ee
+    );
+
   padding:28px;
-  width:min(390px,92%);
+
+  width:
+    min(390px,92%);
+
   text-align:center;
-  border:1px solid #ffffff33;
+
+  border:
+    1px solid #ffffff33;
+
   border-radius:20px;
-  box-shadow:0 20px 60px #001a
+
+  box-shadow:
+    0 20px 60px #001a
+
 }
+
 
 .box h2{
+
   margin:0 0 8px;
+
   font-size:26px
+
 }
+
 
 .box p{
+
   color:#d8edf2;
+
   line-height:1.6;
+
   margin-bottom:15px
+
 }
+
 
 .genderTitle{
+
   font-size:13px;
+
   color:#cfe8ee;
+
   margin-bottom:9px
+
 }
+
 
 .genderRow{
+
   display:flex;
+
   justify-content:center;
+
   gap:18px;
+
   margin-bottom:15px
+
 }
+
 
 .genderOption{
+
   width:145px;
+
   padding:10px 8px;
-  border:2px solid #ffffff22;
+
+  border:
+    2px solid #ffffff22;
+
   border-radius:15px;
+
   background:#071923aa;
+
   cursor:pointer;
-  transition:.15s
+
+  transition:.15s;
+
+  touch-action:manipulation
+
 }
+
 
 .genderOption:hover{
-  transform:translateY(-2px);
-  border-color:#ffffff55
+
+  transform:
+    translateY(-2px);
+
+  border-color:
+    #ffffff55
+
 }
+
 
 .genderOption.selected{
+
   border-color:#42d6ff;
+
   background:#0d4660cc;
-  box-shadow:0 0 18px #42d6ff44
+
+  box-shadow:
+    0 0 18px #42d6ff44
+
 }
+
 
 .genderOption img{
+
   width:82px;
+
   height:82px;
+
   object-fit:contain;
+
   display:block;
+
   margin:auto
+
 }
+
 
 .genderOption div{
+
   margin-top:5px;
+
   font-weight:bold;
+
   font-size:13px
+
 }
+
 
 .box input{
+
   width:100%;
+
   padding:13px;
+
   border-radius:10px;
-  border:1px solid #ffffff25;
+
+  border:
+    1px solid #ffffff25;
+
   margin:7px 0;
+
   background:#071923;
+
   color:white;
+
   outline:0;
-  display:block
+
+  display:block;
+
+  font-size:16px;
+
+  -webkit-appearance:none;
+
+  appearance:none
+
 }
+
 
 .box input:focus{
+
   border-color:#159fd0
+
 }
+
 
 .box button{
+
   padding:12px 25px;
+
   border:0;
+
   border-radius:10px;
+
   background:#159fd0;
+
   color:#fff;
+
   font-weight:bold;
+
   cursor:pointer;
-  margin-top:7px
+
+  margin-top:7px;
+
+  touch-action:manipulation
+
 }
+
 
 .box button:disabled{
+
   opacity:.5;
+
   cursor:not-allowed
+
 }
 
+
 #error{
+
   min-height:20px;
+
   margin:4px 0 0;
+
   color:#ff8f8f;
+
   font-size:12px
+
 }
 
 
@@ -524,93 +927,178 @@ html,body{
    ========================= */
 
 #hostPanel{
+
   display:none;
+
   position:absolute;
+
   top:70px;
+
   right:18px;
+
   width:240px;
+
   max-height:70vh;
+
   overflow:auto;
+
   z-index:40;
+
   background:#102737ee;
-  border:1px solid #ffd75c66;
+
+  border:
+    1px solid #ffd75c66;
+
   border-radius:14px;
+
   padding:14px;
-  box-shadow:0 12px 35px #0007;
-  backdrop-filter:blur(8px)
+
+  box-shadow:
+    0 12px 35px #0007;
+
+  backdrop-filter:
+    blur(8px)
+
 }
+
 
 #hostPanel.show{
+
   display:block
+
 }
+
 
 .hostTitle{
+
   color:#ffd75c;
+
   font-weight:bold;
+
   font-size:15px;
+
   margin-bottom:10px
+
 }
+
 
 .hostSub{
+
   color:#bcd0d8;
+
   font-size:12px;
+
   margin-bottom:8px
+
 }
+
 
 .hostPlayer{
+
   display:flex;
+
   align-items:center;
+
   justify-content:space-between;
+
   gap:7px;
+
   padding:7px;
+
   margin:5px 0;
+
   background:#ffffff0d;
+
   border-radius:8px;
+
   font-size:12px
+
 }
+
 
 .hostPlayerName{
+
   overflow:hidden;
+
   text-overflow:ellipsis;
+
   white-space:nowrap
+
 }
+
 
 .hostKick{
+
   border:0;
+
   border-radius:6px;
+
   padding:4px 8px;
+
   background:#a83b3b;
+
   color:#fff;
+
   cursor:pointer;
+
   font-size:11px;
-  flex:none
+
+  flex:none;
+
+  touch-action:manipulation
+
 }
+
 
 .hostAction{
+
   width:100%;
+
   margin-top:10px;
+
   padding:9px;
+
   border:0;
+
   border-radius:9px;
+
   color:#fff;
+
   cursor:pointer;
-  font-weight:bold
+
+  font-weight:bold;
+
+  touch-action:manipulation
+
 }
+
 
 #closeRoomBtn{
+
   background:#a83b3b
+
 }
+
 
 #openRoomBtn{
+
   display:none;
+
   background:#278c68
+
 }
 
+
 #roomStatus{
+
   margin-top:8px;
+
   color:#ffb0b0;
+
   font-size:11px;
+
   line-height:1.4
+
 }
 
 
@@ -621,84 +1109,231 @@ html,body{
 @media(max-width:700px){
 
   #top{
+
     left:10px;
+
     top:10px
+
   }
+
 
   #top b{
+
     font-size:16px
+
   }
+
 
   .pill{
+
     padding:6px 9px;
+
     font-size:12px
+
   }
+
 
   #chat{
-    width:calc(100vw - 28px);
+
+    width:
+      calc(100vw - 28px);
+
     right:14px;
+
     bottom:85px;
-    transition:bottom .2s ease
+
+    transition:
+      bottom .2s ease
+
   }
+
 
   #messages{
+
     height:140px
+
   }
+
 
   #hint{
+
     left:10px;
+
     bottom:175px;
+
     font-size:11px
+
   }
+
 
   .genderOption{
+
     width:42vw;
+
     max-width:145px
+
   }
+
 
   #input{
+
     font-size:16px;
+
     min-height:48px
+
   }
+
 
   #btn{
+
     min-width:68px
+
   }
+
 
   #hostPanel{
+
     top:58px;
+
     right:10px;
+
     width:220px;
+
     max-height:65vh
+
   }
+
+
+  /*
+    手机头顶文字
+    保持原来的确定位置和大小
+  */
 
   .speech{
-    font-size:16px;
+
+    font-size:17px;
+
+    bottom:84px
+
   }
 
+
+  /*
+    手机头顶互动表情
+    保持原来的位置
+  */
+
   .reaction{
-    font-size:18px;
+
+    font-size:22px;
+
+    bottom:84px;
+
+    transform:
+      translateX(-50%)
+      translateY(-25px)
+
+  }
+
+
+  /*
+    手机点击头像后的表情菜单
+    这次只把按钮放大
+  */
+
+  .reactionMenu{
+
+    bottom:78px;
+
+    padding:7px 8px;
+
+    gap:4px
+
+  }
+
+
+  .reactionBtn{
+
+    width:42px;
+
+    height:42px;
+
+    font-size:25px
+
+  }
+
+}
+
+
+/* =========================
+   超小屏
+   ========================= */
+
+@media(max-width:400px){
+
+  .speech{
+
+    font-size:16px
+
+  }
+
+
+  .reaction{
+
+    font-size:21px
+
+  }
+
+
+  .reactionBtn{
+
+    width:40px;
+
+    height:40px;
+
+    font-size:24px
+
   }
 
 }
 
 </style>
+
 </head>
+
 
 <body>
 
+
 <div id="world">
+
 
 <div id="map"></div>
 
+
 <div id="top">
-<b>🌴 shako的平行空间</b>
-<span class="pill online" id="count">在线：0/10</span>
-<span class="pill">十人房</span>
+
+<b>
+🌴 shako的平行空间
+</b>
+
+<span
+  class="pill online"
+  id="count"
+>
+在线：0/10
+</span>
+
+<span class="pill">
+十人房
+</span>
+
 </div>
 
 
-<!-- 房主控制面板 -->
+<!-- =========================
+     房主控制面板
+     ========================= -->
 
 <div id="hostPanel">
 
@@ -734,31 +1369,56 @@ html,body{
 
 
 <div id="hint">
-WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
+
+WASD / 方向键移动　·　
+最多十个人打开同一个网址即可见面
+
 </div>
 
+
+<!-- =========================
+     聊天
+     ========================= -->
 
 <div id="chat">
 
-<div id="chatTitle">
-💬 shako的平行空间 · 聊天室
+  <div id="chatTitle">
+    💬 shako的平行空间 · 聊天室
+  </div>
+
+  <div id="messages"></div>
+
+  <div id="send">
+
+    <input
+      id="input"
+      maxlength="200"
+      placeholder="说点什么…"
+    >
+
+    <button
+      id="btn"
+      type="button"
+    >
+      发送
+    </button>
+
+  </div>
+
 </div>
 
-<div id="messages"></div>
 
-<div id="send">
-<input id="input" maxlength="200" placeholder="说点什么…">
-<button id="btn">发送</button>
-</div>
-
-</div>
-
+<!-- =========================
+     登录
+     ========================= -->
 
 <div id="modal">
 
 <div class="box">
 
-<h2>🌴 shako的平行空间</h2>
+<h2>
+🌴 shako的平行空间
+</h2>
 
 <p>
 欢迎来到海滩大厅<br>
@@ -771,60 +1431,94 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 <div class="genderRow">
 
-<div class="genderOption selected" id="maleOption" data-gender="male">
 
-<img src="./male.png" alt="男生">
-
-<div>👨 男生</div>
-
-</div>
-
-<div class="genderOption" id="femaleOption" data-gender="female">
-
-<img src="./female.png" alt="女生">
-
-<div>👩 女生</div>
-
-</div>
-
-</div>
-
-<input
-id="nick"
-maxlength="12"
-autocomplete="nickname"
-placeholder="请输入昵称"
+<div
+  class="genderOption selected"
+  id="maleOption"
+  data-gender="male"
 >
 
-<input
-id="password"
-type="password"
-maxlength="100"
-autocomplete="off"
-placeholder="请输入房间密码"
+<img
+  src="./male.png"
+  alt="男生"
 >
 
-<div style="
-  text-align:left;
-  font-size:11px;
-  color:#a9cbd3;
-  margin-top:2px;
-  margin-bottom:4px;
-">
+<div>
+👨 男生
+</div>
+
+</div>
+
+
+<div
+  class="genderOption"
+  id="femaleOption"
+  data-gender="female"
+>
+
+<img
+  src="./female.png"
+  alt="女生"
+>
+
+<div>
+👩 女生
+</div>
+
+</div>
+
+
+</div>
+
+
+<input
+  id="nick"
+  maxlength="12"
+  autocomplete="nickname"
+  placeholder="请输入昵称"
+>
+
+
+<input
+  id="password"
+  type="password"
+  maxlength="100"
+  autocomplete="off"
+  placeholder="请输入房间密码"
+>
+
+
+<div
+  style="
+    text-align:left;
+    font-size:11px;
+    color:#a9cbd3;
+    margin-top:2px;
+    margin-bottom:4px;
+  "
+>
+
 👑 房主密码只有房主填写，不填写也可以正常进入
+
 </div>
 
+
 <input
-id="hostPassword"
-type="password"
-maxlength="100"
-autocomplete="off"
-placeholder="房主密码（只有房主填写）"
+  id="hostPassword"
+  type="password"
+  maxlength="100"
+  autocomplete="off"
+  placeholder="房主密码（只有房主填写）"
 >
+
 
 <div id="error"></div>
 
-<button id="join" type="button">
+
+<button
+  id="join"
+  type="button"
+>
 进入海滩
 </button>
 
@@ -837,15 +1531,21 @@ placeholder="房主密码（只有房主填写）"
 
 <script src="/socket.io/socket.io.js"></script>
 
+
 <script>
+
 "use strict";
 
+
 let socket=null;
+
 
 try{
 
   if(typeof io==="function"){
+
     socket=io();
+
   }
 
 }catch(e){
@@ -854,58 +1554,106 @@ try{
 
 }
 
+
 let myId=null;
 
 let selectedGender="male";
 
+
 let me={
+
   x:50,
+
   y:55
+
 };
+
 
 const speed=1.2;
 
+
 const modal=
-  document.getElementById("modal");
+  document.getElementById(
+    "modal"
+  );
+
 
 const nick=
-  document.getElementById("nick");
+  document.getElementById(
+    "nick"
+  );
+
 
 const password=
-  document.getElementById("password");
+  document.getElementById(
+    "password"
+  );
+
 
 const hostPassword=
-  document.getElementById("hostPassword");
+  document.getElementById(
+    "hostPassword"
+  );
+
 
 const joinBtn=
-  document.getElementById("join");
+  document.getElementById(
+    "join"
+  );
+
 
 const errorBox=
-  document.getElementById("error");
+  document.getElementById(
+    "error"
+  );
+
 
 const world=
-  document.getElementById("world");
+  document.getElementById(
+    "world"
+  );
+
 
 const messages=
-  document.getElementById("messages");
+  document.getElementById(
+    "messages"
+  );
+
 
 const input=
-  document.getElementById("input");
+  document.getElementById(
+    "input"
+  );
+
 
 const count=
-  document.getElementById("count");
+  document.getElementById(
+    "count"
+  );
+
 
 const maleOption=
-  document.getElementById("maleOption");
+  document.getElementById(
+    "maleOption"
+  );
+
 
 const femaleOption=
-  document.getElementById("femaleOption");
+  document.getElementById(
+    "femaleOption"
+  );
+
 
 const closeRoomBtn=
-  document.getElementById("closeRoomBtn");
+  document.getElementById(
+    "closeRoomBtn"
+  );
+
 
 const openRoomBtn=
-  document.getElementById("openRoomBtn");
+  document.getElementById(
+    "openRoomBtn"
+  );
 
 
 /* =========================
@@ -913,78 +1661,108 @@ const openRoomBtn=
    ========================= */
 
 const reactionList=[
+
   "❤️",
   "😂",
   "👍",
   "😮",
   "😡",
   "🎉"
+
 ];
+
 
 let activeReactionMenu=null;
 
 
+/* =========================
+   工具
+   ========================= */
+
 function esc(s){
 
-return String(s).replace(
-  /[&<>"']/g,
-  c=>({
+  return String(s).replace(
 
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+    /[&<>"']/g,
 
-  }[c])
-);
+    c=>({
+
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+
+    }[c])
+
+  );
 
 }
 
+
+/* =========================
+   聊天消息
+   ========================= */
 
 function msg(name,text){
 
-const d=
-  document.createElement("div");
+  const d=
+    document.createElement(
+      "div"
+    );
 
-d.className="msg";
 
-d.innerHTML=
-  "<b>"+
-  esc(name)+
-  "：</b>"+
-  esc(text);
+  d.className="msg";
 
-messages.appendChild(d);
 
-messages.scrollTop=
-  messages.scrollHeight;
+  d.innerHTML=
+    "<b>"+
+    esc(name)+
+    "：</b>"+
+    esc(text);
+
+
+  messages.appendChild(d);
+
+
+  messages.scrollTop=
+    messages.scrollHeight;
 
 }
 
+
+/* =========================
+   登录错误
+   ========================= */
 
 function setError(text){
 
-errorBox.textContent=
-  text||"";
+  errorBox.textContent=
+    text||"";
 
 }
 
 
+/* =========================
+   性别
+   ========================= */
+
 function chooseGender(gender){
 
-selectedGender=
-  gender;
+  selectedGender=
+    gender;
 
-maleOption.classList.toggle(
-  "selected",
-  gender==="male"
-);
 
-femaleOption.classList.toggle(
-  "selected",
-  gender==="female"
-);
+  maleOption.classList.toggle(
+    "selected",
+    gender==="male"
+  );
+
+
+  femaleOption.classList.toggle(
+    "selected",
+    gender==="female"
+  );
 
 }
 
@@ -1001,52 +1779,60 @@ femaleOption.addEventListener(
 );
 
 
+/* =========================
+   登录
+   ========================= */
+
 function startAuth(){
 
-setError("");
-
-const n=
-  nick.value.trim()||
-  "玩家";
-
-const p=
-  password.value;
-
-if(!p){
-
-setError(
-  "请输入房间密码"
-);
-
-password.focus();
-
-return;
-
-}
+  setError("");
 
 
-if(!socket){
-
-setError(
-  "服务器连接失败，请刷新页面后重试"
-);
-
-return;
-
-}
+  const n=
+    nick.value.trim()||
+    "玩家";
 
 
-joinBtn.disabled=
-  true;
-
-joinBtn.textContent=
-  "验证中...";
+  const p=
+    password.value;
 
 
-socket.emit(
-  "auth",
-  p
-);
+  if(!p){
+
+    setError(
+      "请输入房间密码"
+    );
+
+    password.focus();
+
+    return;
+
+  }
+
+
+  if(!socket){
+
+    setError(
+      "服务器连接失败，请刷新页面后重试"
+    );
+
+    return;
+
+  }
+
+
+  joinBtn.disabled=
+    true;
+
+
+  joinBtn.textContent=
+    "验证中...";
+
+
+  socket.emit(
+    "auth",
+    p
+  );
 
 }
 
@@ -1105,6 +1891,10 @@ hostPassword.addEventListener(
 );
 
 
+/* =========================
+   聊天发送
+   ========================= */
+
 input.addEventListener(
   "keydown",
   e=>{
@@ -1121,30 +1911,34 @@ input.addEventListener(
 );
 
 
-document.getElementById("btn")
-.addEventListener(
-  "click",
-  send
-);
+document
+  .getElementById("btn")
+  .addEventListener(
+    "click",
+    send
+  );
 
 
 function send(){
 
-const text=
-  input.value.trim();
+  const text=
+    input.value.trim();
 
-if(!text)return;
 
-if(socket){
+  if(!text)return;
 
-  socket.emit(
-    "chat",
-    text
-  );
 
-}
+  if(socket){
 
-input.value="";
+    socket.emit(
+      "chat",
+      text
+    );
+
+  }
+
+
+  input.value="";
 
 }
 
@@ -1171,8 +1965,17 @@ document.addEventListener(
   function(e){
 
     if(
-      !e.target.closest(".reactionMenu") &&
-      !e.target.closest(".playerImg")
+
+      !e.target.closest(
+        ".reactionMenu"
+      )
+
+      &&
+
+      !e.target.closest(
+        ".playerImg"
+      )
+
     ){
 
       closeReactionMenu();
@@ -1187,13 +1990,19 @@ document.addEventListener(
    创建表情菜单
    ========================= */
 
-function createReactionMenu(playerEl,playerId){
+function createReactionMenu(
+  playerEl,
+  playerId
+){
 
   closeReactionMenu();
 
 
   const menu=
-    document.createElement("div");
+    document.createElement(
+      "div"
+    );
+
 
   menu.className=
     "reactionMenu";
@@ -1203,13 +2012,18 @@ function createReactionMenu(playerEl,playerId){
     emoji=>{
 
       const btn=
-        document.createElement("button");
+        document.createElement(
+          "button"
+        );
+
 
       btn.type=
         "button";
 
+
       btn.className=
         "reactionBtn";
+
 
       btn.textContent=
         emoji;
@@ -1221,10 +2035,12 @@ function createReactionMenu(playerEl,playerId){
 
           e.stopPropagation();
 
+
           sendReaction(
             playerId,
             emoji
           );
+
 
           closeReactionMenu();
 
@@ -1232,13 +2048,18 @@ function createReactionMenu(playerEl,playerId){
       );
 
 
-      menu.appendChild(btn);
+      menu.appendChild(
+        btn
+      );
 
     }
   );
 
 
-  playerEl.appendChild(menu);
+  playerEl.appendChild(
+    menu
+  );
+
 
   activeReactionMenu=
     menu;
@@ -1261,8 +2082,11 @@ function sendReaction(
   socket.emit(
     "reaction",
     {
-      targetId:targetId,
-      emoji:emoji
+      targetId:
+        targetId,
+
+      emoji:
+        emoji
     }
   );
 
@@ -1280,9 +2104,13 @@ function showReaction(
 
   const player=
     document.querySelector(
-      '.player[data-id="'+
-      CSS.escape(String(targetId))+
+
+      '.player[data-id="' +
+      CSS.escape(
+        String(targetId)
+      ) +
       '"]'
+
     );
 
 
@@ -1307,8 +2135,10 @@ function showReaction(
       "div"
     );
 
+
   reaction.className=
     "reaction";
+
 
   reaction.textContent=
     emoji;
@@ -1338,7 +2168,15 @@ function showReaction(
 }
 
 
+/* =========================
+   Socket
+   ========================= */
+
+window.currentPlayers=[];
+
+
 if(socket){
+
 
 socket.on(
   "connect",
@@ -1390,13 +2228,19 @@ socket.on(
 );
 
 
+/* =========================
+   房间关闭
+   ========================= */
+
 socket.on(
   "roomClosed",
   ()=>{
 
     if(
       modal &&
-      getComputedStyle(modal).display!=="none"
+      getComputedStyle(
+        modal
+      ).display!=="none"
     ){
 
       joinBtn.disabled=
@@ -1416,9 +2260,11 @@ socket.on(
 
     setRoomButtons(true);
 
+
     setRoomStatus(
       "🔒 房间已关闭，新玩家暂时无法进入"
     );
+
 
     msg(
       "系统",
@@ -1428,6 +2274,10 @@ socket.on(
   }
 );
 
+
+/* =========================
+   房间重新开放
+   ========================= */
 
 socket.on(
   "roomOpened",
@@ -1445,6 +2295,10 @@ socket.on(
   }
 );
 
+
+/* =========================
+   房间满员
+   ========================= */
 
 socket.on(
   "full",
@@ -1464,6 +2318,10 @@ socket.on(
 );
 
 
+/* =========================
+   初始化
+   ========================= */
+
 socket.on(
   "init",
   d=>{
@@ -1471,15 +2329,19 @@ socket.on(
     myId=
       d.you.id;
 
+
     me=
       d.you;
+
 
     modal.style.display=
       "none";
 
+
     const n=
       nick.value.trim()||
       "玩家";
+
 
     msg(
       "系统",
@@ -1504,6 +2366,7 @@ socket.on(
     const hp=
       hostPassword.value.trim();
 
+
     if(hp){
 
       socket.emit(
@@ -1517,11 +2380,16 @@ socket.on(
 );
 
 
+/* =========================
+   房主认证成功
+   ========================= */
+
 socket.on(
   "hostAuthSuccess",
   d=>{
 
     showHostPanel();
+
 
     if(
       d &&
@@ -1529,6 +2397,7 @@ socket.on(
     ){
 
       setRoomButtons(true);
+
 
       setRoomStatus(
         "🔒 房间已关闭，新玩家暂时无法进入"
@@ -1542,6 +2411,7 @@ socket.on(
 
     }
 
+
     msg(
       "系统",
       "👑 房主身份验证成功"
@@ -1550,6 +2420,10 @@ socket.on(
   }
 );
 
+
+/* =========================
+   房主认证失败
+   ========================= */
 
 socket.on(
   "hostAuthError",
@@ -1576,6 +2450,10 @@ socket.on(
   }
 );
 
+
+/* =========================
+   踢人
+   ========================= */
 
 socket.on(
   "kicked",
@@ -1604,15 +2482,21 @@ socket.on(
 );
 
 
+/* =========================
+   关闭房间成功
+   ========================= */
+
 socket.on(
   "closeRoomSuccess",
   ()=>{
 
     setRoomButtons(true);
 
+
     setRoomStatus(
       "🔒 房间已关闭，新玩家暂时无法进入"
     );
+
 
     msg(
       "系统",
@@ -1636,6 +2520,10 @@ socket.on(
 );
 
 
+/* =========================
+   重新开放成功
+   ========================= */
+
 socket.on(
   "openRoomSuccess",
   ()=>{
@@ -1643,6 +2531,7 @@ socket.on(
     setRoomButtons(false);
 
     setRoomStatus("");
+
 
     msg(
       "系统",
@@ -1667,16 +2556,246 @@ socket.on(
 
 
 /* =========================
-   聊天 + 头顶文字
+   普通聊天
    ========================= */
 
-function showSpeech(targetId,text){
+socket.on(
+  "chat",
+  d=>{
+
+    msg(
+      d.name,
+      d.text
+    );
+
+
+    if(
+      d &&
+      d.id &&
+      d.text
+    ){
+
+      showSpeech(
+        d.id,
+        d.text
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================
+   互动表情
+   ========================= */
+
+socket.on(
+  "reaction",
+  d=>{
+
+    if(!d)return;
+
+
+    if(
+      !d.targetId ||
+      !d.emoji
+    ){
+
+      return;
+
+    }
+
+
+    showReaction(
+      d.targetId,
+      d.emoji
+    );
+
+  }
+);
+
+
+/* =========================
+   玩家列表
+   ========================= */
+
+socket.on(
+  "players",
+  ps=>{
+
+    window.currentPlayers=
+      ps;
+
+
+    count.textContent=
+      "在线："+ps.length+"/10";
+
+
+    updateHostPlayers();
+
+
+    closeReactionMenu();
+
+
+    document
+      .querySelectorAll(
+        ".player"
+      )
+      .forEach(
+        e=>e.remove()
+      );
+
+
+    ps.forEach(
+      p=>{
+
+        const el=
+          document.createElement(
+            "div"
+          );
+
+
+        el.className=
+          "player"+
+          (
+            p.id===myId
+            ?" me"
+            :""
+          );
+
+
+        el.dataset.id=
+          p.id;
+
+
+        el.style.left=
+          p.x+"%";
+
+
+        el.style.top=
+          p.y+"%";
+
+
+        const gender=
+          p.gender==="female"
+          ?"female"
+          :"male";
+
+
+        const img=
+          gender==="female"
+          ?"female.png"
+          :"male.png";
+
+
+        const hostMark=
+          p.isHost
+          ?" 👑"
+          :"";
+
+
+        el.innerHTML=
+
+          '<img '+
+          'class="playerImg" '+
+          'src="./'+
+          img+
+          '" '+
+          'alt="">'+
+
+          '<div class="name">'+
+          esc(p.name)+
+          hostMark+
+          (
+            p.id===myId
+            ?"（你）"
+            :""
+          )+
+          "</div>";
+
+
+        /*
+          点击人物头像
+          才弹出互动表情
+        */
+
+        const avatar=
+          el.querySelector(
+            ".playerImg"
+          );
+
+
+        avatar.addEventListener(
+          "click",
+          function(e){
+
+            e.stopPropagation();
+
+
+            createReactionMenu(
+              el,
+              p.id
+            );
+
+          }
+        );
+
+
+        avatar.addEventListener(
+          "touchend",
+          function(e){
+
+            e.preventDefault();
+
+            e.stopPropagation();
+
+
+            createReactionMenu(
+              el,
+              p.id
+            );
+
+          },
+          {
+            passive:false
+          }
+        );
+
+
+        world.appendChild(
+          el
+        );
+
+      }
+
+    );
+
+  }
+
+);
+
+}
+
+
+/* =========================
+   人物头顶文字
+   ========================= */
+
+function showSpeech(
+  playerId,
+  text
+){
 
   const player=
     document.querySelector(
-      '.player[data-id="'+
-      CSS.escape(String(targetId))+
+
+      '.player[data-id="' +
+      CSS.escape(
+        String(playerId)
+      ) +
       '"]'
+
     );
 
 
@@ -1734,186 +2853,6 @@ function showSpeech(targetId,text){
 }
 
 
-socket.on(
-  "chat",
-  d=>{
-
-    msg(
-      d.name,
-      d.text
-    );
-
-
-    if(
-      d &&
-      d.id &&
-      d.text
-    ){
-
-      showSpeech(
-        d.id,
-        d.text
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================
-   互动表情
-   ========================= */
-
-socket.on(
-  "reaction",
-  d=>{
-
-    if(!d)return;
-
-    if(
-      !d.targetId ||
-      !d.emoji
-    ){
-
-      return;
-
-    }
-
-
-    showReaction(
-      d.targetId,
-      d.emoji
-    );
-
-  }
-);
-
-
-/* =========================
-   玩家列表
-   ========================= */
-
-socket.on(
-  "players",
-  ps=>{
-
-    window.currentPlayers=
-      ps;
-
-
-    count.textContent=
-      "在线："+ps.length+"/10";
-
-
-    updateHostPlayers();
-
-
-    closeReactionMenu();
-
-
-    document
-      .querySelectorAll(".player")
-      .forEach(
-        e=>e.remove()
-      );
-
-
-    ps.forEach(
-      p=>{
-
-        const el=
-          document.createElement(
-            "div"
-          );
-
-
-        el.className=
-          "player"+
-          (p.id===myId?" me":"");
-
-
-        el.dataset.id=
-          p.id;
-
-
-        el.style.left=
-          p.x+"%";
-
-
-        el.style.top=
-          p.y+"%";
-
-
-        const gender=
-          p.gender==="female"
-          ?"female"
-          :"male";
-
-
-        const img=
-          gender==="female"
-          ?"female.png"
-          :"male.png";
-
-
-        const hostMark=
-          p.isHost
-          ?" 👑"
-          :"";
-
-
-        el.innerHTML=
-          '<img class="playerImg" '+
-          'src="./'+
-          img+
-          '" alt="">'+
-
-          '<div class="name">'+
-          esc(p.name)+
-          hostMark+
-          (p.id===myId?"（你）":"")+
-          "</div>";
-
-
-        /* 点击人物头像，打开表情菜单 */
-
-        const avatar=
-          el.querySelector(
-            ".playerImg"
-          );
-
-
-        avatar.addEventListener(
-          "click",
-          function(e){
-
-            e.stopPropagation();
-
-            createReactionMenu(
-              el,
-              p.id
-            );
-
-          }
-        );
-
-
-        world.appendChild(
-          el
-        );
-
-      }
-
-    );
-
-  }
-
-);
-
-}
-
-
 /* =========================
    键盘移动
    ========================= */
@@ -1923,10 +2862,25 @@ document.addEventListener(
   e=>{
 
     if(
-      document.activeElement===input||
-      document.activeElement===nick||
-      document.activeElement===password||
-      document.activeElement===hostPassword
+
+      document.activeElement===
+      input
+
+      ||
+
+      document.activeElement===
+      nick
+
+      ||
+
+      document.activeElement===
+      password
+
+      ||
+
+      document.activeElement===
+      hostPassword
+
     ){
 
       return;
@@ -1935,11 +2889,16 @@ document.addEventListener(
 
 
     let dx=0;
+
     let dy=0;
 
 
     if(
-      ["ArrowUp","w","W"].includes(e.key)
+      [
+        "ArrowUp",
+        "w",
+        "W"
+      ].includes(e.key)
     ){
 
       dy=-speed;
@@ -1948,7 +2907,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowDown","s","S"].includes(e.key)
+      [
+        "ArrowDown",
+        "s",
+        "S"
+      ].includes(e.key)
     ){
 
       dy=speed;
@@ -1957,7 +2920,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowLeft","a","A"].includes(e.key)
+      [
+        "ArrowLeft",
+        "a",
+        "A"
+      ].includes(e.key)
     ){
 
       dx=-speed;
@@ -1966,7 +2933,11 @@ document.addEventListener(
 
 
     if(
-      ["ArrowRight","d","D"].includes(e.key)
+      [
+        "ArrowRight",
+        "d",
+        "D"
+      ].includes(e.key)
     ){
 
       dx=speed;
@@ -2023,172 +2994,202 @@ document.addEventListener(
 
 function showHostPanel(){
 
-const panel=
-  document.getElementById(
-    "hostPanel"
-  );
+  const panel=
+    document.getElementById(
+      "hostPanel"
+    );
 
-if(panel){
 
-  panel.classList.add(
-    "show"
-  );
+  if(panel){
 
-}
+    panel.classList.add(
+      "show"
+    );
 
-updateHostPlayers();
+  }
+
+
+  updateHostPlayers();
 
 }
 
 
 function updateHostPlayers(){
 
-const box=
-  document.getElementById(
-    "hostPlayers"
-  );
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-(window.currentPlayers||[])
-.forEach(p=>{
-
-  const row=
-    document.createElement(
-      "div"
+  const box=
+    document.getElementById(
+      "hostPlayers"
     );
 
-  row.className=
-    "hostPlayer";
+
+  if(!box)return;
 
 
-  const name=
-    document.createElement(
-      "span"
-    );
-
-  name.className=
-    "hostPlayerName";
+  box.innerHTML="";
 
 
-  name.textContent=
-    (p.isHost?"👑 ":"")+
-    p.name+
-    (p.id===myId?"（你）":"");
+  (
+    window.currentPlayers||[]
+  ).forEach(
+    p=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
 
 
-  row.appendChild(name);
+      row.className=
+        "hostPlayer";
 
 
-  if(p.id!==myId){
+      const name=
+        document.createElement(
+          "span"
+        );
 
-    const kick=
-      document.createElement(
-        "button"
+
+      name.className=
+        "hostPlayerName";
+
+
+      name.textContent=
+
+        (
+          p.isHost
+          ?"👑 "
+          :""
+        )+
+
+        p.name+
+
+        (
+          p.id===myId
+          ?"（你）"
+          :""
+        );
+
+
+      row.appendChild(
+        name
       );
 
-    kick.className=
-      "hostKick";
 
-    kick.type=
-      "button";
+      if(
+        p.id!==myId
+      ){
 
-    kick.textContent=
-      "踢出";
-
-
-    kick.onclick=
-      ()=>{
-
-        if(!socket)return;
-
-
-        if(
-          confirm(
-            "确定要把「"+
-            p.name+
-            "」请出房间吗？"
-          )
-        ){
-
-          socket.emit(
-            "kickPlayer",
-            p.id
+        const kick=
+          document.createElement(
+            "button"
           );
 
-        }
 
-      };
-
-
-    row.appendChild(
-      kick
-    );
-
-  }
+        kick.className=
+          "hostKick";
 
 
-  box.appendChild(
-    row
+        kick.type=
+          "button";
+
+
+        kick.textContent=
+          "踢出";
+
+
+        kick.onclick=
+          ()=>{
+
+            if(!socket)return;
+
+
+            if(
+              confirm(
+                "确定要把「"+
+                p.name+
+                "」请出房间吗？"
+              )
+            ){
+
+              socket.emit(
+                "kickPlayer",
+                p.id
+              );
+
+            }
+
+          };
+
+
+        row.appendChild(
+          kick
+        );
+
+      }
+
+
+      box.appendChild(
+        row
+      );
+
+    }
   );
-
-});
 
 }
 
 
 function setRoomStatus(text){
 
-const el=
-  document.getElementById(
-    "roomStatus"
-  );
-
-if(el){
-
-  el.textContent=
-    text||"";
-
-}
-
-}
+  const el=
+    document.getElementById(
+      "roomStatus"
+    );
 
 
-function setRoomButtons(closed){
+  if(el){
 
-const closeBtn=
-  document.getElementById(
-    "closeRoomBtn"
-  );
+    el.textContent=
+      text||"";
 
-const openBtn=
-  document.getElementById(
-    "openRoomBtn"
-  );
-
-
-if(closeBtn){
-
-  closeBtn.style.display=
-    closed
-    ?"none"
-    :"block";
+  }
 
 }
 
 
-if(openBtn){
+function setRoomButtons(
+  closed
+){
 
-  openBtn.style.display=
-    closed
-    ?"block"
-    :"none";
+  const closeBtn=
+    document.getElementById(
+      "closeRoomBtn"
+    );
 
-}
+
+  const openBtn=
+    document.getElementById(
+      "openRoomBtn"
+    );
+
+
+  if(closeBtn){
+
+    closeBtn.style.display=
+      closed
+      ?"none"
+      :"block";
+
+  }
+
+
+  if(openBtn){
+
+    openBtn.style.display=
+      closed
+      ?"block"
+      :"none";
+
+  }
 
 }
 
@@ -2219,55 +3220,55 @@ openRoomBtn.addEventListener(
 
 function closeRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "确定要关闭房间吗？\n\n"+
+      "关闭后，新的人将无法进入，"+
+      "但已经在房间里的人可以继续聊天。"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "closeRoom"
   );
-
-  return;
-
-}
-
-
-if(
-  !confirm(
-    "确定要关闭房间吗？\n\n"+
-    "关闭后，新的人将无法进入，"+
-    "但已经在房间里的人可以继续聊天。"
-  )
-){
-
-  return;
-
-}
-
-
-socket.emit(
-  "closeRoom"
-);
 
 }
 
 
 function openRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "openRoom"
   );
-
-  return;
-
-}
-
-
-socket.emit(
-  "openRoom"
-);
 
 }
 
@@ -2287,13 +3288,21 @@ socket.emit(
       "chat"
     );
 
+
   const input=
     document.getElementById(
       "input"
     );
 
 
-  if(!chat || !input)return;
+  if(
+    !chat ||
+    !input
+  ){
+
+    return;
+
+  }
 
 
   const isMobile=
@@ -2323,10 +3332,14 @@ socket.emit(
       viewport.height;
 
 
-    if(keyboardHeight>120){
+    if(
+      keyboardHeight>120
+    ){
 
       chat.style.bottom=
-        (keyboardHeight+15)+"px";
+        (
+          keyboardHeight+15
+        )+"px";
 
     }else{
 
@@ -2338,7 +3351,9 @@ socket.emit(
   }
 
 
-  if(window.visualViewport){
+  if(
+    window.visualViewport
+  ){
 
     window.visualViewport.addEventListener(
       "resize",
@@ -2362,6 +3377,7 @@ socket.emit(
         adjustChat,
         100
       );
+
 
       setTimeout(
         adjustChat,
@@ -2401,6 +3417,7 @@ const chat=
   document.getElementById(
     "chat"
   );
+
 
 const chatTitle=
   document.getElementById(
@@ -2475,13 +3492,17 @@ document.addEventListener(
 
 
     chat.style.left=
-      (e.clientX-offsetX)+
-      "px";
+      (
+        e.clientX-
+        offsetX
+      )+"px";
 
 
     chat.style.top=
-      (e.clientY-offsetY)+
-      "px";
+      (
+        e.clientY-
+        offsetY
+      )+"px";
 
   }
 );
@@ -2498,5 +3519,7 @@ document.addEventListener(
 
 </script>
 
+
 </body>
+
 </html>
