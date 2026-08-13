@@ -7,6 +7,7 @@
 
 <style>
 *{box-sizing:border-box}
+
 html,body{
   margin:0;
   width:100%;
@@ -28,9 +29,11 @@ html,body{
   position:absolute;
   inset:0;
   background-image:url("beach-sunset.jpg");
-background-size:cover;
-background-position:center;
-background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center;
+  background-repeat:no-repeat
+}
+
 #top{
   position:absolute;
   left:18px;
@@ -127,21 +130,18 @@ background-repeat:no-repeat;
   background:#0b1b28aa;
   font-weight:bold;
   font-size:13px;
-  border-bottom:1px solid #ffffff18
+  border-bottom:1px solid #ffffff18;
+  cursor:move;
+  user-select:none
 }
 
 #messages{
   height:210px;
-  min-height:100px;
-  max-height:600px;
   overflow:auto;
   padding:12px;
-  font-size:13px;
+  font-size:13px
 }
-#resizeBar{
-  height:6px;
-  cursor:row-resize;
-}
+
 .msg{
   margin:7px 0;
   line-height:1.4
@@ -295,38 +295,6 @@ background-repeat:no-repeat;
 
 @media(max-width:700px){
 
-  #chat{
-    width:calc(100vw - 28px);
-    right:14px;
-    bottom:85px;
-    transition:bottom .2s ease;
-  }
-
-  #messages{
-    height:140px;
-  }
-
-  #hint{
-    left:10px;
-    bottom:245px;
-    font-size:11px;
-  }
-
-  .genderOption{
-    width:42vw;
-    max-width:145px;
-  }
-
-  #input{
-    font-size:16px;
-    min-height:48px;
-  }
-
-  #btn{
-    min-width:68px;
-  }
-
-}
   #top{
     left:10px;
     top:10px
@@ -344,7 +312,8 @@ background-repeat:no-repeat;
   #chat{
     width:calc(100vw - 28px);
     right:14px;
-    bottom:14px
+    bottom:85px;
+    transition:bottom .2s ease
   }
 
   #messages{
@@ -361,7 +330,17 @@ background-repeat:no-repeat;
     width:42vw;
     max-width:145px
   }
+
+  #input{
+    font-size:16px;
+    min-height:48px
+  }
+
+  #btn{
+    min-width:68px
+  }
 }
+
 </style>
 </head>
 
@@ -388,7 +367,7 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 </div>
 
 <div id="messages"></div>
-<div id="resizeBar"></div>
+
 <div id="send">
 <input id="input" maxlength="200" placeholder="说点什么…">
 <button id="btn">发送</button>
@@ -729,11 +708,6 @@ socket.on(
       n
     );
 
-    /*
-      密码验证成功后，
-      把性别告诉服务器
-    */
-
     socket.emit(
       "setGender",
       selectedGender
@@ -802,11 +776,6 @@ document.addEventListener(
   "keydown",
   e=>{
 
-    /*
-      输入昵称、密码、聊天时，
-      WASD 不执行移动
-    */
-
     if(
       document.activeElement===input||
       document.activeElement===nick||
@@ -872,44 +841,46 @@ document.addEventListener(
 );
 
 </script>
+
 <script>
 
 (function(){
 
-  const chat = document.getElementById("chat");
-  const input = document.getElementById("input");
+  const chat=document.getElementById("chat");
+  const input=document.getElementById("input");
 
-  if(!chat || !input) return;
+  if(!chat || !input)return;
 
-  const isMobile =
+  const isMobile=
     /Android|iPhone|iPad|iPod/i.test(
       navigator.userAgent
     );
 
-  if(!isMobile) return;
+  if(!isMobile)return;
 
-  const normalBottom = 85;
+  const normalBottom=85;
 
   function adjustChat(){
 
-    const viewport = window.visualViewport;
+    const viewport=window.visualViewport;
 
-    if(!viewport) return;
+    if(!viewport)return;
 
-    const keyboardHeight =
-      window.innerHeight - viewport.height;
+    const keyboardHeight=
+      window.innerHeight-viewport.height;
 
-    if(keyboardHeight > 120){
+    if(keyboardHeight>120){
 
-      chat.style.bottom =
-        (keyboardHeight + 15) + "px";
+      chat.style.bottom=
+        (keyboardHeight+15)+"px";
 
     }else{
 
-      chat.style.bottom =
-        normalBottom + "px";
+      chat.style.bottom=
+        normalBottom+"px";
 
     }
+
   }
 
   if(window.visualViewport){
@@ -951,180 +922,71 @@ document.addEventListener(
   );
 
 })();
-// 电脑端拖动聊天框
 
-const chat = document.getElementById("chat");
-const chatTitle = document.getElementById("chatTitle");
+/* 电脑端拖动聊天框 */
 
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
+const chat=document.getElementById("chat");
+const chatTitle=document.getElementById("chatTitle");
 
-chatTitle.addEventListener("mousedown", function(e){
+let dragging=false;
+let offsetX=0;
+let offsetY=0;
 
-  if(window.innerWidth <= 700) return;
+chatTitle.addEventListener(
+  "mousedown",
+  function(e){
 
-  dragging = true;
+    if(window.innerWidth<=700)return;
 
-  const rect = chat.getBoundingClientRect();
+    dragging=true;
 
-  offsetX = e.clientX - rect.left;
-  offsetY = e.clientY - rect.top;
+    const rect=
+      chat.getBoundingClientRect();
 
-  chat.style.left = rect.left + "px";
-  chat.style.top = rect.top + "px";
+    offsetX=
+      e.clientX-rect.left;
 
-  chat.style.right = "auto";
-  chat.style.bottom = "auto";
+    offsetY=
+      e.clientY-rect.top;
 
-});
+    chat.style.left=
+      rect.left+"px";
 
-document.addEventListener("mousemove", function(e){
+    chat.style.top=
+      rect.top+"px";
 
-  if(!dragging) return;
+    chat.style.right="auto";
+    chat.style.bottom="auto";
 
-  chat.style.left =
-    (e.clientX - offsetX) + "px";
+    e.preventDefault();
 
-  chat.style.top =
-    (e.clientY - offsetY) + "px";
+  }
+);
 
-});
+document.addEventListener(
+  "mousemove",
+  function(e){
 
-document.addEventListener("mouseup", function(){
+    if(!dragging)return;
 
-  dragging = false;
+    chat.style.left=
+      (e.clientX-offsetX)+"px";
 
-});
-  // 调整聊天记录区域高度
+    chat.style.top=
+      (e.clientY-offsetY)+"px";
 
-const messages = document.getElementById("messages");
-const resizeBar = document.getElementById("resizeBar");
+  }
+);
 
-let resizing = false;
-let startY = 0;
-let startHeight = 0;
+document.addEventListener(
+  "mouseup",
+  function(){
 
-resizeBar.addEventListener("mousedown", function(e){
+    dragging=false;
 
-  if(window.innerWidth <= 700) return;
+  }
+);
 
-  resizing = true;
-
-  startY = e.clientY;
-  startHeight = messages.offsetHeight;
-
-  document.body.style.cursor = "row-resize";
-
-  e.preventDefault();
-
-});
-
-document.addEventListener("mousemove", function(e){
-
-  if(!resizing) return;
-
-  const newHeight =
-    startHeight + (e.clientY - startY);
-
-  messages.style.height =
-    Math.max(100, Math.min(600, newHeight)) + "px";
-
-});
-
-document.addEventListener("mouseup", function(){
-
-  resizing = false;
-
-  document.body.style.cursor = "";
-
-});
-  // 聊天框整体移动
-
-const chat = document.getElementById("chat");
-const chatTitle = document.getElementById("chatTitle");
-
-let dragging = false;
-let offsetX = 0;
-let offsetY = 0;
-
-chatTitle.addEventListener("mousedown", function(e){
-
-  if(window.innerWidth <= 700) return;
-
-  dragging = true;
-
-  const rect = chat.getBoundingClientRect();
-
-  offsetX = e.clientX - rect.left;
-  offsetY = e.clientY - rect.top;
-
-  chat.style.left = rect.left + "px";
-  chat.style.top = rect.top + "px";
-  chat.style.right = "auto";
-  chat.style.bottom = "auto";
-
-  e.preventDefault();
-});
-
-document.addEventListener("mousemove", function(e){
-
-  if(!dragging) return;
-
-  chat.style.left =
-    (e.clientX - offsetX) + "px";
-
-  chat.style.top =
-    (e.clientY - offsetY) + "px";
-});
-
-document.addEventListener("mouseup", function(){
-
-  dragging = false;
-
-});
-  // 调整聊天记录区域高度
-
-const messages = document.getElementById("messages");
-const resizeBar = document.getElementById("resizeBar");
-
-let resizing = false;
-let startY = 0;
-let startHeight = 0;
-
-resizeBar.addEventListener("mousedown", function(e){
-
-  if(window.innerWidth <= 700) return;
-
-  resizing = true;
-
-  startY = e.clientY;
-  startHeight = messages.offsetHeight;
-
-  document.body.style.cursor = "row-resize";
-
-  e.preventDefault();
-});
-
-document.addEventListener("mousemove", function(e){
-
-  if(!resizing) return;
-
-  const newHeight =
-    startHeight + (e.clientY - startY);
-
-  messages.style.height =
-    Math.max(100, Math.min(600, newHeight)) + "px";
-
-});
-
-document.addEventListener("mouseup", function(){
-
-  resizing = false;
-
-  document.body.style.cursor = "";
-
-});
 </script>
 
 </body>
