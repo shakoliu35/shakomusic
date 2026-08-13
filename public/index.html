@@ -112,6 +112,7 @@ html,body{
   right:18px;
   bottom:18px;
   width:min(350px,34vw);
+   resize:both;
   background:#15232eea;
   border:1px solid #ffffff35;
   border-radius:16px;
@@ -945,7 +946,51 @@ document.addEventListener(
   );
 
 })();
+// 电脑端拖动聊天框
 
+const chat = document.getElementById("chat");
+const chatTitle = document.getElementById("chatTitle");
+
+let dragging = false;
+let offsetX = 0;
+let offsetY = 0;
+
+chatTitle.addEventListener("mousedown", function(e){
+
+  if(window.innerWidth <= 700) return;
+
+  dragging = true;
+
+  const rect = chat.getBoundingClientRect();
+
+  offsetX = e.clientX - rect.left;
+  offsetY = e.clientY - rect.top;
+
+  chat.style.left = rect.left + "px";
+  chat.style.top = rect.top + "px";
+
+  chat.style.right = "auto";
+  chat.style.bottom = "auto";
+
+});
+
+document.addEventListener("mousemove", function(e){
+
+  if(!dragging) return;
+
+  chat.style.left =
+    (e.clientX - offsetX) + "px";
+
+  chat.style.top =
+    (e.clientY - offsetY) + "px";
+
+});
+
+document.addEventListener("mouseup", function(){
+
+  dragging = false;
+
+});
 </script>
 
 </body>
