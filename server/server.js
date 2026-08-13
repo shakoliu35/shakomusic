@@ -17,24 +17,26 @@ const HOST_PASSWORD = process.env.HOST_PASSWORD;
 // 当前房主
 let hostId = null;
 
-// 房间是否开放
+// 房间状态
+// true = 开放
+// false = 关闭
 let roomOpen = true;
 
 
-// =========================
+// ======================================================
 // Socket 连接
-// =========================
+// ======================================================
 
 io.on("connection", socket => {
 
 
-  // =========================
-  // 普通玩家进入房间
-  // =========================
+  // ======================================================
+  // 玩家使用房间密码进入
+  // ======================================================
 
   socket.on("auth", password => {
 
-    // 房间关闭
+    // 房间已经关闭
     if (!roomOpen) {
 
       socket.emit("roomClosed");
@@ -65,23 +67,23 @@ io.on("connection", socket => {
 
     const spawns = [
 
-      {x:50,y:55},
-      {x:62,y:47},
-      {x:38,y:47},
-      {x:50,y:35},
-      {x:25,y:60},
-      {x:75,y:60},
-      {x:25,y:35},
-      {x:75,y:35},
-      {x:40,y:75},
-      {x:60,y:75}
+      { x: 50, y: 55 },
+      { x: 62, y: 47 },
+      { x: 38, y: 47 },
+      { x: 50, y: 35 },
+      { x: 25, y: 60 },
+      { x: 75, y: 60 },
+      { x: 25, y: 35 },
+      { x: 75, y: 35 },
+      { x: 40, y: 75 },
+      { x: 60, y: 75 }
 
     ];
 
 
     const spawn =
       spawns[players.size] ||
-      {x:50,y:55};
+      { x: 50, y: 55 };
 
 
     // 创建玩家
@@ -117,7 +119,10 @@ io.on("connection", socket => {
         players.get(socket.id),
 
       players:
-        [...players.values()]
+        [...players.values()],
+
+      roomOpen:
+        roomOpen
 
     });
 
@@ -133,9 +138,9 @@ io.on("connection", socket => {
 
 
 
-  // =========================
-  // 房主认证
-  // =========================
+  // ======================================================
+  // 房主密码验证
+  // ======================================================
 
   socket.on("hostAuth", hostPassword => {
 
@@ -170,7 +175,7 @@ io.on("connection", socket => {
     }
 
 
-    // 已经存在房主
+    // 已经有其他房主
 
     if (
       hostId &&
@@ -194,10 +199,18 @@ io.on("connection", socket => {
       true;
 
 
+    // 告诉当前用户房主认证成功
+
     socket.emit(
-      "hostAuthSuccess"
+      "hostAuthSuccess",
+      {
+        roomOpen:
+          roomOpen
+      }
     );
 
+
+    // 更新所有玩家
 
     io.emit(
       "players",
@@ -208,9 +221,9 @@ io.on("connection", socket => {
 
 
 
-  // =========================
+  // ======================================================
   // 设置昵称
-  // =========================
+  // ======================================================
 
   socket.on("setName", name => {
 
@@ -223,7 +236,7 @@ io.on("connection", socket => {
     name =
       String(name || "")
       .trim()
-      .slice(0,12);
+      .slice(0, 12);
 
 
     if (name) {
@@ -243,9 +256,9 @@ io.on("connection", socket => {
 
 
 
-  // =========================
+  // ======================================================
   // 设置性别
-  // =========================
+  // ======================================================
 
   socket.on("setGender", gender => {
 
@@ -283,9 +296,9 @@ io.on("connection", socket => {
 
 
 
-  // =========================
+  // ======================================================
   // 玩家移动
-  // =========================
+  // ======================================================
 
   socket.on("move", pos => {
 
@@ -324,9 +337,9 @@ io.on("connection", socket => {
 
 
 
-  // =========================
+  // ======================================================
   // 聊天
-  // =========================
+  // ======================================================
 
   socket.on("chat", text => {
 
@@ -339,37 +352,37 @@ io.on("connection", socket => {
     text =
       String(text || "")
       .trim()
-      .slice(0,200);
+      .slice(0, 200);
 
 
-    if (text) {
+    if (!text) return;
 
-      io.emit(
-        "chat",
-        {
 
-          name:
-            p.name,
+    io.emit(
+      "chat",
+      {
 
-          text:
-            text
+        name:
+          p.name,
 
-        }
-      );
+        text:
+          text
 
-    }
+      }
+    );
 
   });
 
 
 
-  // =========================
+  // ======================================================
   // 房主：踢人
-  // =========================
+  // ======================================================
 
   socket.on("kickPlayer", targetId => {
 
-    // 必须是房主
+    // 只有房主可以踢人
+
     if (
       socket.id !== hostId
     ) {
@@ -388,6 +401,8 @@ io.on("connection", socket => {
     }
 
 
+    // 查找目标玩家
+
     const targetPlayer =
       players.get(targetId);
 
@@ -397,6 +412,8 @@ io.on("connection", socket => {
       return;
     }
 
+
+    // 查找目标 Socket
 
     const targetSocket =
       io.sockets.sockets.get(
@@ -410,7 +427,7 @@ io.on("connection", socket => {
     }
 
 
-    // 告诉被踢的人
+    // 通知被踢的人
 
     targetSocket.emit(
       "kicked"
@@ -431,35 +448,75 @@ io.on("connection", socket => {
     );
 
 
-    // 更新所有人
+    // 更新所有玩家
 
     io.emit(
       "players",
       [...players.values()]
     );
 
+
+    // 告诉房主操作成功
+
+    socket.emit(
+      "kickSuccess"
+    );
+
   });
 
 
 
-  // =========================
+  // ======================================================
   // 房主：关闭房间
-  // =========================
+  // ======================================================
 
   socket.on("closeRoom", () => {
 
-    // 只有房主可以操作
+    console.log(
+      "收到关闭房间请求:",
+      socket.id
+    );
+
+
+    // 只有房主可以关闭
 
     if (
       socket.id !== hostId
     ) {
 
+      console.log(
+        "关闭失败：不是房主"
+      );
+
+      socket.emit(
+        "closeRoomError"
+      );
+
       return;
     }
 
 
+    // 已经关闭
+
+    if (!roomOpen) {
+
+      socket.emit(
+        "closeRoomSuccess"
+      );
+
+      return;
+    }
+
+
+    // 关闭房间
+
     roomOpen =
       false;
+
+
+    console.log(
+      "房间已经关闭"
+    );
 
 
     // 告诉所有在线玩家
@@ -468,43 +525,98 @@ io.on("connection", socket => {
       "roomClosed"
     );
 
-  });
 
+    // 单独告诉房主关闭成功
 
-
-  // =========================
-  // 房主：重新开放房间
-  // =========================
-
-  socket.on("openRoom", () => {
-
-    // 只有房主可以操作
-
-    if (
-      socket.id !== hostId
-    ) {
-
-      return;
-    }
-
-
-    roomOpen =
-      true;
-
-
-    io.emit(
-      "roomOpened"
+    socket.emit(
+      "closeRoomSuccess"
     );
 
   });
 
 
 
-  // =========================
-  // 玩家离开
-  // =========================
+  // ======================================================
+  // 房主：重新开放房间
+  // ======================================================
+
+  socket.on("openRoom", () => {
+
+    console.log(
+      "收到重新开放房间请求:",
+      socket.id
+    );
+
+
+    // 只有房主可以开放
+
+    if (
+      socket.id !== hostId
+    ) {
+
+      console.log(
+        "开放失败：不是房主"
+      );
+
+      socket.emit(
+        "openRoomError"
+      );
+
+      return;
+    }
+
+
+    // 已经开放
+
+    if (roomOpen) {
+
+      socket.emit(
+        "openRoomSuccess"
+      );
+
+      return;
+    }
+
+
+    // 重新开放
+
+    roomOpen =
+      true;
+
+
+    console.log(
+      "房间已经重新开放"
+    );
+
+
+    // 告诉所有在线玩家
+
+    io.emit(
+      "roomOpened"
+    );
+
+
+    // 单独告诉房主
+
+    socket.emit(
+      "openRoomSuccess"
+    );
+
+  });
+
+
+
+  // ======================================================
+  // 玩家断开
+  // ======================================================
 
   socket.on("disconnect", () => {
+
+    const wasHost =
+      socket.id === hostId;
+
+
+    // 删除玩家
 
     players.delete(
       socket.id
@@ -513,15 +625,19 @@ io.on("connection", socket => {
 
     // 房主离开
 
-    if (
-      socket.id === hostId
-    ) {
+    if (wasHost) {
 
       hostId =
         null;
 
+      console.log(
+        "房主离开，房主身份已释放"
+      );
+
     }
 
+
+    // 更新在线玩家
 
     io.emit(
       "players",
@@ -533,16 +649,21 @@ io.on("connection", socket => {
 });
 
 
-// =========================
+// ======================================================
 // 启动服务器
-// =========================
+// ======================================================
+
+const PORT =
+  process.env.PORT || 3000;
+
 
 server.listen(
-  process.env.PORT || 3000,
+  PORT,
   () => {
 
     console.log(
-      "Mini RooMi V2 running"
+      "Mini RooMi V2 running on port " +
+      PORT
     );
 
   }
