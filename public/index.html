@@ -70,182 +70,133 @@ html,body{
 
 
 /* =========================
-   人物
+   玩家
    ========================= */
 
 .player{
   position:absolute;
   width:78px;
   height:96px;
-
   transform:translate(-50%,-80%);
-
   transition:left .08s,top .08s;
-
   cursor:pointer;
-
   z-index:20;
-
   text-align:center;
-
   filter:drop-shadow(0 4px 3px #0005)
 }
 
 .playerImg{
   width:68px;
   height:68px;
-
   object-fit:contain;
-
   display:block;
-
   margin:0 auto
 }
 
-.name{
-  margin-top:2px;
 
-  text-align:center;
+/* =========================
+   人物头顶说话文字
+   ========================= */
 
-  background:#27333bd9;
+.speech{
+  position:absolute;
 
-  border:1px solid #ffffff33;
+  /*
+    比之前稍微高一点
+  */
+  bottom:88px;
 
-  border-radius:10px;
+  left:50%;
 
-  padding:3px 6px;
+  transform:translateX(-50%);
 
-  font-size:11px;
+  /*
+    不使用白色气泡框
+  */
+  background:transparent;
 
+  border:0;
+
+  padding:0;
+
+  /*
+    文字始终横向
+  */
   white-space:nowrap;
 
+  /*
+    文字多的时候不主动换行
+  */
+  word-break:keep-all;
+
+  overflow:visible;
+
+  /*
+    比下面昵称大一点
+  */
+  font-size:17px;
+
+  font-weight:bold;
+
+  line-height:1.35;
+
+  color:#fff;
+
+  /*
+    黑色描边/阴影，让夕阳背景上也能看清
+  */
+  text-shadow:
+    -2px -2px 0 #000,
+     2px -2px 0 #000,
+    -2px  2px 0 #000,
+     2px  2px 0 #000,
+     0 3px 7px #000;
+
+  pointer-events:none;
+
+  z-index:50;
+
+  /*
+    防止文字被玩家图片遮住
+  */
+  min-width:max-content;
+}
+
+
+/* 玩家昵称 */
+
+.name{
+  margin-top:2px;
+  text-align:center;
+  background:#27333bd9;
+  border:1px solid #ffffff33;
+  border-radius:10px;
+  padding:3px 6px;
+  font-size:11px;
+  white-space:nowrap;
   text-shadow:0 1px 1px #000
 }
 
 .me .name{
   background:#5a4721e8;
-
   box-shadow:0 0 0 1px #ffd35c66
 }
 
 
 /* =========================
-   人物头顶聊天文字
-   ========================= */
-
-.chatBubble{
-  position:absolute;
-
-  left:50%;
-
-  /*
-    人物头顶稍微高一点
-    不会离人物太远
-  */
-  bottom:76px;
-
-  transform:translateX(-50%);
-
-  /*
-    关键：
-    强制横向显示
-  */
-  writing-mode:horizontal-tb;
-
-  text-orientation:mixed;
-
-  white-space:normal;
-
-  width:max-content;
-
-  max-width:220px;
-
-  word-break:normal;
-
-  overflow-wrap:break-word;
-
-  /*
-    不要白色框
-  */
-  background:transparent;
-
-  border:none;
-
-  box-shadow:none;
-
-  padding:0;
-
-  /*
-    文字
-  */
-  color:#fff;
-
-  font-size:15px;
-
-  font-weight:bold;
-
-  line-height:1.45;
-
-  text-align:center;
-
-  /*
-    黑色阴影，保证在夕阳背景上也能看清
-  */
-  text-shadow:
-    0 2px 4px rgba(0,0,0,.95),
-    0 0 5px rgba(0,0,0,.8);
-
-  user-select:none;
-
-  pointer-events:none;
-
-  z-index:25;
-
-  animation:
-    bubbleShow .18s ease-out;
-}
-
-
-/* 文字出现动画 */
-
-@keyframes bubbleShow{
-
-  from{
-    opacity:0;
-    transform:translateX(-50%) translateY(6px) scale(.95)
-  }
-
-  to{
-    opacity:1;
-    transform:translateX(-50%) translateY(0) scale(1)
-  }
-
-}
-
-
-/* =========================
-   底部提示
+   左下提示
    ========================= */
 
 #hint{
   position:absolute;
-
   left:18px;
-
   bottom:18px;
-
   background:#15232ee8;
-
   border:1px solid #ffffff22;
-
   padding:10px 14px;
-
   border-radius:12px;
-
   font-size:12px;
-
   z-index:30;
-
   box-shadow:0 5px 18px #0025
 }
 
@@ -256,57 +207,37 @@ html,body{
 
 #chat{
   position:absolute;
-
   right:18px;
-
   bottom:18px;
-
   width:min(350px,34vw);
-
   background:#15232eea;
-
   border:1px solid #ffffff35;
-
   border-radius:16px;
-
   overflow:hidden;
-
   box-shadow:0 12px 35px #0028;
-
   z-index:30;
-
   backdrop-filter:blur(5px)
 }
 
 #chatTitle{
   padding:9px 12px;
-
   background:#0b1b28aa;
-
   font-weight:bold;
-
   font-size:13px;
-
   border-bottom:1px solid #ffffff18;
-
   cursor:move;
-
   user-select:none
 }
 
 #messages{
   height:210px;
-
   overflow:auto;
-
   padding:12px;
-
   font-size:13px
 }
 
 .msg{
   margin:7px 0;
-
   line-height:1.4
 }
 
@@ -316,35 +247,24 @@ html,body{
 
 #send{
   display:flex;
-
   border-top:1px solid #ffffff25
 }
 
 #input{
   flex:1;
-
   background:#0b1620;
-
   border:0;
-
   color:#fff;
-
   padding:13px;
-
   outline:0
 }
 
 #btn{
   border:0;
-
   background:#3888ed;
-
   color:#fff;
-
   padding:0 18px;
-
   font-size:14px;
-
   cursor:pointer
 }
 
@@ -355,141 +275,93 @@ html,body{
 
 #modal{
   position:absolute;
-
   inset:0;
-
   background:#04233566;
-
   display:flex;
-
   align-items:center;
-
   justify-content:center;
-
   z-index:50;
-
   backdrop-filter:blur(3px)
 }
 
 .box{
-  background:linear-gradient(
-    145deg,
-    #16394dcc,
-    #102737ee
-  );
-
+  background:linear-gradient(145deg,#16394dcc,#102737ee);
   padding:28px;
-
   width:min(390px,92%);
-
   text-align:center;
-
   border:1px solid #ffffff33;
-
   border-radius:20px;
-
   box-shadow:0 20px 60px #001a
 }
 
 .box h2{
   margin:0 0 8px;
-
   font-size:26px
 }
 
 .box p{
   color:#d8edf2;
-
   line-height:1.6;
-
   margin-bottom:15px
 }
 
 .genderTitle{
   font-size:13px;
-
   color:#cfe8ee;
-
   margin-bottom:9px
 }
 
 .genderRow{
   display:flex;
-
   justify-content:center;
-
   gap:18px;
-
   margin-bottom:15px
 }
 
 .genderOption{
   width:145px;
-
   padding:10px 8px;
-
   border:2px solid #ffffff22;
-
   border-radius:15px;
-
   background:#071923aa;
-
   cursor:pointer;
-
   transition:.15s
 }
 
 .genderOption:hover{
   transform:translateY(-2px);
-
   border-color:#ffffff55
 }
 
 .genderOption.selected{
   border-color:#42d6ff;
-
   background:#0d4660cc;
-
   box-shadow:0 0 18px #42d6ff44
 }
 
 .genderOption img{
   width:82px;
-
   height:82px;
-
   object-fit:contain;
-
   display:block;
-
   margin:auto
 }
 
 .genderOption div{
   margin-top:5px;
-
   font-weight:bold;
-
   font-size:13px
 }
 
 .box input{
   width:100%;
-
   padding:13px;
-
   border-radius:10px;
-
   border:1px solid #ffffff25;
-
   margin:7px 0;
-
   background:#071923;
-
   color:white;
-
   outline:0;
-
   display:block
 }
 
@@ -499,35 +371,24 @@ html,body{
 
 .box button{
   padding:12px 25px;
-
   border:0;
-
   border-radius:10px;
-
   background:#159fd0;
-
   color:#fff;
-
   font-weight:bold;
-
   cursor:pointer;
-
   margin-top:7px
 }
 
 .box button:disabled{
   opacity:.5;
-
   cursor:not-allowed
 }
 
 #error{
   min-height:20px;
-
   margin:4px 0 0;
-
   color:#ff8f8f;
-
   font-size:12px
 }
 
@@ -538,31 +399,18 @@ html,body{
 
 #hostPanel{
   display:none;
-
   position:absolute;
-
   top:70px;
-
   right:18px;
-
   width:240px;
-
   max-height:70vh;
-
   overflow:auto;
-
   z-index:40;
-
   background:#102737ee;
-
   border:1px solid #ffd75c66;
-
   border-radius:14px;
-
   padding:14px;
-
   box-shadow:0 12px 35px #0007;
-
   backdrop-filter:blur(8px)
 }
 
@@ -572,83 +420,54 @@ html,body{
 
 .hostTitle{
   color:#ffd75c;
-
   font-weight:bold;
-
   font-size:15px;
-
   margin-bottom:10px
 }
 
 .hostSub{
   color:#bcd0d8;
-
   font-size:12px;
-
   margin-bottom:8px
 }
 
 .hostPlayer{
   display:flex;
-
   align-items:center;
-
   justify-content:space-between;
-
   gap:7px;
-
   padding:7px;
-
   margin:5px 0;
-
   background:#ffffff0d;
-
   border-radius:8px;
-
   font-size:12px
 }
 
 .hostPlayerName{
   overflow:hidden;
-
   text-overflow:ellipsis;
-
   white-space:nowrap
 }
 
 .hostKick{
   border:0;
-
   border-radius:6px;
-
   padding:4px 8px;
-
   background:#a83b3b;
-
   color:#fff;
-
   cursor:pointer;
-
   font-size:11px;
-
   flex:none
 }
 
 .hostAction{
   width:100%;
-
   margin-top:10px;
-
   padding:9px;
-
   border:0;
-
   border-radius:9px;
-
   color:#fff;
-
   cursor:pointer;
-
   font-weight:bold
 }
 
@@ -658,17 +477,13 @@ html,body{
 
 #openRoomBtn{
   display:none;
-
   background:#278c68
 }
 
 #roomStatus{
   margin-top:8px;
-
   color:#ffb0b0;
-
   font-size:11px;
-
   line-height:1.4
 }
 
@@ -681,7 +496,6 @@ html,body{
 
   #top{
     left:10px;
-
     top:10px
   }
 
@@ -691,17 +505,13 @@ html,body{
 
   .pill{
     padding:6px 9px;
-
     font-size:12px
   }
 
   #chat{
     width:calc(100vw - 28px);
-
     right:14px;
-
     bottom:85px;
-
     transition:bottom .2s ease
   }
 
@@ -711,21 +521,17 @@ html,body{
 
   #hint{
     left:10px;
-
     bottom:175px;
-
     font-size:11px
   }
 
   .genderOption{
     width:42vw;
-
     max-width:145px
   }
 
   #input{
     font-size:16px;
-
     min-height:48px
   }
 
@@ -735,54 +541,42 @@ html,body{
 
   #hostPanel{
     top:58px;
-
     right:10px;
-
     width:220px;
-
     max-height:65vh
   }
 
   /*
-    手机人物头顶文字
-    稍微小一点
+    手机端人物说话文字稍微小一点，
+    但依然保持横向
   */
-  .chatBubble{
-    font-size:14px;
-
-    max-width:180px;
-
-    bottom:76px;
-
-    line-height:1.4
+  .speech{
+    font-size:15px;
+    bottom:84px;
   }
 
 }
 
 
 /* =========================
-   手机键盘输入优化
+   超长文字处理
    ========================= */
 
-@media(max-width:700px){
+.speech.long{
+  font-size:16px;
+}
 
-  #input{
-    -webkit-appearance:none;
 
-    appearance:none;
+/* =========================
+   不显示默认的 HTML 文本
+   ========================= */
 
-    touch-action:manipulation
-  }
-
-  #btn{
-    touch-action:manipulation
-  }
-
+html{
+  -webkit-text-size-adjust:100%;
 }
 
 </style>
 </head>
-
 
 <body>
 
@@ -791,18 +585,12 @@ html,body{
 <div id="map"></div>
 
 
-<!-- =========================
-     顶部
-     ========================= -->
+<!-- 顶部 -->
 
 <div id="top">
-
 <b>🌴 shako的平行空间</b>
 
-<span
-  class="pill online"
-  id="count"
->
+<span class="pill online" id="count">
 在线：0/10
 </span>
 
@@ -850,46 +638,38 @@ html,body{
 </div>
 
 
-<!-- =========================
-     提示
-     ========================= -->
+<!-- 提示 -->
 
 <div id="hint">
-
 WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
-
 </div>
 
 
 <!-- =========================
-     聊天
+     聊天框
      ========================= -->
 
 <div id="chat">
 
-<div id="chatTitle">
+  <div id="chatTitle">
+    💬 shako的平行空间 · 聊天室
+  </div>
 
-💬 shako的平行空间 · 聊天室
+  <div id="messages"></div>
 
-</div>
+  <div id="send">
 
-<div id="messages"></div>
+    <input
+      id="input"
+      maxlength="200"
+      placeholder="说点什么…"
+    >
 
-<div id="send">
+    <button id="btn">
+      发送
+    </button>
 
-<input
-  id="input"
-  maxlength="200"
-  placeholder="说点什么…"
->
-
-<button
-  id="btn"
->
-发送
-</button>
-
-</div>
+  </div>
 
 </div>
 
@@ -900,116 +680,109 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 <div id="modal">
 
-<div class="box">
+  <div class="box">
 
-<h2>
-🌴 shako的平行空间
-</h2>
+    <h2>
+      🌴 shako的平行空间
+    </h2>
 
-<p>
-欢迎来到海滩大厅<br>
-先选择你的角色，再输入昵称和房间密码
-</p>
+    <p>
+      欢迎来到海滩大厅<br>
+      先选择你的角色，再输入昵称和房间密码
+    </p>
 
+    <div class="genderTitle">
+      选择你的角色
+    </div>
 
-<div class="genderTitle">
-选择你的角色
-</div>
+    <div class="genderRow">
 
+      <div
+        class="genderOption selected"
+        id="maleOption"
+        data-gender="male"
+      >
 
-<div class="genderRow">
+        <img
+          src="./male.png"
+          alt="男生"
+        >
 
+        <div>
+          👨 男生
+        </div>
 
-<div
-  class="genderOption selected"
-  id="maleOption"
-  data-gender="male"
->
-
-<img
-  src="./male.png"
-  alt="男生"
->
-
-<div>
-👨 男生
-</div>
-
-</div>
+      </div>
 
 
-<div
-  class="genderOption"
-  id="femaleOption"
-  data-gender="female"
->
+      <div
+        class="genderOption"
+        id="femaleOption"
+        data-gender="female"
+      >
 
-<img
-  src="./female.png"
-  alt="女生"
->
+        <img
+          src="./female.png"
+          alt="女生"
+        >
 
-<div>
-👩 女生
-</div>
+        <div>
+          👩 女生
+        </div>
 
-</div>
+      </div>
 
-
-</div>
-
-
-<input
-  id="nick"
-  maxlength="12"
-  autocomplete="nickname"
-  placeholder="请输入昵称"
->
+    </div>
 
 
-<input
-  id="password"
-  type="password"
-  maxlength="100"
-  autocomplete="off"
-  placeholder="请输入房间密码"
->
+    <input
+      id="nick"
+      maxlength="12"
+      autocomplete="nickname"
+      placeholder="请输入昵称"
+    >
 
 
-<div style="
-  text-align:left;
-  font-size:11px;
-  color:#a9cbd3;
-  margin-top:2px;
-  margin-bottom:4px;
-">
-
-👑 房主密码只有房主填写，不填写也可以正常进入
-
-</div>
+    <input
+      id="password"
+      type="password"
+      maxlength="100"
+      autocomplete="off"
+      placeholder="请输入房间密码"
+    >
 
 
-<input
-  id="hostPassword"
-  type="password"
-  maxlength="100"
-  autocomplete="off"
-  placeholder="房主密码（只有房主填写）"
->
+    <div style="
+      text-align:left;
+      font-size:11px;
+      color:#a9cbd3;
+      margin-top:2px;
+      margin-bottom:4px;
+    ">
+      👑 房主密码只有房主填写，不填写也可以正常进入
+    </div>
 
 
-<div id="error"></div>
+    <input
+      id="hostPassword"
+      type="password"
+      maxlength="100"
+      autocomplete="off"
+      placeholder="房主密码（只有房主填写）"
+    >
 
 
-<button
-  id="join"
-  type="button"
->
-进入海滩
-</button>
+    <div id="error"></div>
 
 
-</div>
+    <button
+      id="join"
+      type="button"
+    >
+      进入海滩
+    </button>
+
+  </div>
 
 </div>
 
@@ -1018,14 +791,16 @@ WASD / 方向键移动　·　最多十个人打开同一个网址即可见面
 
 <script src="/socket.io/socket.io.js"></script>
 
-
 <script>
 
 "use strict";
 
 
-let socket=null;
+/* =========================
+   Socket
+   ========================= */
 
+let socket=null;
 
 try{
 
@@ -1056,61 +831,58 @@ let me={
 const speed=1.2;
 
 
+/* =========================
+   DOM
+   ========================= */
+
 const modal=
   document.getElementById("modal");
-
 
 const nick=
   document.getElementById("nick");
 
-
 const password=
   document.getElementById("password");
-
 
 const hostPassword=
   document.getElementById("hostPassword");
 
-
 const joinBtn=
   document.getElementById("join");
-
 
 const errorBox=
   document.getElementById("error");
 
-
 const world=
   document.getElementById("world");
-
 
 const messages=
   document.getElementById("messages");
 
-
 const input=
   document.getElementById("input");
-
 
 const count=
   document.getElementById("count");
 
-
 const maleOption=
   document.getElementById("maleOption");
-
 
 const femaleOption=
   document.getElementById("femaleOption");
 
-
 const closeRoomBtn=
   document.getElementById("closeRoomBtn");
-
 
 const openRoomBtn=
   document.getElementById("openRoomBtn");
 
+
+/* =========================
+   记录人物头顶说话内容
+   ========================= */
+
+const speechMap={};
 
 
 /* =========================
@@ -1119,21 +891,20 @@ const openRoomBtn=
 
 function esc(s){
 
-return String(s).replace(
-  /[&<>"']/g,
-  c=>({
+  return String(s).replace(
+    /[&<>"']/g,
+    c=>({
 
-    "&":"&amp;",
-    "<":"&lt;",
-    ">":"&gt;",
-    '"':"&quot;",
-    "'":"&#39;"
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
 
-  }[c])
-);
+    }[c])
+  );
 
 }
-
 
 
 /* =========================
@@ -1142,122 +913,23 @@ return String(s).replace(
 
 function msg(name,text){
 
-const d=
-  document.createElement("div");
-
-d.className="msg";
-
-d.innerHTML=
-  "<b>"+
-  esc(name)+
-  "：</b>"+
-  esc(text);
-
-messages.appendChild(d);
-
-messages.scrollTop=
-  messages.scrollHeight;
-
-}
-
-
-
-/* =========================
-   人物头顶显示文字
-   ========================= */
-
-function showBubble(name,text){
-
-  const players=
-    document.querySelectorAll(".player");
-
-  let target=null;
-
-
-  /*
-    优先寻找名字对应的人物
-  */
-
-  players.forEach(player=>{
-
-    const nameBox=
-      player.querySelector(".name");
-
-    if(!nameBox)return;
-
-
-    let playerName=
-      nameBox.textContent
-      .replace("（你）","")
-      .replace("👑","")
-      .trim();
-
-
-    if(playerName===String(name).trim()){
-
-      target=player;
-
-    }
-
-  });
-
-
-  if(!target)return;
-
-
-  /*
-    如果之前已经有文字
-    先删除
-  */
-
-  const old=
-    target.querySelector(".chatBubble");
-
-  if(old){
-
-    old.remove();
-
-  }
-
-
-  /*
-    创建新的文字
-  */
-
-  const bubble=
+  const d=
     document.createElement("div");
 
-  bubble.className=
-    "chatBubble";
+  d.className="msg";
 
-  bubble.textContent=
-    text;
+  d.innerHTML=
+    "<b>"+
+    esc(name)+
+    "：</b>"+
+    esc(text);
 
+  messages.appendChild(d);
 
-  target.appendChild(
-    bubble
-  );
-
-
-  /*
-    3秒后自动消失
-  */
-
-  setTimeout(()=>{
-
-    if(
-      bubble &&
-      bubble.parentNode===target
-    ){
-
-      bubble.remove();
-
-    }
-
-  },3000);
+  messages.scrollTop=
+    messages.scrollHeight;
 
 }
-
 
 
 /* =========================
@@ -1266,31 +938,30 @@ function showBubble(name,text){
 
 function setError(text){
 
-errorBox.textContent=
-  text||"";
+  errorBox.textContent=
+    text||"";
 
 }
 
 
-
 /* =========================
-   性别
+   选择性别
    ========================= */
 
 function chooseGender(gender){
 
-selectedGender=
-  gender;
+  selectedGender=
+    gender;
 
-maleOption.classList.toggle(
-  "selected",
-  gender==="male"
-);
+  maleOption.classList.toggle(
+    "selected",
+    gender==="male"
+  );
 
-femaleOption.classList.toggle(
-  "selected",
-  gender==="female"
-);
+  femaleOption.classList.toggle(
+    "selected",
+    gender==="female"
+  );
 
 }
 
@@ -1307,58 +978,56 @@ femaleOption.addEventListener(
 );
 
 
-
 /* =========================
    登录
    ========================= */
 
 function startAuth(){
 
-setError("");
+  setError("");
 
-const n=
-  nick.value.trim()||
-  "玩家";
+  const n=
+    nick.value.trim()||
+    "玩家";
 
-const p=
-  password.value;
+  const p=
+    password.value;
 
+  if(!p){
 
-if(!p){
+    setError(
+      "请输入房间密码"
+    );
 
-setError(
-  "请输入房间密码"
-);
+    password.focus();
 
-password.focus();
+    return;
 
-return;
-
-}
-
-
-if(!socket){
-
-setError(
-  "服务器连接失败，请刷新页面后重试"
-);
-
-return;
-
-}
+  }
 
 
-joinBtn.disabled=
-  true;
+  if(!socket){
 
-joinBtn.textContent=
-  "验证中...";
+    setError(
+      "服务器连接失败，请刷新页面后重试"
+    );
+
+    return;
+
+  }
 
 
-socket.emit(
-  "auth",
-  p
-);
+  joinBtn.disabled=
+    true;
+
+  joinBtn.textContent=
+    "验证中...";
+
+
+  socket.emit(
+    "auth",
+    p
+  );
 
 }
 
@@ -1369,6 +1038,9 @@ joinBtn.addEventListener(
 );
 
 
+/* =========================
+   登录回车
+   ========================= */
 
 nick.addEventListener(
   "keydown",
@@ -1384,7 +1056,6 @@ nick.addEventListener(
 
   }
 );
-
 
 
 password.addEventListener(
@@ -1403,7 +1074,6 @@ password.addEventListener(
 );
 
 
-
 hostPassword.addEventListener(
   "keydown",
   e=>{
@@ -1420,9 +1090,8 @@ hostPassword.addEventListener(
 );
 
 
-
 /* =========================
-   聊天输入
+   聊天回车
    ========================= */
 
 input.addEventListener(
@@ -1449,30 +1118,29 @@ document
 );
 
 
+/* =========================
+   发送消息
+   ========================= */
 
 function send(){
 
-const text=
-  input.value.trim();
+  const text=
+    input.value.trim();
 
+  if(!text)return;
 
-if(!text)return;
+  if(socket){
 
+    socket.emit(
+      "chat",
+      text
+    );
 
-if(socket){
+  }
 
-  socket.emit(
-    "chat",
-    text
-  );
-
-}
-
-
-input.value="";
+  input.value="";
 
 }
-
 
 
 /* =========================
@@ -1482,13 +1150,12 @@ input.value="";
 window.currentPlayers=[];
 
 
+/* =========================
+   Socket事件
+   ========================= */
 
 if(socket){
 
-
-/* =========================
-   Socket连接
-   ========================= */
 
 socket.on(
   "connect",
@@ -1498,7 +1165,6 @@ socket.on(
 
   }
 );
-
 
 
 socket.on(
@@ -1518,11 +1184,6 @@ socket.on(
   }
 );
 
-
-
-/* =========================
-   密码错误
-   ========================= */
 
 socket.on(
   "authError",
@@ -1544,7 +1205,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1590,9 +1250,8 @@ socket.on(
 );
 
 
-
 /* =========================
-   房间重新开放
+   房间开放
    ========================= */
 
 socket.on(
@@ -1610,7 +1269,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1635,9 +1293,8 @@ socket.on(
 );
 
 
-
 /* =========================
-   进入房间
+   登录成功
    ========================= */
 
 socket.on(
@@ -1649,7 +1306,6 @@ socket.on(
 
     me=
       d.you;
-
 
     modal.style.display=
       "none";
@@ -1697,7 +1353,6 @@ socket.on(
 );
 
 
-
 /* =========================
    房主验证成功
    ========================= */
@@ -1738,6 +1393,9 @@ socket.on(
 );
 
 
+/* =========================
+   房主密码错误
+   ========================= */
 
 socket.on(
   "hostAuthError",
@@ -1752,6 +1410,9 @@ socket.on(
 );
 
 
+/* =========================
+   已经有房主
+   ========================= */
 
 socket.on(
   "hostAlreadyExists",
@@ -1764,7 +1425,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1785,6 +1445,9 @@ socket.on(
 );
 
 
+/* =========================
+   踢人成功
+   ========================= */
 
 socket.on(
   "kickSuccess",
@@ -1797,7 +1460,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1823,6 +1485,9 @@ socket.on(
 );
 
 
+/* =========================
+   关闭失败
+   ========================= */
 
 socket.on(
   "closeRoomError",
@@ -1835,7 +1500,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1859,6 +1523,9 @@ socket.on(
 );
 
 
+/* =========================
+   开放失败
+   ========================= */
 
 socket.on(
   "openRoomError",
@@ -1871,7 +1538,6 @@ socket.on(
 
   }
 );
-
 
 
 /* =========================
@@ -1889,21 +1555,106 @@ socket.on(
 
 
     /*
-      同时在人物头顶显示
+      记录人物头顶文字
+
+      如果服务器返回 id，
+      直接使用 id。
+
+      如果没有 id，
+      使用昵称寻找人物。
     */
 
-    showBubble(
-      d.name,
-      d.text
-    );
+    let playerId=
+      d.id||
+      d.playerId||
+      null;
+
+
+    if(playerId){
+
+      speechMap[playerId]=
+        d.text;
+
+      renderSpeech(
+        playerId,
+        d.text
+      );
+
+
+      clearTimeout(
+        speechMap[playerId+"_timer"]
+      );
+
+
+      speechMap[playerId+"_timer"]=
+        setTimeout(
+          ()=>{
+
+            delete speechMap[playerId];
+
+            renderSpeech(
+              playerId,
+              ""
+            );
+
+          },
+          5000
+        );
+
+    }else{
+
+      /*
+        如果服务器没有传玩家ID，
+        就按照昵称匹配。
+      */
+
+      const player=
+        window.currentPlayers.find(
+          p=>p.name===d.name
+        );
+
+
+      if(player){
+
+        speechMap[player.id]=
+          d.text;
+
+        renderSpeech(
+          player.id,
+          d.text
+        );
+
+
+        clearTimeout(
+          speechMap[player.id+"_timer"]
+        );
+
+
+        speechMap[player.id+"_timer"]=
+          setTimeout(
+            ()=>{
+
+              delete speechMap[player.id];
+
+              renderSpeech(
+                player.id,
+                ""
+              );
+
+            },
+            5000
+          );
+
+      }
+
+    }
 
   }
 );
 
 
-
 /* =========================
-   玩家位置
+   玩家列表
    ========================= */
 
 socket.on(
@@ -1921,10 +1672,6 @@ socket.on(
     updateHostPlayers();
 
 
-    /*
-      删除旧人物
-    */
-
     document
       .querySelectorAll(".player")
       .forEach(
@@ -1932,63 +1679,95 @@ socket.on(
       );
 
 
-    /*
-      创建玩家
-    */
+    ps.forEach(
+      p=>{
 
-    ps.forEach(p=>{
-
-      const el=
-        document.createElement("div");
-
-
-      el.className=
-        "player"+
-        (p.id===myId?" me":"");
+        const el=
+          document.createElement(
+            "div"
+          );
 
 
-      el.style.left=
-        p.x+"%";
+        el.className=
+          "player"+
+          (p.id===myId?" me":"");
 
 
-      el.style.top=
-        p.y+"%";
+        el.style.left=
+          p.x+"%";
 
 
-      const gender=
-        p.gender==="female"
-        ?"female"
-        :"male";
+        el.style.top=
+          p.y+"%";
 
 
-      const img=
-        gender==="female"
-        ?"female.png"
-        :"male.png";
+        const gender=
+          p.gender==="female"
+          ?"female"
+          :"male";
 
 
-      const hostMark=
-        p.isHost
-        ?" 👑"
-        :"";
+        const img=
+          gender==="female"
+          ?"female.png"
+          :"male.png";
 
 
-      el.innerHTML=
-        '<img class="playerImg" '+
-        'src="./'+
-        img+
-        '" alt="">'+
-
-        '<div class="name">'+
-        esc(p.name)+
-        hostMark+
-        (p.id===myId?"（你）":"")+
-        "</div>";
+        const hostMark=
+          p.isHost
+          ?" 👑"
+          :"";
 
 
-      world.appendChild(el);
+        /*
+          如果这个人当前正在说话，
+          显示头顶文字
+        */
 
-    });
+        const speech=
+          speechMap[p.id]||"";
+
+
+        let speechHtml="";
+
+
+        if(speech){
+
+          const longClass=
+            String(speech).length>20
+            ?" long"
+            :"";
+
+
+          speechHtml=
+            '<div class="speech'+
+            longClass+
+            '">'+
+            esc(speech)+
+            '</div>';
+
+        }
+
+
+        el.innerHTML=
+          speechHtml+
+
+          '<img class="playerImg" '+
+          'src="./'+
+          img+
+          '" alt="">'+
+
+          '<div class="name">'+
+          esc(p.name)+
+          hostMark+
+          (p.id===myId?"（你）":"")+
+          "</div>";
+
+
+        world.appendChild(el);
+
+      }
+    );
 
   }
 
@@ -1997,9 +1776,152 @@ socket.on(
 }
 
 
+/* =========================
+   重新渲染某个人物头顶文字
+   ========================= */
+
+function renderSpeech(playerId,text){
+
+  const player=
+    document.querySelector(
+      '.player[data-id="'+
+      playerId+
+      '"]'
+    );
+
+
+  /*
+    当前玩家元素没有 data-id，
+    所以下面使用玩家列表重新定位
+  */
+
+  if(player){
+
+    updateSpeechElement(
+      player,
+      text
+    );
+
+    return;
+
+  }
+
+
+  const index=
+    window.currentPlayers.findIndex(
+      p=>p.id===playerId
+    );
+
+
+  if(index===-1)return;
+
+
+  /*
+    找到对应玩家元素
+  */
+
+  const elements=
+    document.querySelectorAll(
+      ".player"
+    );
+
+
+  const p=
+    window.currentPlayers[index];
+
+
+  for(
+    const el of elements
+  ){
+
+    const nameEl=
+      el.querySelector(
+        ".name"
+      );
+
+
+    if(
+      nameEl &&
+      nameEl.textContent
+        .replace("（你）","")
+        .replace("👑","")
+        .trim()===p.name
+    ){
+
+      updateSpeechElement(
+        el,
+        text
+      );
+
+      break;
+
+    }
+
+  }
+
+}
+
 
 /* =========================
-   电脑键盘移动
+   更新头顶文字
+   ========================= */
+
+function updateSpeechElement(
+  el,
+  text
+){
+
+  const old=
+    el.querySelector(
+      ".speech"
+    );
+
+
+  if(old){
+
+    old.remove();
+
+  }
+
+
+  if(!text)return;
+
+
+  const speech=
+    document.createElement(
+      "div"
+    );
+
+
+  speech.className=
+    "speech";
+
+
+  if(
+    String(text).length>20
+  ){
+
+    speech.classList.add(
+      "long"
+    );
+
+  }
+
+
+  speech.textContent=
+    text;
+
+
+  el.insertBefore(
+    speech,
+    el.firstChild
+  );
+
+}
+
+
+/* =========================
+   WASD / 方向键
    ========================= */
 
 document.addEventListener(
@@ -2019,12 +1941,12 @@ document.addEventListener(
 
 
     let dx=0;
-
     let dy=0;
 
 
     if(
-      ["ArrowUp","w","W"].includes(e.key)
+      ["ArrowUp","w","W"]
+      .includes(e.key)
     ){
 
       dy=-speed;
@@ -2033,7 +1955,8 @@ document.addEventListener(
 
 
     if(
-      ["ArrowDown","s","S"].includes(e.key)
+      ["ArrowDown","s","S"]
+      .includes(e.key)
     ){
 
       dy=speed;
@@ -2042,7 +1965,8 @@ document.addEventListener(
 
 
     if(
-      ["ArrowLeft","a","A"].includes(e.key)
+      ["ArrowLeft","a","A"]
+      .includes(e.key)
     ){
 
       dx=-speed;
@@ -2051,7 +1975,8 @@ document.addEventListener(
 
 
     if(
-      ["ArrowRight","d","D"].includes(e.key)
+      ["ArrowRight","d","D"]
+      .includes(e.key)
     ){
 
       dx=speed;
@@ -2102,139 +2027,140 @@ document.addEventListener(
 );
 
 
-
 /* =========================
    房主控制
    ========================= */
 
 function showHostPanel(){
 
-const panel=
-  document.getElementById(
-    "hostPanel"
-  );
-
-
-if(panel){
-
-  panel.classList.add(
-    "show"
-  );
-
-}
-
-
-updateHostPlayers();
-
-}
-
-
-
-function updateHostPlayers(){
-
-const box=
-  document.getElementById(
-    "hostPlayers"
-  );
-
-
-if(!box)return;
-
-
-box.innerHTML="";
-
-
-window.currentPlayers
-.forEach(p=>{
-
-  const row=
-    document.createElement(
-      "div"
+  const panel=
+    document.getElementById(
+      "hostPanel"
     );
 
 
-  row.className=
-    "hostPlayer";
+  if(panel){
 
-
-  const name=
-    document.createElement(
-      "span"
-    );
-
-
-  name.className=
-    "hostPlayerName";
-
-
-  name.textContent=
-    (p.isHost?"👑 ":"")+
-    p.name+
-    (p.id===myId?"（你）":"");
-
-
-  row.appendChild(name);
-
-
-  if(p.id!==myId){
-
-    const kick=
-      document.createElement(
-        "button"
-      );
-
-
-    kick.className=
-      "hostKick";
-
-
-    kick.type=
-      "button";
-
-
-    kick.textContent=
-      "踢出";
-
-
-    kick.onclick=
-      ()=>{
-
-        if(!socket)return;
-
-
-        if(
-          confirm(
-            "确定要把「"+
-            p.name+
-            "」请出房间吗？"
-          )
-        ){
-
-          socket.emit(
-            "kickPlayer",
-            p.id
-          );
-
-        }
-
-      };
-
-
-    row.appendChild(
-      kick
+    panel.classList.add(
+      "show"
     );
 
   }
 
 
-  box.appendChild(
-    row
-  );
-
-});
+  updateHostPlayers();
 
 }
 
+
+function updateHostPlayers(){
+
+  const box=
+    document.getElementById(
+      "hostPlayers"
+    );
+
+
+  if(!box)return;
+
+
+  box.innerHTML="";
+
+
+  window.currentPlayers
+  .forEach(
+    p=>{
+
+      const row=
+        document.createElement(
+          "div"
+        );
+
+
+      row.className=
+        "hostPlayer";
+
+
+      const name=
+        document.createElement(
+          "span"
+        );
+
+
+      name.className=
+        "hostPlayerName";
+
+
+      name.textContent=
+        (p.isHost?"👑 ":"")+
+        p.name+
+        (p.id===myId?"（你）":"");
+
+
+      row.appendChild(
+        name
+      );
+
+
+      if(p.id!==myId){
+
+        const kick=
+          document.createElement(
+            "button"
+          );
+
+
+        kick.className=
+          "hostKick";
+
+
+        kick.type=
+          "button";
+
+
+        kick.textContent=
+          "踢出";
+
+
+        kick.onclick=
+          ()=>{
+
+            if(!socket)return;
+
+
+            if(
+              confirm(
+                "确定要把「"+
+                p.name+
+                "」请出房间吗？"
+              )
+            ){
+
+              socket.emit(
+                "kickPlayer",
+                p.id
+              );
+
+            }
+
+          };
+
+
+        row.appendChild(
+          kick
+        );
+
+      }
+
+
+      box.appendChild(
+        row
+      );
+
+    }
+  );
+
+}
 
 
 /* =========================
@@ -2243,62 +2169,60 @@ window.currentPlayers
 
 function setRoomStatus(text){
 
-const el=
-  document.getElementById(
-    "roomStatus"
-  );
+  const el=
+    document.getElementById(
+      "roomStatus"
+    );
 
 
-if(el){
+  if(el){
 
-  el.textContent=
-    text||"";
+    el.textContent=
+      text||"";
+
+  }
 
 }
-
-}
-
 
 
 function setRoomButtons(closed){
 
-const closeBtn=
-  document.getElementById(
-    "closeRoomBtn"
-  );
+  const closeBtn=
+    document.getElementById(
+      "closeRoomBtn"
+    );
 
 
-const openBtn=
-  document.getElementById(
-    "openRoomBtn"
-  );
+  const openBtn=
+    document.getElementById(
+      "openRoomBtn"
+    );
 
 
-if(closeBtn){
+  if(closeBtn){
 
-  closeBtn.style.display=
-    closed
-    ?"none"
-    :"block";
+    closeBtn.style.display=
+      closed
+      ?"none"
+      :"block";
+
+  }
+
+
+  if(openBtn){
+
+    openBtn.style.display=
+      closed
+      ?"block"
+      :"none";
+
+  }
 
 }
-
-
-if(openBtn){
-
-  openBtn.style.display=
-    closed
-    ?"block"
-    :"none";
-
-}
-
-}
-
 
 
 /* =========================
-   关闭 / 开放房间
+   关闭房间
    ========================= */
 
 closeRoomBtn.addEventListener(
@@ -2311,6 +2235,10 @@ closeRoomBtn.addEventListener(
 );
 
 
+/* =========================
+   开放房间
+   ========================= */
+
 openRoomBtn.addEventListener(
   "click",
   function(){
@@ -2321,59 +2249,57 @@ openRoomBtn.addEventListener(
 );
 
 
-
 function closeRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  if(
+    !confirm(
+      "确定要关闭房间吗？\n\n"+
+      "关闭后，新的人将无法进入，"+
+      "但已经在房间里的人可以继续聊天。"
+    )
+  ){
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "closeRoom"
   );
 
-  return;
-
 }
-
-
-if(
-  !confirm(
-    "确定要关闭房间吗？\n\n"+
-    "关闭后，新的人将无法进入，"+
-    "但已经在房间里的人可以继续聊天。"
-  )
-){
-
-  return;
-
-}
-
-
-socket.emit(
-  "closeRoom"
-);
-
-}
-
 
 
 function openRoom(){
 
-if(!socket){
+  if(!socket){
 
-  msg(
-    "系统",
-    "服务器连接失败"
+    msg(
+      "系统",
+      "服务器连接失败"
+    );
+
+    return;
+
+  }
+
+
+  socket.emit(
+    "openRoom"
   );
-
-  return;
-
-}
-
-
-socket.emit(
-  "openRoom"
-);
 
 }
 
@@ -2383,7 +2309,7 @@ socket.emit(
 <script>
 
 /* =========================
-   手机键盘适配
+   手机端聊天框跟随键盘
    ========================= */
 
 (function(){
@@ -2498,8 +2424,8 @@ socket.emit(
     adjustChat
   );
 
-})();
 
+})();
 
 
 /* =========================
@@ -2523,7 +2449,6 @@ let dragging=false;
 let offsetX=0;
 
 let offsetY=0;
-
 
 
 chatTitle.addEventListener(
@@ -2578,7 +2503,6 @@ chatTitle.addEventListener(
 );
 
 
-
 document.addEventListener(
   "mousemove",
   function(e){
@@ -2597,7 +2521,6 @@ document.addEventListener(
 
   }
 );
-
 
 
 document.addEventListener(
