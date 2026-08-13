@@ -665,6 +665,12 @@ const maleOption=
 const femaleOption=
   document.getElementById("femaleOption");
 
+const closeRoomBtn=
+  document.getElementById("closeRoomBtn");
+
+const openRoomBtn=
+  document.getElementById("openRoomBtn");
+
 
 function esc(s){
 
@@ -1086,11 +1092,33 @@ socket.on(
 
 socket.on(
   "hostAuthSuccess",
-  ()=>{
+  d=>{
 
     showHostPanel();
 
-    setRoomStatus("");
+    /*
+      根据服务器实际房间状态
+      显示正确按钮
+    */
+
+    if(
+      d &&
+      d.roomOpen===false
+    ){
+
+      setRoomButtons(true);
+
+      setRoomStatus(
+        "🔒 房间已关闭，新玩家暂时无法进入"
+      );
+
+    }else{
+
+      setRoomButtons(false);
+
+      setRoomStatus("");
+
+    }
 
     msg(
       "系统",
@@ -1136,6 +1164,81 @@ socket.on(
     );
 
     location.reload();
+
+  }
+);
+
+
+socket.on(
+  "kickSuccess",
+  ()=>{
+
+    msg(
+      "系统",
+      "🚪 玩家已被请出房间"
+    );
+
+  }
+);
+
+
+socket.on(
+  "closeRoomSuccess",
+  ()=>{
+
+    setRoomButtons(true);
+
+    setRoomStatus(
+      "🔒 房间已关闭，新玩家暂时无法进入"
+    );
+
+    msg(
+      "系统",
+      "🔒 房间关闭成功"
+    );
+
+  }
+);
+
+
+socket.on(
+  "closeRoomError",
+  ()=>{
+
+    msg(
+      "系统",
+      "关闭房间失败：当前账号不是房主"
+    );
+
+  }
+);
+
+
+socket.on(
+  "openRoomSuccess",
+  ()=>{
+
+    setRoomButtons(false);
+
+    setRoomStatus("");
+
+    msg(
+      "系统",
+      "🔓 房间重新开放成功"
+    );
+
+  }
+);
+
+
+socket.on(
+  "openRoomError",
+  ()=>{
+
+    msg(
+      "系统",
+      "重新开放失败：当前账号不是房主"
+    );
 
   }
 );
@@ -1511,9 +1614,42 @@ if(openBtn){
 }
 
 
+/* =========================
+   这里是这次修好的关键
+   ========================= */
+
+closeRoomBtn.addEventListener(
+  "click",
+  function(){
+
+    closeRoom();
+
+  }
+);
+
+
+openRoomBtn.addEventListener(
+  "click",
+  function(){
+
+    openRoom();
+
+  }
+);
+
+
 function closeRoom(){
 
-if(!socket)return;
+if(!socket){
+
+  msg(
+    "系统",
+    "服务器连接失败"
+  );
+
+  return;
+
+}
 
 
 if(
@@ -1538,7 +1674,16 @@ socket.emit(
 
 function openRoom(){
 
-if(!socket)return;
+if(!socket){
+
+  msg(
+    "系统",
+    "服务器连接失败"
+  );
+
+  return;
+
+}
 
 
 socket.emit(
