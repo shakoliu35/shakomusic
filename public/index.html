@@ -2008,13 +2008,15 @@ function startAuth(){
 
 
   socket.emit(
-    "auth",
-    {
-      roomId:selectedRoom,
-      password:p
-    }
-  );
+  "auth",
+  {
+    roomId:
+      selectedRoom,
 
+    password:
+      p
+  }
+);
 }
 
 
@@ -3704,28 +3706,1383 @@ document.addEventListener(
 
 
 
-<!-- =========================
-     背景音乐
-     ========================= -->
-<audio id="bgMusic" src="./music.mp3" loop preload="auto"></audio>
-<button id="musicBtn" type="button" aria-label="背景音乐">🔊</button>
+<!-- ======================================================
+     房间音乐
+     普通用户：只能静音 / 恢复声音
+     房主：可以控制11首歌
+     ====================================================== -->
+
+<audio
+  id="bgMusic"
+  preload="auto"
+></audio>
+
+
+<button
+  id="musicBtn"
+  type="button"
+  aria-label="音乐"
+>
+  🔊
+</button>
+
+
+<div
+  id="musicPanel"
+>
+
+
+  <div
+    class="musicTitle"
+  >
+    🎵 房间音乐
+  </div>
+
+
+  <div
+    id="musicCurrent"
+    class="musicCurrent"
+  >
+    正在加载音乐…
+  </div>
+
+
+  <!-- =========================
+       房主控制
+       ========================= -->
+
+  <div
+    id="hostMusicControls"
+    class="hostMusicControls"
+  >
+
+    <div
+      class="musicButtons"
+    >
+
+      <button
+        id="musicPrev"
+        type="button"
+      >
+        ⏮
+      </button>
+
+
+      <button
+        id="musicPlay"
+        type="button"
+      >
+        ⏸
+      </button>
+
+
+      <button
+        id="musicNext"
+        type="button"
+      >
+        ⏭
+      </button>
+
+    </div>
+
+
+    <div
+      id="musicList"
+      class="musicList"
+    ></div>
+
+  </div>
+
+
+  <!-- =========================
+       普通用户提示
+       ========================= -->
+
+  <div
+    id="musicGuestText"
+    class="musicGuestText"
+  >
+    🎵 房主正在控制音乐
+  </div>
+
+
+</div>
+
+
 <style>
-#musicBtn{position:fixed;top:18px;right:18px;z-index:200;width:38px;height:38px;border:1px solid #ffffff30;border-radius:50%;background:#102737cc;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);box-shadow:0 5px 18px #0005;touch-action:manipulation}
-#musicBtn:active{transform:scale(.92)}
-@media(max-width:700px){#musicBtn{top:10px;right:10px;width:34px;height:34px;font-size:16px}}
+
+#musicBtn{
+
+  position:fixed;
+
+  top:18px;
+  right:18px;
+
+  z-index:200;
+
+  width:38px;
+  height:38px;
+
+  border:
+    1px solid #ffffff30;
+
+  border-radius:50%;
+
+  background:#102737cc;
+
+  color:#fff;
+
+  font-size:18px;
+
+  cursor:pointer;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  backdrop-filter:blur(6px);
+
+  box-shadow:
+    0 5px 18px #0005;
+
+  touch-action:manipulation;
+
+}
+
+
+#musicBtn:active{
+
+  transform:
+    scale(.92);
+
+}
+
+
+/* ======================================================
+   音乐面板
+   ====================================================== */
+
+#musicPanel{
+
+  position:fixed;
+
+  top:64px;
+  right:18px;
+
+  width:280px;
+
+  max-height:70vh;
+
+  overflow:hidden;
+
+  z-index:199;
+
+  background:#102737ee;
+
+  border:
+    1px solid #ffffff30;
+
+  border-radius:15px;
+
+  padding:12px;
+
+  box-shadow:
+    0 12px 35px #0008;
+
+  backdrop-filter:
+    blur(10px);
+
+  display:none;
+
+}
+
+
+#musicPanel.show{
+
+  display:block;
+
+}
+
+
+/* ======================================================
+   标题
+   ====================================================== */
+
+.musicTitle{
+
+  color:#ffd75c;
+
+  font-size:14px;
+
+  font-weight:bold;
+
+  margin-bottom:8px;
+
+}
+
+
+.musicCurrent{
+
+  color:#fff;
+
+  font-size:12px;
+
+  padding:8px 9px;
+
+  background:#ffffff0c;
+
+  border-radius:8px;
+
+  margin-bottom:8px;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+}
+
+
+/* ======================================================
+   房主按钮
+   ====================================================== */
+
+.musicButtons{
+
+  display:flex;
+
+  gap:6px;
+
+  margin-bottom:9px;
+
+}
+
+
+.musicButtons button{
+
+  flex:1;
+
+  height:32px;
+
+  border:0;
+
+  border-radius:8px;
+
+  background:#ffffff12;
+
+  color:#fff;
+
+  font-size:15px;
+
+  cursor:pointer;
+
+  touch-action:manipulation;
+
+}
+
+
+.musicButtons button:hover{
+
+  background:#ffffff22;
+
+}
+
+
+.musicButtons button:active{
+
+  transform:
+    scale(.94);
+
+}
+
+
+/* ======================================================
+   歌单
+   ====================================================== */
+
+.musicList{
+
+  max-height:45vh;
+
+  overflow-y:auto;
+
+}
+
+
+.musicItem{
+
+  width:100%;
+
+  border:0;
+
+  border-radius:8px;
+
+  background:transparent;
+
+  color:#dcebf0;
+
+  padding:8px 9px;
+
+  margin:2px 0;
+
+  text-align:left;
+
+  font-size:12px;
+
+  cursor:pointer;
+
+  white-space:nowrap;
+
+  overflow:hidden;
+
+  text-overflow:ellipsis;
+
+  display:block;
+
+  touch-action:manipulation;
+
+}
+
+
+.musicItem:hover{
+
+  background:#ffffff12;
+
+}
+
+
+.musicItem.active{
+
+  background:#5a4721aa;
+
+  color:#ffd75c;
+
+}
+
+
+/* ======================================================
+   普通用户
+   ====================================================== */
+
+.musicGuestText{
+
+  color:#a9cbd3;
+
+  font-size:11px;
+
+  padding:
+    4px 2px 2px;
+
+}
+
+
+/* ======================================================
+   手机
+   ====================================================== */
+
+@media(max-width:700px){
+
+  #musicBtn{
+
+    top:10px;
+    right:10px;
+
+    width:34px;
+    height:34px;
+
+    font-size:16px;
+
+  }
+
+
+  #musicPanel{
+
+    top:52px;
+    right:10px;
+
+    width:250px;
+
+    max-height:65vh;
+
+  }
+
+
+  .musicList{
+
+    max-height:42vh;
+
+  }
+
+}
+
 </style>
+
+
 <script>
+
 (function(){
-  const music=document.getElementById("bgMusic");
-  const btn=document.getElementById("musicBtn");
-  if(!music||!btn)return;
-  let playing=false;
-  function update(){btn.textContent=playing?"🔊":"🔇";}
-  async function start(){try{await music.play();playing=true;update();}catch(e){playing=false;update();}}
-  btn.addEventListener("click",async()=>{if(music.paused){await start();}else{music.pause();playing=false;update();}});
-  start();
-  document.addEventListener("click",()=>{if(music.paused)start();},{once:true});
+
+  "use strict";
+
+
+  /* ====================================================
+     11首歌
+     ==================================================== */
+
+  const playlist = [
+
+    {
+      file:
+        "music.mp3",
+
+      name:
+        "那女孩对我说"
+    },
+
+    {
+      file:
+        "green to blue.mp3",
+
+      name:
+        "green to blue"
+    },
+
+    {
+      file:
+        "one more light.mp3",
+
+      name:
+        "one more light"
+    },
+
+    {
+      file:
+        "sarusa.mp3",
+
+      name:
+        "sarusa"
+    },
+
+    {
+      file:
+        "satie – gymnopédie no. 1.mp3",
+
+      name:
+        "satie – gymnopédie no. 1"
+    },
+
+    {
+      file:
+        "little things.mp3",
+
+      name:
+        "little things"
+    },
+
+    {
+      file:
+        "nocturne chopin op 9 no 2.mp3",
+
+      name:
+        "nocturne chopin op 9 no 2"
+    },
+
+    {
+      file:
+        "intro.mp3",
+
+      name:
+        "intro"
+    },
+
+    {
+      file:
+        "low sun.mp3",
+
+      name:
+        "low sun"
+    },
+
+    {
+      file:
+        "泸沽湖.mp3",
+
+      name:
+        "泸沽湖"
+    },
+
+    {
+      file:
+        "pieces.mp3",
+
+      name:
+        "pieces"
+    }
+
+  ];
+
+
+  const music =
+    document.getElementById(
+      "bgMusic"
+    );
+
+
+  const musicBtn =
+    document.getElementById(
+      "musicBtn"
+    );
+
+
+  const musicPanel =
+    document.getElementById(
+      "musicPanel"
+    );
+
+
+  const musicCurrent =
+    document.getElementById(
+      "musicCurrent"
+    );
+
+
+  const hostControls =
+    document.getElementById(
+      "hostMusicControls"
+    );
+
+
+  const guestText =
+    document.getElementById(
+      "musicGuestText"
+    );
+
+
+  const musicList =
+    document.getElementById(
+      "musicList"
+    );
+
+
+  const musicPrev =
+    document.getElementById(
+      "musicPrev"
+    );
+
+
+  const musicPlay =
+    document.getElementById(
+      "musicPlay"
+    );
+
+
+  const musicNext =
+    document.getElementById(
+      "musicNext"
+    );
+
+
+  if(
+    !music ||
+    !musicBtn ||
+    !musicPanel
+  ){
+
+    return;
+
+  }
+
+
+  let currentIndex=0;
+
+  let isHost=false;
+
+  let startedByUser=false;
+
+  let applyingServerState=false;
+
+
+  /* ====================================================
+     文件地址
+     ==================================================== */
+
+  function musicUrl(file){
+
+    return "./"+
+      file
+        .split("/")
+        .map(
+          part =>
+            encodeURIComponent(part)
+        )
+        .join("/");
+
+  }
+
+
+  /* ====================================================
+     更新音乐按钮
+     ==================================================== */
+
+  function updateMusicButton(){
+
+    if(
+      music.muted
+    ){
+
+      musicBtn.textContent=
+        "🔇";
+
+    }else{
+
+      musicBtn.textContent=
+        "🔊";
+
+    }
+
+  }
+
+
+  /* ====================================================
+     更新歌单
+     ==================================================== */
+
+  function updateMusicList(){
+
+    const items =
+      musicList.querySelectorAll(
+        ".musicItem"
+      );
+
+
+    items.forEach(
+      (item,index)=>{
+
+        item.classList.toggle(
+          "active",
+          index===
+          currentIndex
+        );
+
+      }
+    );
+
+  }
+
+
+  /* ====================================================
+     设置歌曲
+     ==================================================== */
+
+  function setSong(
+    index,
+    position=0,
+    autoPlay=true
+  ){
+
+    currentIndex =
+      (
+        index+
+        playlist.length
+      ) %
+      playlist.length;
+
+
+    const song =
+      playlist[
+        currentIndex
+      ];
+
+
+    music.src =
+      musicUrl(
+        song.file
+      );
+
+
+    music.currentTime=0;
+
+
+    musicCurrent.textContent =
+      "🎵 "+
+      song.name;
+
+
+    updateMusicList();
+
+
+    const playAfterLoad =
+      autoPlay;
+
+
+    music.addEventListener(
+      "loadedmetadata",
+      function(){
+
+        if(
+          Number.isFinite(
+            position
+          )
+        ){
+
+          try{
+
+            music.currentTime =
+              Math.max(
+                0,
+                position
+              );
+
+          }catch(e){}
+
+        }
+
+
+        if(
+          playAfterLoad
+        ){
+
+          startPlayback();
+
+        }
+
+      },
+      {
+        once:true
+      }
+    );
+
+
+    music.load();
+
+  }
+
+
+  /* ====================================================
+     播放
+     ==================================================== */
+
+  async function startPlayback(){
+
+    try{
+
+      await music.play();
+
+      startedByUser=true;
+
+      musicPlay.textContent=
+        "⏸";
+
+      updateMusicButton();
+
+    }catch(e){
+
+      /*
+       * 浏览器禁止自动播放时，
+       * 用户第一次点击页面后再尝试。
+       */
+
+      musicPlay.textContent=
+        "▶";
+
+      updateMusicButton();
+
+    }
+
+  }
+
+
+  /* ====================================================
+     暂停
+     ==================================================== */
+
+  function pausePlayback(){
+
+    music.pause();
+
+    musicPlay.textContent=
+      "▶";
+
+    updateMusicButton();
+
+  }
+
+
+  /* ====================================================
+     歌单
+     ==================================================== */
+
+  playlist.forEach(
+    (song,index)=>{
+
+      const item =
+        document.createElement(
+          "button"
+        );
+
+
+      item.type=
+        "button";
+
+
+      item.className=
+        "musicItem";
+
+
+      item.textContent=
+        (
+          index+1
+        )+
+        ". "+
+        song.name;
+
+
+      item.addEventListener(
+        "click",
+        function(e){
+
+          e.stopPropagation();
+
+
+          if(
+            !isHost ||
+            !socket
+          ){
+
+            return;
+
+          }
+
+
+          socket.emit(
+            "musicControl",
+            {
+
+              action:
+                "select",
+
+              index:
+                index
+
+            }
+          );
+
+        }
+      );
+
+
+      musicList.appendChild(
+        item
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     音乐按钮
+     ==================================================== */
+
+  musicBtn.addEventListener(
+    "click",
+    function(e){
+
+      e.stopPropagation();
+
+      musicPanel.classList.toggle(
+        "show"
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     普通用户只能静音
+     ==================================================== */
+
+  musicBtn.addEventListener(
+    "dblclick",
+    function(e){
+
+      e.preventDefault();
+
+    }
+  );
+
+
+  /*
+   * 这里把音乐按钮定义为静音按钮。
+   *
+   * 点击音乐按钮：
+   * 打开面板
+   *
+   * 面板里的普通用户没有
+   * 播放控制。
+   *
+   * 为了让普通用户可以静音，
+   * 使用鼠标右键/触摸长按会不方便。
+   *
+   * 所以增加一个独立静音按钮。
+   */
+
+  const muteButton =
+    document.createElement(
+      "button"
+    );
+
+
+  muteButton.type=
+    "button";
+
+
+  muteButton.id=
+    "musicMuteButton";
+
+
+  muteButton.textContent=
+    "🔊";
+
+
+  muteButton.style.cssText=
+    [
+      "position:fixed",
+      "top:18px",
+      "right:62px",
+      "z-index:201",
+      "width:38px",
+      "height:38px",
+      "border:1px solid #ffffff30",
+      "border-radius:50%",
+      "background:#102737cc",
+      "color:#fff",
+      "font-size:16px",
+      "cursor:pointer",
+      "display:flex",
+      "align-items:center",
+      "justify-content:center",
+      "backdrop-filter:blur(6px)",
+      "box-shadow:0 5px 18px #0005"
+    ].join(";");
+
+
+  document.body.appendChild(
+    muteButton
+  );
+
+
+  muteButton.addEventListener(
+    "click",
+    function(e){
+
+      e.stopPropagation();
+
+
+      music.muted =
+        !music.muted;
+
+
+      muteButton.textContent =
+        music.muted
+        ? "🔇"
+        : "🔊";
+
+
+      updateMusicButton();
+
+    }
+  );
+
+
+  /* ====================================================
+     房主控制
+     ==================================================== */
+
+  musicPrev.addEventListener(
+    "click",
+    function(){
+
+      if(
+        !isHost ||
+        !socket
+      ){
+
+        return;
+
+      }
+
+
+      socket.emit(
+        "musicControl",
+        {
+          action:
+            "prev"
+        }
+      );
+
+    }
+  );
+
+
+  musicNext.addEventListener(
+    "click",
+    function(){
+
+      if(
+        !isHost ||
+        !socket
+      ){
+
+        return;
+
+      }
+
+
+      socket.emit(
+        "musicControl",
+        {
+          action:
+            "next"
+        }
+      );
+
+    }
+  );
+
+
+  musicPlay.addEventListener(
+    "click",
+    function(){
+
+      if(
+        !isHost ||
+        !socket
+      ){
+
+        return;
+
+      }
+
+
+      if(
+        music.paused
+      ){
+
+        socket.emit(
+          "musicControl",
+          {
+            action:
+              "play"
+          }
+        );
+
+      }else{
+
+        socket.emit(
+          "musicControl",
+          {
+            action:
+              "pause"
+          }
+        );
+
+      }
+
+    }
+  );
+
+
+  /* ====================================================
+     服务器音乐状态
+     ==================================================== */
+
+  function applyMusicState(
+    state
+  ){
+
+    if(
+      !state
+    ){
+
+      return;
+
+    }
+
+
+    if(
+      state.index !==
+      currentIndex ||
+      !music.src
+    ){
+
+      applyingServerState=true;
+
+      setSong(
+        state.index,
+        state.position||0,
+        state.playing
+      );
+
+      return;
+
+    }
+
+
+    const target =
+      Number(
+        state.position
+      ) || 0;
+
+
+    /*
+     * 同步进度
+     */
+
+    if(
+      Number.isFinite(
+        target
+      ) &&
+      Math.abs(
+        music.currentTime-
+        target
+      )>1.2
+    ){
+
+      try{
+
+        music.currentTime=
+          target;
+
+      }catch(e){}
+
+    }
+
+
+    if(
+      state.playing
+    ){
+
+      startPlayback();
+
+    }else{
+
+      music.pause();
+
+      musicPlay.textContent=
+        "▶";
+
+    }
+
+  }
+
+
+  /* ====================================================
+     当前歌曲播放完毕
+     ==================================================== */
+
+  music.addEventListener(
+    "ended",
+    function(){
+
+      /*
+       * 不循环当前歌曲。
+       *
+       * 第1首结束 → 第2首
+       * 第2首结束 → 第3首
+       * ...
+       * 第11首结束 → 第1首
+       */
+
+      if(
+        !socket
+      ){
+
+        return;
+
+      }
+
+
+      socket.emit(
+        "musicEnded",
+        currentIndex
+      );
+
+    }
+  );
+
+
+  /* ====================================================
+     浏览器允许时自动播放
+     ==================================================== */
+
+  function tryAutoPlay(){
+
+    if(
+      music.paused
+    ){
+
+      startPlayback();
+
+    }
+
+  }
+
+
+  document.addEventListener(
+    "click",
+    function(){
+
+      if(
+        music.paused
+      ){
+
+        tryAutoPlay();
+
+      }
+
+    },
+    {
+      once:true
+    }
+  );
+
+
+  document.addEventListener(
+    "touchstart",
+    function(){
+
+      if(
+        music.paused
+      ){
+
+        tryAutoPlay();
+
+      }
+
+    },
+    {
+      once:true,
+      passive:true
+    }
+  );
+
+
+  /* ====================================================
+     Socket
+     ==================================================== */
+
+  if(
+    typeof socket !==
+    "undefined" &&
+    socket
+  ){
+
+    socket.on(
+      "musicState",
+      state => {
+
+        applyMusicState(
+          state
+        );
+
+      }
+    );
+
+
+    socket.on(
+      "hostAuthSuccess",
+      data => {
+
+        isHost=true;
+
+
+        hostControls.style.display=
+          "block";
+
+
+        guestText.style.display=
+          "none";
+
+
+        musicPanel.classList.add(
+          "show"
+        );
+
+
+        if(
+          data &&
+          data.music
+        ){
+
+          applyMusicState(
+            data.music
+          );
+
+        }
+
+      }
+    );
+
+
+    socket.on(
+      "hostAlreadyExists",
+      ()=>{
+
+        isHost=false;
+
+        hostControls.style.display=
+          "none";
+
+        guestText.style.display=
+          "block";
+
+      }
+    );
+
+
+    socket.on(
+      "hostAuthError",
+      ()=>{
+
+        isHost=false;
+
+        hostControls.style.display=
+          "none";
+
+        guestText.style.display=
+          "block";
+
+      }
+    );
+
+  }
+
+
+  /* ====================================================
+     初始状态
+     ==================================================== */
+
+  hostControls.style.display=
+    "none";
+
+
+  guestText.style.display=
+    "block";
+
+
+  setSong(
+    0,
+    0,
+    true
+  );
+
+
+  updateMusicButton();
+
 })();
+
 </script>
 
 </body>
