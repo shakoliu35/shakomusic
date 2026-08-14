@@ -3507,7 +3507,146 @@ document.addEventListener(
 
 </script>
 
+<!-- =========================
+     背景音乐
+     ========================= -->
 
+<audio
+  id="bgMusic"
+  src="./music.mp3"
+  loop
+  preload="auto"
+></audio>
+
+<button
+  id="musicBtn"
+  type="button"
+  aria-label="背景音乐"
+>
+  🔊
+</button>
+
+<style>
+#musicBtn{
+  position:fixed;
+  top:18px;
+  right:18px;
+  z-index:200;
+  width:38px;
+  height:38px;
+  border:1px solid #ffffff30;
+  border-radius:50%;
+  background:#102737cc;
+  color:#fff;
+  font-size:18px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  backdrop-filter:blur(6px);
+  box-shadow:0 5px 18px #0005;
+  touch-action:manipulation;
+}
+
+#musicBtn:active{
+  transform:scale(.92);
+}
+
+@media(max-width:700px){
+  #musicBtn{
+    top:10px;
+    right:10px;
+    width:34px;
+    height:34px;
+    font-size:16px;
+  }
+}
+</style>
+
+<script>
+(function(){
+
+  const music =
+    document.getElementById("bgMusic");
+
+  const musicBtn =
+    document.getElementById("musicBtn");
+
+  if(!music || !musicBtn)return;
+
+  let playing=false;
+
+  function updateButton(){
+    musicBtn.textContent =
+      playing ? "🔊" : "🔇";
+  }
+
+  async function startMusic(){
+
+    try{
+
+      await music.play();
+
+      playing=true;
+
+      updateButton();
+
+    }catch(e){
+
+      playing=false;
+
+      updateButton();
+
+    }
+
+  }
+
+  musicBtn.addEventListener(
+    "click",
+    async function(){
+
+      if(music.paused){
+
+        await startMusic();
+
+      }else{
+
+        music.pause();
+
+        playing=false;
+
+        updateButton();
+
+      }
+
+    }
+  );
+
+  /*
+    进入页面后自动尝试播放
+  */
+  startMusic();
+
+  /*
+    如果浏览器禁止自动播放，
+    用户第一次点击页面后再次尝试
+  */
+  document.addEventListener(
+    "click",
+    function(){
+
+      if(music.paused){
+
+        startMusic();
+
+      }
+
+    },
+    {once:true}
+  );
+
+})();
+</script>
 </body>
 
 </html>
