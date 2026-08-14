@@ -4764,9 +4764,77 @@ document.addEventListener(
      服务器音乐状态
      ==================================================== */
 
-  function applyMusicState(
-  state
-){
+ function applyMusicState(state){
+
+  if(!state) return;
+
+  const serverIndex = Number(state.index);
+
+  if(!Number.isInteger(serverIndex)) return;
+
+
+  /*
+   * 如果服务器当前歌曲和本地正在播放的歌曲一样，
+   * 不重新加载歌曲，也不修改 currentTime。
+   *
+   * 这样进入房间时就不会突然往前跳几秒。
+   */
+
+  if(serverIndex === currentIndex){
+
+    musicCurrent.textContent =
+      "🎵 " + playlist[currentIndex].name;
+
+    updateMusicList();
+
+
+    /*
+     * 只同步播放 / 暂停状态
+     */
+
+    if(state.playing){
+
+      if(music.paused){
+
+        music.play().catch(
+          ()=>{}
+        );
+
+      }
+
+      musicPlay.textContent = "⏸";
+
+    }else{
+
+      if(!music.paused){
+
+        music.pause();
+
+      }
+
+      musicPlay.textContent = "▶";
+
+    }
+
+    return;
+
+  }
+
+
+  /*
+   * 只有服务器歌曲和本地歌曲不一样时，
+   * 才真正切换歌曲。
+   *
+   * 新歌曲从 0 秒开始。
+   */
+
+  setSong(
+    serverIndex,
+    0,
+    state.playing
+  );
+
+}
 
     if(
       !state
