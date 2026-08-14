@@ -9,744 +9,350 @@ const io = new Server(server);
 
 app.use(express.static(path.join(__dirname, "../public")));
 
-const players = new Map();
+const ROOM_CONFIG = {
+  beach: {
+    name: "海滩房间",
+    icon: "🏝️",
+    password: process.env.BEACH_ROOM_PASSWORD,
+    hostPassword: process.env.BEACH_HOST_PASSWORD,
+    background: "beach-sunset.jpg"
+  },
+  lounge: {
+    name: "会客厅",
+    icon: "☕",
+    password: process.env.LOUNGE_ROOM_PASSWORD,
+    hostPassword: process.env.LOUNGE_HOST_PASSWORD,
+    background: "lounge.png"
+  },
+  club: {
+    name: "俱乐部",
+    icon: "🎉",
+    password: process.env.CLUB_ROOM_PASSWORD,
+    hostPassword: process.env.CLUB_HOST_PASSWORD,
+    background: "club.png"
+  },
+  private: {
+    name: "私密房间",
+    icon: "🔒",
+    password: process.env.PRIVATE_ROOM_PASSWORD,
+    hostPassword: process.env.PRIVATE_HOST_PASSWORD,
+    background: "private.png"
+  }
+};
 
-const ROOM_PASSWORD = process.env.ROOM_PASSWORD;
-const HOST_PASSWORD = process.env.HOST_PASSWORD;
+const rooms = {};
 
-// 当前房主
-let hostId = null;
+for (const roomId of Object.keys(ROOM_CONFIG)) {
+  rooms[roomId] = {
+    players: new Map(),
+    hostId: null,
+    roomOpen: true
+  };
+}
 
-// 房间状态
-// true = 开放
-// false = 关闭
-let roomOpen = true;
+function getRoom(roomId) {
+  return rooms[roomId] || null;
+}
 
+function broadcastPlayers(roomId) {
+  const room = getRoom(roomId);
+  if (!room) return;
 
-// ======================================================
-// Socket 连接
-// ======================================================
+  io.to(roomId).emit(
+    "players",
+    [...room.players.values()]
+  );
+}
+
+function spawnFor(count) {
+  const spawns = [
+    { x: 50, y: 55 },
+    { x: 62, y: 47 },
+    { x: 38, y: 47 },
+    { x: 50, y: 35 },
+    { x: 25, y: 60 },
+    { x: 75, y: 60 },
+    { x: 25, y: 35 },
+    { x: 75, y: 35 },
+    { x: 40, y: 75 },
+    { x: 60, y: 75 }
+  ];
+
+  return spawns[count] || { x: 50, y: 55 };
+}
 
 io.on("connection", socket => {
 
-
   // ======================================================
-  // 玩家使用房间密码进入
+  // 玩家进入房间
   // ======================================================
+  socket.on("auth", payload => {
+    let roomId;
+    let password;
 
-  socket.on("auth", password => {
-
-    // 房间已经关闭
-    if (!roomOpen) {
-
-      socket.emit("roomClosed");
-
-      return;
+    // 兼容旧客户端：如果只传字符串，默认海滩房间
+    if (typeof payload === "string") {
+      roomId = "beach";
+      password = payload;
+    } else {
+      roomId = String(payload?.roomId || "beach");
+      password = String(payload?.password || "");
     }
 
+    const cfg = ROOM_CONFIG[roomId];
+    const room = getRoom(roomId);
 
-    // 房间密码错误
-    if (password !== ROOM_PASSWORD) {
-
+    if (!cfg || !room) {
       socket.emit("authError");
-
       return;
     }
 
+    if (!room.roomOpen) {
+      socket.emit("roomClosed");
+      return;
+    }
 
-    // 人数限制
-    if (players.size >= 10) {
+    if (!cfg.password || password !== cfg.password) {
+      socket.emit("authError");
+      return;
+    }
 
+    if (room.players.size >= 10) {
       socket.emit("full");
-
       return;
     }
 
+    // 如果同一个连接已经进入过房间，不重复创建玩家
+    if (socket.data.roomId) {
+      return;
+    }
 
-    // 出生位置
+    socket.data.roomId = roomId;
+    socket.join(roomId);
 
-    const spawns = [
+    const spawn = spawnFor(room.players.size);
 
-      { x: 50, y: 55 },
-      { x: 62, y: 47 },
-      { x: 38, y: 47 },
-      { x: 50, y: 35 },
-      { x: 25, y: 60 },
-      { x: 75, y: 60 },
-      { x: 25, y: 35 },
-      { x: 75, y: 35 },
-      { x: 40, y: 75 },
-      { x: 60, y: 75 }
-
-    ];
-
-
-    const spawn =
-      spawns[players.size] ||
-      { x: 50, y: 55 };
-
-
-    // 创建玩家
-
-    players.set(socket.id, {
-
+    const player = {
       id: socket.id,
+      name: "玩家" + (room.players.size + 1),
+      gender: "male",
+      x: spawn.x,
+      y: spawn.y,
+      isHost: false
+    };
 
-      name:
-        "玩家" +
-        (players.size + 1),
-
-      gender:
-        "male",
-
-      x:
-        spawn.x,
-
-      y:
-        spawn.y,
-
-      isHost:
-        false
-
-    });
-
-
-    // 告诉本人进入成功
+    room.players.set(socket.id, player);
 
     socket.emit("init", {
-
-      you:
-        players.get(socket.id),
-
-      players:
-        [...players.values()],
-
-      roomOpen:
-        roomOpen
-
+      you: player,
+      players: [...room.players.values()],
+      roomOpen: room.roomOpen,
+      roomId,
+      roomName: cfg.name,
+      roomIcon: cfg.icon,
+      background: cfg.background
     });
 
-
-    // 更新所有玩家
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    broadcastPlayers(roomId);
   });
 
-
-
   // ======================================================
-  // 房主密码验证
+  // 房主密码
   // ======================================================
-
   socket.on("hostAuth", hostPassword => {
+    const roomId = socket.data.roomId;
+    const room = getRoom(roomId);
+    const cfg = ROOM_CONFIG[roomId];
+    const player = room?.players.get(socket.id);
 
-    const player =
-      players.get(socket.id);
-
-
-    if (!player) {
-
-      socket.emit(
-        "hostAuthError"
-      );
-
+    if (!room || !cfg || !player) {
+      socket.emit("hostAuthError");
       return;
     }
 
-
-    if (
-      hostPassword !==
-      HOST_PASSWORD
-    ) {
-
-      socket.emit(
-        "hostAuthError"
-      );
-
+    if (!cfg.hostPassword || hostPassword !== cfg.hostPassword) {
+      socket.emit("hostAuthError");
       return;
     }
 
-
-    if (
-      hostId &&
-      hostId !== socket.id
-    ) {
-
-      socket.emit(
-        "hostAlreadyExists"
-      );
-
+    if (room.hostId && room.hostId !== socket.id) {
+      socket.emit("hostAlreadyExists");
       return;
     }
 
+    room.hostId = socket.id;
+    player.isHost = true;
 
-    hostId =
-      socket.id;
+    socket.emit("hostAuthSuccess", {
+      roomOpen: room.roomOpen
+    });
 
-    player.isHost =
-      true;
-
-
-    socket.emit(
-      "hostAuthSuccess",
-      {
-        roomOpen:
-          roomOpen
-      }
-    );
-
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    broadcastPlayers(roomId);
   });
 
-
-
   // ======================================================
-  // 设置昵称
+  // 昵称
   // ======================================================
-
   socket.on("setName", name => {
-
-    const p =
-      players.get(socket.id);
-
+    const room = getRoom(socket.data.roomId);
+    const p = room?.players.get(socket.id);
     if (!p) return;
 
+    name = String(name || "").trim().slice(0, 12);
+    if (name) p.name = name;
 
-    name =
-      String(name || "")
-      .trim()
-      .slice(0, 12);
-
-
-    if (name) {
-
-      p.name =
-        name;
-
-    }
-
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    broadcastPlayers(socket.data.roomId);
   });
 
-
-
   // ======================================================
-  // 设置性别
+  // 性别
   // ======================================================
-
   socket.on("setGender", gender => {
-
-    const p =
-      players.get(socket.id);
-
+    const room = getRoom(socket.data.roomId);
+    const p = room?.players.get(socket.id);
     if (!p) return;
 
-
-    gender =
-      String(gender || "male");
-
-
-    if (
-      gender !== "male" &&
-      gender !== "female"
-    ) {
-
-      gender =
-        "male";
-
+    gender = String(gender || "male");
+    if (gender !== "male" && gender !== "female") {
+      gender = "male";
     }
 
-
-    p.gender =
-      gender;
-
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    p.gender = gender;
+    broadcastPlayers(socket.data.roomId);
   });
 
-
-
   // ======================================================
-  // 玩家移动
+  // 移动
   // ======================================================
-
   socket.on("move", pos => {
-
-    const p =
-      players.get(socket.id);
-
+    const room = getRoom(socket.data.roomId);
+    const p = room?.players.get(socket.id);
     if (!p) return;
 
+    p.x = Math.max(5, Math.min(95, Number(pos?.x) || 50));
+    p.y = Math.max(8, Math.min(92, Number(pos?.y) || 50));
 
-    p.x =
-      Math.max(
-        5,
-        Math.min(
-          95,
-          Number(pos.x) || 50
-        )
-      );
-
-
-    p.y =
-      Math.max(
-        8,
-        Math.min(
-          92,
-          Number(pos.y) || 50
-        )
-      );
-
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    broadcastPlayers(socket.data.roomId);
   });
-
-
 
   // ======================================================
   // 聊天
   // ======================================================
-
   socket.on("chat", text => {
-
-    const p =
-      players.get(socket.id);
-
+    const room = getRoom(socket.data.roomId);
+    const p = room?.players.get(socket.id);
     if (!p) return;
 
-
-    text =
-      String(text || "")
-      .trim()
-      .slice(0, 200);
-
-
+    text = String(text || "").trim().slice(0, 200);
     if (!text) return;
 
-
-    io.emit(
-      "chat",
-      {
-
-        // 用于让前端知道是哪一个人物说话
-        id:
-          socket.id,
-
-        name:
-          p.name,
-
-        text:
-          text
-
-      }
-    );
-
+    io.to(socket.data.roomId).emit("chat", {
+      id: p.id,
+      name: p.name,
+      text
+    });
   });
-
-
 
   // ======================================================
   // 互动表情
   // ======================================================
-
   socket.on("reaction", data => {
+    const room = getRoom(socket.data.roomId);
+    const p = room?.players.get(socket.id);
+    if (!p || !data) return;
 
-    const player =
-      players.get(socket.id);
+    const targetId = String(data.targetId || "");
+    const emoji = String(data.emoji || "").slice(0, 8);
 
-    if (!player || !data) return;
+    if (!targetId || !emoji) return;
+    if (!room.players.has(targetId)) return;
 
-
-    const targetId =
-      String(
-        data.targetId || ""
-      );
-
-
-    const emoji =
-      String(
-        data.emoji || ""
-      ).trim();
-
-
-    if (
-      !targetId ||
-      !emoji
-    ){
-
-      return;
-
-    }
-
-
-    // 只能对当前在线玩家发送表情
-
-    if(
-      !players.has(targetId)
-    ){
-
-      return;
-
-    }
-
-
-    // 只允许这几个互动表情
-
-    const allowed = [
-
-      "❤️",
-      "😂",
-      "👍",
-      "😮",
-      "😡",
-      "🎉"
-
-    ];
-
-
-    if(
-      !allowed.includes(emoji)
-    ){
-
-      return;
-
-    }
-
-
-    // 广播给所有在线玩家
-
-    io.emit(
-      "reaction",
-      {
-
-        fromId:
-          socket.id,
-
-        targetId:
-          targetId,
-
-        emoji:
-          emoji
-
-      }
-    );
-
+    io.to(socket.data.roomId).emit("reaction", {
+      id: targetId,
+      targetId,
+      emoji
+    });
   });
 
-
-
   // ======================================================
-  // 房主：踢人
+  // 房主踢人
   // ======================================================
-
   socket.on("kickPlayer", targetId => {
+    const roomId = socket.data.roomId;
+    const room = getRoom(roomId);
+    if (!room || socket.id !== room.hostId) return;
+    if (targetId === socket.id) return;
 
-    // 只有房主可以踢人
+    const target = room.players.get(targetId);
+    const targetSocket = io.sockets.sockets.get(targetId);
+    if (!target || !targetSocket) return;
 
-    if (
-      socket.id !== hostId
-    ) {
+    targetSocket.emit("kicked");
+    room.players.delete(targetId);
+    targetSocket.leave(roomId);
+    targetSocket.data.roomId = null;
+    targetSocket.disconnect(true);
 
-      return;
-    }
-
-
-    // 不能踢自己
-
-    if (
-      targetId === hostId
-    ) {
-
-      return;
-    }
-
-
-    // 查找目标玩家
-
-    const targetPlayer =
-      players.get(targetId);
-
-
-    if (!targetPlayer) {
-
-      return;
-    }
-
-
-    // 查找目标 Socket
-
-    const targetSocket =
-      io.sockets.sockets.get(
-        targetId
-      );
-
-
-    if (!targetSocket) {
-
-      return;
-    }
-
-
-    // 通知被踢的人
-
-    targetSocket.emit(
-      "kicked"
-    );
-
-
-    // 删除玩家
-
-    players.delete(
-      targetId
-    );
-
-
-    // 强制断开
-
-    targetSocket.disconnect(
-      true
-    );
-
-
-    // 更新所有玩家
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
-
-    // 告诉房主操作成功
-
-    socket.emit(
-      "kickSuccess"
-    );
-
+    broadcastPlayers(roomId);
+    socket.emit("kickSuccess");
   });
 
-
-
   // ======================================================
-  // 房主：关闭房间
+  // 房主关闭房间
   // ======================================================
-
   socket.on("closeRoom", () => {
-
-    console.log(
-      "收到关闭房间请求:",
-      socket.id
-    );
-
-
-    // 只有房主可以关闭
-
-    if (
-      socket.id !== hostId
-    ) {
-
-      console.log(
-        "关闭失败：不是房主"
-      );
-
-      socket.emit(
-        "closeRoomError"
-      );
-
+    const roomId = socket.data.roomId;
+    const room = getRoom(roomId);
+    if (!room || socket.id !== room.hostId) {
+      socket.emit("closeRoomError");
       return;
     }
 
+    room.roomOpen = false;
 
-    // 已经关闭
-
-    if (!roomOpen) {
-
-      socket.emit(
-        "closeRoomSuccess"
-      );
-
-      return;
-    }
-
-
-    // 关闭房间
-
-    roomOpen =
-      false;
-
-
-    console.log(
-      "房间已经关闭"
-    );
-
-
-    // 告诉所有在线玩家
-
-    io.emit(
-      "roomClosed"
-    );
-
-
-    // 单独告诉房主关闭成功
-
-    socket.emit(
-      "closeRoomSuccess"
-    );
-
+    io.to(roomId).emit("roomClosed");
+    socket.emit("closeRoomSuccess");
   });
 
-
-
   // ======================================================
-  // 房主：重新开放房间
+  // 房主重新开放房间
   // ======================================================
-
   socket.on("openRoom", () => {
-
-    console.log(
-      "收到重新开放房间请求:",
-      socket.id
-    );
-
-
-    // 只有房主可以开放
-
-    if (
-      socket.id !== hostId
-    ) {
-
-      console.log(
-        "开放失败：不是房主"
-      );
-
-      socket.emit(
-        "openRoomError"
-      );
-
+    const roomId = socket.data.roomId;
+    const room = getRoom(roomId);
+    if (!room || socket.id !== room.hostId) {
+      socket.emit("openRoomError");
       return;
     }
 
+    room.roomOpen = true;
 
-    // 已经开放
-
-    if (roomOpen) {
-
-      socket.emit(
-        "openRoomSuccess"
-      );
-
-      return;
-    }
-
-
-    // 重新开放
-
-    roomOpen =
-      true;
-
-
-    console.log(
-      "房间已经重新开放"
-    );
-
-
-    // 告诉所有在线玩家
-
-    io.emit(
-      "roomOpened"
-    );
-
-
-    // 单独告诉房主
-
-    socket.emit(
-      "openRoomSuccess"
-    );
-
+    io.to(roomId).emit("roomOpened");
+    socket.emit("openRoomSuccess");
   });
 
-
-
   // ======================================================
-  // 玩家断开
+  // 断开
   // ======================================================
-
   socket.on("disconnect", () => {
+    const roomId = socket.data.roomId;
+    const room = getRoom(roomId);
+    if (!room) return;
 
-    const wasHost =
-      socket.id === hostId;
+    const wasHost = socket.id === room.hostId;
 
-
-    // 删除玩家
-
-    players.delete(
-      socket.id
-    );
-
-
-    // 房主离开
+    room.players.delete(socket.id);
 
     if (wasHost) {
-
-      hostId =
-        null;
-
-      console.log(
-        "房主离开，房主身份已释放"
-      );
-
+      room.hostId = null;
     }
 
-
-    // 更新在线玩家
-
-    io.emit(
-      "players",
-      [...players.values()]
-    );
-
+    broadcastPlayers(roomId);
   });
-
 });
 
+const PORT = process.env.PORT || 3000;
 
-// ======================================================
-// 启动服务器
-// ======================================================
-
-const PORT =
-  process.env.PORT || 3000;
-
-
-server.listen(
-  PORT,
-  () => {
-
-    console.log(
-      "Mini RooMi V2 running on port " +
-      PORT
-    );
-
-  }
-);
+server.listen(PORT, () => {
+  console.log("shako 平行空间 multi-room server running on port " + PORT);
+});
