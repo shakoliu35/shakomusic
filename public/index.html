@@ -4764,94 +4764,9 @@ document.addEventListener(
      服务器音乐状态
      ==================================================== */
 
-  let hasReceivedRoomMusicState = false;
-
-function applyMusicState(state){
-
-  if(!state) return;
-
-  const serverIndex = Number(state.index);
-
-  if(!Number.isInteger(serverIndex)) return;
-
-  /* 第一次收到房间音乐状态 */
-
-  if(!hasReceivedRoomMusicState){
-
-    hasReceivedRoomMusicState = true;
-
-    /*
-     * 如果服务器当前就是本地正在播放的歌曲，
-     * 不重新加载，也不修改播放进度。
-     */
-
-    if(serverIndex === currentIndex){
-
-      musicCurrent.textContent =
-        "🎵 " + playlist[currentIndex].name;
-
-      updateMusicList();
-
-      if(state.playing && music.paused){
-        startPlayback();
-      }
-
-      if(!state.playing && !music.paused){
-        music.pause();
-        musicPlay.textContent = "▶";
-      }
-
-      return;
-    }
-
-    /*
-     * 如果服务器当前是另一首歌，
-     * 才切换歌曲，并从0秒开始。
-     */
-
-    setSong(
-      serverIndex,
-      0,
-      state.playing
-    );
-
-    return;
-  }
-
-  /* 后续收到音乐状态 */
-
-  if(serverIndex !== currentIndex){
-
-    setSong(
-      serverIndex,
-      0,
-      state.playing
-    );
-
-    return;
-  }
-
-  /* 同一首歌只同步播放/暂停，不调整进度 */
-
-  if(state.playing){
-
-    if(music.paused){
-      startPlayback();
-    }
-
-    musicPlay.textContent = "⏸";
-
-  }else{
-
-    if(!music.paused){
-      music.pause();
-    }
-
-    musicPlay.textContent = "▶";
-  }
-
-  updateMusicList();
-}
+  function applyMusicState(
+  state
+){
 
     if(
       !state
