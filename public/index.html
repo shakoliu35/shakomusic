@@ -4768,8 +4768,6 @@ function applyMusicState(
   state
 ){
 
-}
-
     if(
       !state
     ){
@@ -4789,7 +4787,7 @@ function applyMusicState(
 
       setSong(
         state.index,
-        state.position||0,
+        0,
         state.playing
       );
 
@@ -4798,35 +4796,16 @@ function applyMusicState(
     }
 
 
-    const target =
-      Number(
-        state.position
-      ) || 0;
-
-
     /*
-     * 同步进度
+     * 同一首歌进入房间时：
+     *
+     * 不再同步服务器的播放进度。
+     *
+     * 这样就不会出现：
+     * pieces 正常播放
+     * → 进入房间
+     * → 突然跳前几秒
      */
-
-    if(
-      Number.isFinite(
-        target
-      ) &&
-      Math.abs(
-        music.currentTime-
-        target
-      )>1.2
-    ){
-
-      try{
-
-        music.currentTime=
-          target;
-
-      }catch(e){}
-
-    }
-
 
     if(
       state.playing
@@ -4843,7 +4822,7 @@ function applyMusicState(
 
     }
 
-  }
+}
 
 
   /* ====================================================
