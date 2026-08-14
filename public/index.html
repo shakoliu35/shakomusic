@@ -60,8 +60,7 @@ body{
 
   inset:0;
 
-  background-image:
-    url("beach-sunset.jpg");
+  background-image:var(--room-bg, url("beach-sunset.jpg"));
 
   background-size:cover;
 
@@ -740,6 +739,81 @@ body{
 }
 
 
+/* =========================
+   房间选择
+   ========================= */
+
+.roomTitle{
+  margin-top:4px;
+  margin-bottom:8px;
+  font-size:13px;
+  font-weight:bold;
+  text-align:left;
+  color:#dcecf2
+}
+
+.roomGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-bottom:12px
+}
+
+.roomOption{
+  border:1px solid #ffffff22;
+  background:#102333cc;
+  border-radius:12px;
+  padding:10px 8px;
+  cursor:pointer;
+  text-align:left;
+  transition:.15s ease;
+  color:#fff;
+  user-select:none;
+}
+
+.roomOption:hover{
+  background:#18364dcc;
+  transform:translateY(-1px)
+}
+
+.roomOption.selected{
+  border-color:#ffd35caa;
+  background:#5a4721aa;
+  box-shadow:0 0 0 1px #ffd35c44
+}
+
+.roomOption .roomIcon{
+  font-size:20px;
+  margin-right:5px
+}
+
+.roomOption .roomName{
+  font-weight:bold;
+  font-size:13px
+}
+
+.roomOption .roomDesc{
+  display:block;
+  margin-top:3px;
+  color:#a9cbd3;
+  font-size:10px;
+  line-height:1.3
+}
+
+#roomCurrent{
+  margin-top:2px;
+  margin-bottom:8px;
+  color:#ffd35c;
+  font-size:11px;
+  text-align:left
+}
+
+@media(max-width:700px){
+  .roomGrid{gap:7px}
+  .roomOption{padding:9px 7px}
+  .roomOption .roomDesc{font-size:9px}
+}
+
 .genderTitle{
 
   font-size:13px;
@@ -1408,10 +1482,42 @@ WASD / 方向键移动　·　
 🌴 shako的平行空间
 </h2>
 
-<p>
+<p id="loginIntro">
 欢迎来到海滩大厅<br>
 先选择你的角色，再输入昵称和房间密码
 </p>
+
+<div class="roomTitle">选择房间</div>
+
+<div class="roomGrid">
+
+  <div class="roomOption selected" data-room="beach">
+    <span class="roomIcon">🏝️</span>
+    <span class="roomName">海滩房间</span>
+    <span class="roomDesc">轻松聊天 · 公共空间</span>
+  </div>
+
+  <div class="roomOption" data-room="lounge">
+    <span class="roomIcon">☕</span>
+    <span class="roomName">会客厅</span>
+    <span class="roomDesc">同事 · 合作 · 熟人</span>
+  </div>
+
+  <div class="roomOption" data-room="club">
+    <span class="roomIcon">🎉</span>
+    <span class="roomName">俱乐部</span>
+    <span class="roomDesc">朋友 · 娱乐 · 互动</span>
+  </div>
+
+  <div class="roomOption" data-room="private">
+    <span class="roomIcon">🔒</span>
+    <span class="roomName">私密房间</span>
+    <span class="roomDesc">小范围 · 私密聊天</span>
+  </div>
+
+</div>
+
+<div id="roomCurrent">当前：🏝️ 海滩房间</div>
 
 <div class="genderTitle">
 选择你的角色
@@ -1546,6 +1652,35 @@ try{
 let myId=null;
 
 let selectedGender="male";
+
+let selectedRoom="beach";
+
+const ROOM_CONFIG={
+  beach:{
+    name:"海滩房间",
+    icon:"🏝️",
+    bg:"beach-sunset.jpg",
+    desc:"轻松聊天 · 公共空间"
+  },
+  lounge:{
+    name:"会客厅",
+    icon:"☕",
+    bg:"lounge.png",
+    desc:"同事 · 合作 · 熟人"
+  },
+  club:{
+    name:"俱乐部",
+    icon:"🎉",
+    bg:"club.png",
+    desc:"朋友 · 娱乐 · 互动"
+  },
+  private:{
+    name:"私密房间",
+    icon:"🔒",
+    bg:"private.png",
+    desc:"小范围 · 私密聊天"
+  }
+};
 
 
 let me={
@@ -1735,6 +1870,56 @@ function setError(text){
    性别
    ========================= */
 
+function applyRoom(roomId){
+
+  if(!ROOM_CONFIG[roomId]) roomId="beach";
+
+  selectedRoom=roomId;
+
+  const cfg=ROOM_CONFIG[roomId];
+
+  document.documentElement.style.setProperty(
+    "--room-bg",
+    'url("'+cfg.bg+'")'
+  );
+
+  const topTitle=document.querySelector("#top b");
+  if(topTitle){
+    topTitle.textContent=cfg.icon+" shako的平行空间 · "+cfg.name;
+  }
+
+  const chatTitle=document.getElementById("chatTitle");
+  if(chatTitle){
+    chatTitle.textContent="💬 shako的平行空间 · "+cfg.name;
+  }
+
+  const hint=document.getElementById("hint");
+  if(hint){
+    hint.textContent="WASD / 方向键移动　·　"+cfg.icon+" "+cfg.name+" · 最多十个人";
+  }
+
+  const intro=document.getElementById("loginIntro");
+  if(intro){
+    intro.innerHTML="欢迎来到"+cfg.name+"<br>先选择你的角色，再输入昵称和房间密码";
+  }
+
+  const current=document.getElementById("roomCurrent");
+  if(current){
+    current.textContent="当前："+cfg.icon+" "+cfg.name;
+  }
+
+  joinBtn.textContent="进入"+cfg.name.replace("房间","");
+
+  document.querySelectorAll(".roomOption").forEach(el=>{
+    el.classList.toggle("selected",el.dataset.room===roomId);
+  });
+}
+
+document.querySelectorAll(".roomOption").forEach(el=>{
+  el.addEventListener("click",()=>applyRoom(el.dataset.room));
+});
+
+
 function chooseGender(gender){
 
   selectedGender=
@@ -1770,6 +1955,11 @@ femaleOption.addEventListener(
 /* =========================
    登录
    ========================= */
+
+function setJoinButtonDefault(){
+  const cfg=ROOM_CONFIG[selectedRoom]||ROOM_CONFIG.beach;
+  joinBtn.textContent="进入"+cfg.name.replace("房间","");
+}
 
 function startAuth(){
 
@@ -1819,7 +2009,10 @@ function startAuth(){
 
   socket.emit(
     "auth",
-    p
+    {
+      roomId:selectedRoom,
+      password:p
+    }
   );
 
 }
@@ -2183,8 +2376,7 @@ socket.on(
     joinBtn.disabled=
       false;
 
-    joinBtn.textContent=
-      "进入海滩";
+    setJoinButtonDefault();
 
     setError(
       "无法连接服务器，请稍后刷新重试"
@@ -2201,8 +2393,7 @@ socket.on(
     joinBtn.disabled=
       false;
 
-    joinBtn.textContent=
-      "进入海滩";
+    setJoinButtonDefault();
 
     password.value="";
 
@@ -2317,6 +2508,10 @@ socket.on(
     myId=
       d.you.id;
 
+    if(d.roomId && ROOM_CONFIG[d.roomId]){
+      applyRoom(d.roomId);
+    }
+
 
     me=
       d.you;
@@ -2333,9 +2528,9 @@ socket.on(
 
     msg(
       "系统",
-      "🏝️ 欢迎 "+
+      ROOM_CONFIG[selectedRoom].icon+" 欢迎 "+
       n+
-      " 来到 shako 的平行空间！"
+      " 来到 shako 的平行空间 · "+ROOM_CONFIG[selectedRoom].name+"！"
     );
 
 
@@ -3507,146 +3702,32 @@ document.addEventListener(
 
 </script>
 
+
+
 <!-- =========================
      背景音乐
      ========================= -->
-
-<audio
-  id="bgMusic"
-  src="./music.mp3"
-  loop
-  preload="auto"
-></audio>
-
-<button
-  id="musicBtn"
-  type="button"
-  aria-label="背景音乐"
->
-  🔊
-</button>
-
+<audio id="bgMusic" src="./music.mp3" loop preload="auto"></audio>
+<button id="musicBtn" type="button" aria-label="背景音乐">🔊</button>
 <style>
-#musicBtn{
-  position:fixed;
-  top:18px;
-  right:18px;
-  z-index:200;
-  width:38px;
-  height:38px;
-  border:1px solid #ffffff30;
-  border-radius:50%;
-  background:#102737cc;
-  color:#fff;
-  font-size:18px;
-  cursor:pointer;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  backdrop-filter:blur(6px);
-  box-shadow:0 5px 18px #0005;
-  touch-action:manipulation;
-}
-
-#musicBtn:active{
-  transform:scale(.92);
-}
-
-@media(max-width:700px){
-  #musicBtn{
-    top:10px;
-    right:10px;
-    width:34px;
-    height:34px;
-    font-size:16px;
-  }
-}
+#musicBtn{position:fixed;top:18px;right:18px;z-index:200;width:38px;height:38px;border:1px solid #ffffff30;border-radius:50%;background:#102737cc;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(6px);box-shadow:0 5px 18px #0005;touch-action:manipulation}
+#musicBtn:active{transform:scale(.92)}
+@media(max-width:700px){#musicBtn{top:10px;right:10px;width:34px;height:34px;font-size:16px}}
 </style>
-
 <script>
 (function(){
-
-  const music =
-    document.getElementById("bgMusic");
-
-  const musicBtn =
-    document.getElementById("musicBtn");
-
-  if(!music || !musicBtn)return;
-
+  const music=document.getElementById("bgMusic");
+  const btn=document.getElementById("musicBtn");
+  if(!music||!btn)return;
   let playing=false;
-
-  function updateButton(){
-    musicBtn.textContent =
-      playing ? "🔊" : "🔇";
-  }
-
-  async function startMusic(){
-
-    try{
-
-      await music.play();
-
-      playing=true;
-
-      updateButton();
-
-    }catch(e){
-
-      playing=false;
-
-      updateButton();
-
-    }
-
-  }
-
-  musicBtn.addEventListener(
-    "click",
-    async function(){
-
-      if(music.paused){
-
-        await startMusic();
-
-      }else{
-
-        music.pause();
-
-        playing=false;
-
-        updateButton();
-
-      }
-
-    }
-  );
-
-  /*
-    进入页面后自动尝试播放
-  */
-  startMusic();
-
-  /*
-    如果浏览器禁止自动播放，
-    用户第一次点击页面后再次尝试
-  */
-  document.addEventListener(
-    "click",
-    function(){
-
-      if(music.paused){
-
-        startMusic();
-
-      }
-
-    },
-    {once:true}
-  );
-
+  function update(){btn.textContent=playing?"🔊":"🔇";}
+  async function start(){try{await music.play();playing=true;update();}catch(e){playing=false;update();}}
+  btn.addEventListener("click",async()=>{if(music.paused){await start();}else{music.pause();playing=false;update();}});
+  start();
+  document.addEventListener("click",()=>{if(music.paused)start();},{once:true});
 })();
 </script>
+
 </body>
 
 </html>
