@@ -4789,10 +4789,10 @@ function applyMusicState(
       applyingServerState=true;
 
       setSong(
-        state.index,
-        0,
-        state.playing
-      );
+  state.index,
+  Number(state.position) || 0,
+  state.playing
+);
 
       return;
 
