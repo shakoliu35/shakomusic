@@ -1,7 +1,16 @@
 {
-  "name":"mini-roomi-v2",
-  "version":"1.0.0",
-  "private":true,
-  "scripts":{"start":"node server/server.js"},
-  "dependencies":{"express":"^4.21.2","socket.io":"^4.8.1"}
+  "name": "mini-roomi-v2",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.js",
+    "test": "node test/message-board-store.test.js && node test/message-board-socket.test.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "socket.io-client": "^4.8.3"
+  }
 }

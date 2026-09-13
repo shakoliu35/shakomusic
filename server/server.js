@@ -2,10 +2,14 @@ const express = require("express");
 const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
+const { MessageBoardStore } = require("./message-board-store");
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
+const messageBoardStore = new MessageBoardStore({
+  filePath: process.env.MESSAGE_BOARD_FILE
+});
 
 app.use(
   express.static(
@@ -504,7 +508,10 @@ io.on(
               cfg.icon,
 
             music:
-              getMusicState(room)
+              getMusicState(room),
+
+            messageBoard:
+              messageBoardStore.list(roomId)
 
           }
         );
@@ -852,6 +859,54 @@ io.on(
             }
           );
 
+      }
+    );
+
+
+    /* ==================================================
+       留言板：每间房最多十条，保存三天
+       ================================================== */
+
+    socket.on(
+      "leaveMessage",
+      text => {
+
+        const roomId = socket.data.roomId;
+        const room = getRoom(roomId);
+        const player = room?.players.get(socket.id);
+
+        if (!player) return;
+
+        text = String(text || "").trim().slice(0, 200);
+        if (!text) return;
+
+        const result = messageBoardStore.add(roomId, {
+          name: player.name,
+          text
+        });
+
+        if (result.error === "full") {
+          socket.emit("messageBoardError", "留言板已满，最多保留十条留言");
+          return;
+        }
+
+        io.to(roomId).emit("messageBoard", result.messages);
+      }
+    );
+
+
+    socket.on(
+      "deleteMessage",
+      messageId => {
+
+        const roomId = socket.data.roomId;
+        const room = getRoom(roomId);
+
+        if (!room || socket.id !== room.hostId) return;
+
+        if (messageBoardStore.delete(roomId, String(messageId || ""))) {
+          io.to(roomId).emit("messageBoard", messageBoardStore.list(roomId));
+        }
       }
     );
 
