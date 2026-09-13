@@ -70,14 +70,14 @@ const ROOM_CONFIG = {
 
 
 /* ======================================================
-   11首音乐
+   12首音乐
    ====================================================== */
 
 const MUSIC_LIST = [
 
   {
-    file: "music.mp3",
-    name: "那女孩对我说"
+    file: "pieces.mp3",
+    name: "pieces"
   },
 
   {
@@ -96,8 +96,8 @@ const MUSIC_LIST = [
   },
 
   {
-    file: "satie – gymnopédie no. 1.mp3",
-    name: "satie – gymnopédie no. 1"
+    file: "satie.mp3",
+    name: "Satie – Gymnopédie No. 1"
   },
 
   {
@@ -126,12 +126,16 @@ const MUSIC_LIST = [
   },
 
   {
-    file: "pieces.mp3",
-    name: "pieces"
+    file: "music.mp3",
+    name: "那女孩对我说"
+  },
+
+  {
+    file: "Best of me.mp3",
+    name: "Best of me"
   }
 
 ];
-
 
 /* ======================================================
    创建四个独立房间
