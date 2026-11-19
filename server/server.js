@@ -869,7 +869,7 @@ io.on(
 
     socket.on(
       "leaveMessage",
-      text => {
+      async text => {
 
         const roomId = socket.data.roomId;
         const room = getRoom(roomId);
