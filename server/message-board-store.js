@@ -1,69 +1,46 @@
-const crypto = require("crypto");
-const fs = require("fs");
-const path = require("path");
 
-const MESSAGE_TTL_MS = 3 * 24 * 60 * 60 * 1000;
+const { createClient } = require("@supabase/supabase-js");
+const crypto = require("crypto");
+
+const MESSAGE_TTL_MS = 5 * 24 * 60 * 60 * 1000;
 const MESSAGE_LIMIT = 10;
 
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SECRET_KEY
+);
+
 class MessageBoardStore {
-  constructor({ filePath, now = () => Date.now() } = {}) {
-    this.filePath = filePath || path.join(__dirname, "../data/message-board.json");
-    this.now = now;
-    this.boards = this.load();
-    this.prune();
+  async list(roomId) {
+    const expiresBefore = new Date(Date.now() - MESSAGE_TTL_MS).toISOString();
+
+    const { error: deleteError } = await supabase
+      .from("message_board")
+      .delete()
+      .eq("room_id", roomId)
+      .lt("created_at", expiresBefore);
+
+    if (deleteError) throw deleteError;
+
+    const { data, error } = await supabase
+      .from("message_board")
+      .select("*")
+      .eq("room_id", roomId)
+      .order("created_at", { ascending: true });
+
+    if (error) throw error;
+
+    return data.map(message => ({
+      id: message.id,
+      name: message.name,
+      text: message.content,
+      createdAt: new Date(message.created_at).getTime()
+    }));
   }
 
-  load() {
-    try {
-      const saved = JSON.parse(fs.readFileSync(this.filePath, "utf8"));
-      return saved && typeof saved === "object" ? saved : {};
-    } catch (error) {
-      return {};
-    }
-  }
+  async add(roomId, { name, text }) {
+    const messages = await this.list(roomId);
 
-  save() {
-    const directory = path.dirname(this.filePath);
-    fs.mkdirSync(directory, { recursive: true });
-    const temporaryFile = `${this.filePath}.tmp`;
-    fs.writeFileSync(temporaryFile, JSON.stringify(this.boards), "utf8");
-    fs.renameSync(temporaryFile, this.filePath);
-  }
-
-  prune(roomId) {
-    const expiresBefore = this.now() - MESSAGE_TTL_MS;
-    const roomIds = roomId ? [roomId] : Object.keys(this.boards);
-    let changed = false;
-
-    roomIds.forEach(id => {
-      const messages = Array.isArray(this.boards[id]) ? this.boards[id] : [];
-      const currentMessages = messages.filter(message =>
-        message && Number(message.createdAt) > expiresBefore
-      );
-
-      if (currentMessages.length !== messages.length) {
-        changed = true;
-      }
-
-      if (currentMessages.length) {
-        this.boards[id] = currentMessages;
-      } else if (this.boards[id]) {
-        delete this.boards[id];
-        changed = true;
-      }
-    });
-
-    if (changed) this.save();
-    return changed;
-  }
-
-  list(roomId) {
-    this.prune(roomId);
-    return [...(this.boards[roomId] || [])];
-  }
-
-  add(roomId, { name, text }) {
-    const messages = this.list(roomId);
     if (messages.length >= MESSAGE_LIMIT) {
       return { error: "full", messages };
     }
@@ -72,29 +49,43 @@ class MessageBoardStore {
       id: crypto.randomUUID(),
       name,
       text,
-      createdAt: this.now()
+      createdAt: Date.now()
     };
 
-    this.boards[roomId] = [...messages, message];
-    this.save();
-    return { message, messages: this.list(roomId) };
+    const { error } = await supabase
+      .from("message_board")
+      .insert({
+        id: message.id,
+        room_id: roomId,
+        name,
+        content: text,
+        created_at: new Date(message.createdAt).toISOString()
+      });
+
+    if (error) throw error;
+
+    return {
+      message,
+      messages: await this.list(roomId)
+    };
   }
 
-  delete(roomId, messageId) {
-    const messages = this.list(roomId);
-    const nextMessages = messages.filter(message => message.id !== messageId);
+  async delete(roomId, messageId) {
+    const { data, error } = await supabase
+      .from("message_board")
+      .delete()
+      .eq("room_id", roomId)
+      .eq("id", messageId)
+      .select("id");
 
-    if (nextMessages.length === messages.length) return false;
+    if (error) throw error;
 
-    if (nextMessages.length) {
-      this.boards[roomId] = nextMessages;
-    } else {
-      delete this.boards[roomId];
-    }
-
-    this.save();
-    return true;
+    return data.length > 0;
   }
 }
 
-module.exports = { MessageBoardStore, MESSAGE_LIMIT, MESSAGE_TTL_MS };
+module.exports = {
+  MessageBoardStore,
+  MESSAGE_LIMIT,
+  MESSAGE_TTL_MS
+};
