@@ -3,7 +3,10 @@ const http = require("http");
 const { Server } = require("socket.io");
 const path = require("path");
 const { MessageBoardStore } = require("./message-board-store");
-
+process.on("unhandledRejection", reason => {
+  console.error("========== Supabase真实错误 ==========");
+  console.dir(reason, { depth: 10 });
+});
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
