@@ -7,8 +7,9 @@
     "test": "node test/message-board-store.test.js && node test/message-board-socket.test.js"
   },
   "dependencies": {
-    "express": "^4.21.2",
-    "socket.io": "^4.8.1"
+  "express": "^4.21.2",
+  "socket.io": "^4.8.1",
+  "@supabase/supabase-js": "^2.0.0"
   },
   "devDependencies": {
     "socket.io-client": "^4.8.3"
