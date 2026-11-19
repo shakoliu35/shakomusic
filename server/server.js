@@ -897,15 +897,15 @@ io.on(
 
     socket.on(
       "deleteMessage",
-      messageId => {
+      async messageId => {
 
         const roomId = socket.data.roomId;
         const room = getRoom(roomId);
 
         if (!room || socket.id !== room.hostId) return;
 
-        if (messageBoardStore.delete(roomId, String(messageId || ""))) {
-          io.to(roomId).emit("messageBoard", messageBoardStore.list(roomId));
+        if (await messageBoardStore.delete(roomId, String(messageId || ""))) {
+          io.to(roomId).emit("messageBoard", await messageBoardStore.list(roomId));
         }
       }
     );
