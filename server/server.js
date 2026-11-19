@@ -880,7 +880,7 @@ io.on(
         text = String(text || "").trim().slice(0, 200);
         if (!text) return;
 
-        const result = messageBoardStore.add(roomId, {
+        const result = await messageBoardStore.add(roomId, {
           name: player.name,
           text
         });
