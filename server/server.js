@@ -511,7 +511,7 @@ io.on(
               getMusicState(room),
 
             messageBoard:
-              messageBoardStore.list(roomId)
+              await messageBoardStore.list(roomId)
 
           }
         );
