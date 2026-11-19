@@ -315,7 +315,7 @@ io.on(
 
     socket.on(
       "auth",
-      payload => {
+      async payload => {
 
         let roomId =
           "beach";
