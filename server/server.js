@@ -140,8 +140,11 @@ const MUSIC_LIST = [
   {
     file: "Best of me.mp3",
     name: "Best of me"
-  }
-
+  },
+  { 
+file: "With Me.mp3", 
+name: "With Me.mp3"
+ } 
 ];
 
 /* ======================================================
