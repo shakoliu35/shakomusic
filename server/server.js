@@ -146,20 +146,20 @@ file: "With Me.mp3",
 name: "With Me.mp3"
  },
   { 
-file: “Cry.mp3”, 
-name: “Cry"
+file: "Cry.mp3", 
+name: "Cry"
  },
 { 
-file: “K.mp3”, 
-name: “K"
+file: "K.mp3", 
+name: "K"
  },
 { 
-file: “生命中的时光.mp3”, 
-name: “生命中的时光"
+file: "生命中的时光.mp3", 
+name: "生命中的时光"
  },
 { 
-file: “这个年纪.mp3”, 
-name: “这个年纪"
+file: "这个年纪.mp3", 
+name: "这个年纪"
  } 
 ];
 
